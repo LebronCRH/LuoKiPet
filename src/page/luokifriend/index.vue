@@ -139,7 +139,8 @@ export default {
       }
     },
     mounted(){
-      // this.getCamera();
+      this.getCamera();
+      console.log("打开照相机");
     },
     computed: {
   
