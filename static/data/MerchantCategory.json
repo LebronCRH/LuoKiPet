@@ -1,0 +1,10 @@
+[{
+	"CategoryId":1001,
+	"CategoryName":"不限"
+},{
+	"CategoryId":1002,
+	"CategoryName":"合作服务商户"
+},{
+	"CategoryId":1003,
+	"CategoryName":"非合作服务商户"
+}]

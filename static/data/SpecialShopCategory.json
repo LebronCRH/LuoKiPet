@@ -1,0 +1,16 @@
+[{
+	"CategoryId":1001,
+	"CategoryName":"明星"
+},{
+	"CategoryId":1002,
+	"CategoryName":"认证"
+},{
+	"CategoryId":1003,
+	"CategoryName":"医疗"
+},{
+	"CategoryId":1004,
+	"CategoryName":"会员卡"
+},{
+	"CategoryId":1005,
+	"CategoryName":"接送"
+}]

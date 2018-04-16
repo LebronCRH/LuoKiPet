@@ -1,0 +1,21 @@
+[{
+	"CategoryId":1001,
+	"CategoryName":"新用户立减",
+	"CategoryImg":"static/image/shouci.png"
+},{
+	"CategoryId":1002,
+	"CategoryName":"折扣商品",
+	"CategoryImg":"static/image/zhekou.png"
+},{
+	"CategoryId":1003,
+	"CategoryName":"会员价",
+	"CategoryImg":"static/image/huiyuan.png"
+},{
+	"CategoryId":1004,
+	"CategoryName":"赠品优惠",
+	"CategoryImg":"static/image/zeng.png"
+},{
+	"CategoryId":1005,
+	"CategoryName":"满减优惠",
+	"CategoryImg":"static/image/manjian.png"
+}]
