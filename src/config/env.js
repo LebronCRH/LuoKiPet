@@ -10,22 +10,24 @@
 let baseUrl = ''; 
 let routerMode = 'history';
 let imgBaseUrl = 'http://120.78.183.108:6786/Images/ServiceShop/';
+let imgUserBaseUrl='http://localhost:8084';
 let socketBaseUrl='http://www.joingp.com:3000/';
 
 
 if (process.env.NODE_ENV == 'development') {
-	baseUrl='http://120.78.183.108:6786';
-	// baseUrl='http://localhost:8084';
+	// baseUrl='http://120.78.183.108:6786';
+	baseUrl='http://localhost:8084';
 
 }else if(process.env.NODE_ENV == 'production'){
 
-	baseUrl='http://120.78.183.108:6786';
-	// baseUrl='http://localhost:8084';
+	// baseUrl='http://120.78.183.108:6786';
+	baseUrl='http://localhost:8084';
 }
 
 export {
 	baseUrl,
 	routerMode,
 	imgBaseUrl,
+	imgUserBaseUrl,
 	socketBaseUrl,
 }

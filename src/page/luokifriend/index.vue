@@ -26,18 +26,18 @@
                       </div>
                     </div>
                     <ul class="ul_friend">
-                      <router-link :to="{ name: 'friendchat',query:{userid:20}}" tag="li" class="lifriendItem">
-                        <img src="static/image/user1.jpg" alt="">
-                        <p><span>爱陌生时尚</span></p>
+                      <router-link v-for="item in UserFriendList" :key="item.UserID" :to="{ name: 'friendchat',query:{userid:item.UserID}}" tag="li" class="lifriendItem">
+                        <img :src="imgUserBaseUrl + item.UserPhotos" alt="">
+                        <p><span>{{item.UserName}}</span></p>
                       </router-link>
-                      <router-link :to="{ name: 'friendchat',query:{userid:1}}" tag="li" class="lifriendItem">
+<!--                       <router-link :to="{ name: 'friendchat',query:{userid:1}}" tag="li" class="lifriendItem">
                         <img src="static/image/user2.jpg" alt="">
                         <p><span>笑吾不良人</span></p>
                       </router-link>
                       <li class="lifriendItem">
                         <img src="static/image/user3.jpg" alt="">
                         <p><span>邪魅君子阐</span></p>
-                      </li>
+                      </li> -->
                     </ul>
                     <p class="Num"><span>4个关注</span></p>
                   </div>
@@ -111,7 +111,11 @@
 <script>
 import serviceshoplist from '@/page/petservice/components/serviceshoplist'
 import axios from 'axios'
+import {mapState, mapMutations} from 'vuex'
 import { Swiper, Scroller, Spinner,SwiperItem,Tab, TabItem, } from 'vux'
+import {GetUserFriendly} from '../../service/getdata'  
+import {imgUserBaseUrl} from '@/config/env'
+
 const list = () => ['好友', '关注', '粉丝']
 export default {
     components: {
@@ -136,14 +140,19 @@ export default {
         swiperHeight:0,
         InfoActiveIndex:0,
         swiperArticleHeight:0,
+        UserFriendList:[],
+        imgUserBaseUrl:imgUserBaseUrl,
       }
     },
     mounted(){
-      this.getCamera();
+      this.initData();
+      // this.getCamera();
       console.log("打开照相机");
     },
     computed: {
-  
+      ...mapState([
+                'LoginFrontPageUrl','isLogin','userInfo',
+            ]),
     },
     props:[],
     methods: {
@@ -154,6 +163,12 @@ export default {
           this.$refs.scroller.donePulldown()
         }, 1000)
        })
+      },
+      async initData(){
+        await GetUserFriendly(this.userInfo.UserID).then(response=>{
+          this.UserFriendList=response;
+          console.log(response);
+        })
       },
       getCamera(){
         var cr=plus.camera.getCamera(1);

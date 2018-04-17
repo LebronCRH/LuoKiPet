@@ -48,6 +48,11 @@ import fetch from '../config/fetch'
 	/*根据用户的ID获得某个用户的信息*/
 	export const GetUserInfoByUserID=(userid)=>fetch('/user/GetUserInfoByUserID',{
 		UserID:userid,
+	});
+
+	/*获得用户的好友列表*/
+	export const GetUserFriendly=(userid)=>fetch('/user/GetUserFriendly',{
+		UserId:userid,
 	})
 
 //登录API结束 

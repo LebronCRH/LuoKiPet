@@ -28,6 +28,7 @@ import ForgetPasswordThirdly from '@/page/login/forgetpasswordthirdly.vue'
 import Login from '@/page/login/login.vue'
 import LuoKiFriend from '@/page/luokifriend/index.vue'
 import FriendChat from '@/page/luokifriend/friendchat.vue'
+import CreatePhoto from '@/page/Release/CreatePhoto.vue'
 
 // Routes
 export default [
@@ -163,5 +164,10 @@ export default [
     name:'friendchat',
     path:'/friendchat',
     component:FriendChat
+  },
+  {
+    name:'createphoto',
+    path:'/createphoto',
+    component:CreatePhoto
   }
 ]

@@ -4,46 +4,76 @@
   	  <router-view name="Conter"></router-view>
   </div>
   <div class="Footer">
-  <div class="LuoKiFoot">
-   <div class="MenuItem">
-<router-link :to="{ path: '/home/community'}">
-   <div class="Content">
-         <div class="menuimg1"></div>
-      <p>社区</p>
-   </div>
-</router-link>
-   </div>
-   <div class="MenuItem">
-<router-link :to="{ path: '/home/mall'}">
-   <div class="Content">
-      <div class="menuimg2"></div>
-      <p>商城</p>
-      </div>
-      </router-link>
-   </div>
-   <div class="MenuItem">
-   <div class="MidContent">
-   <div class="Midimg"></div>
-   </div>
-   </div>
-   <div class="MenuItem">
-<router-link :to="{ path: '/home/petservice'}">
-   <div class="Content">
-      <div class="menuimg3"></div>
-      <p>服务</p>
-      </div>
-      </router-link>
-   </div>
-   <div class="MenuItem">
-<router-link :to="{ path: '/home/profile'}">
-   <div class="Content">
-      <div class="menuimg4"></div>
-      <p>我的</p>
-      </div>
-      </router-link>
-   </div>
-</div>
+    <div class="LuoKiFoot">
+       <div class="MenuItem">
+          <router-link :to="{ path: '/home/community'}">
+             <div class="Content">
+                   <div class="menuimg1"></div>
+                <p>社区</p>
+             </div>
+          </router-link>
+       </div>
+       <div class="MenuItem">
+            <router-link :to="{ path: '/home/mall'}">
+               <div class="Content">
+                  <div class="menuimg2"></div>
+                  <p>商城</p>
+                </div>
+            </router-link>
+       </div>
+       <div class="MenuItem">
+             <div class="MidContent">
+             <div class="Midimg" @click="ShowCreate()"></div>
+             </div>
+       </div>
+       <div class="MenuItem">
+            <router-link :to="{ path: '/home/petservice'}">
+                  <div class="Content">
+                    <div class="menuimg3"></div>
+                    <p>服务</p>
+                  </div>
+            </router-link>
+       </div>
+       <div class="MenuItem">
+            <router-link :to="{ path: '/home/profile'}">
+               <div class="Content">
+                  <div class="menuimg4"></div>
+                  <p>我的</p>
+                </div>
+            </router-link>
+       </div>
+    </div>
   </div>
+
+<div class="CreateProject" v-show="CreateProjectshow" @click="ShowCreate()">
+  <ul class="ul_Create">
+    <li class="CreateItem Photo bounceInUp animated">
+      <div class="img">
+         <div class="ImgItem Photo yui" @click="GoCreate()">
+           <img src="static/image/png/CreatePhoto.png" alt="">
+         </div>
+      </div>
+      <p>拍照</p>
+    </li>
+    <li class="CreateItem Article bounceInUp animated">
+      <div class="img">
+         <div class="ImgItem Article">
+           <img src="static/image/png/CreateArticle.png" alt="">
+         </div>
+      </div>
+      <p>文章</p>
+    </li>
+    <li class="CreateItem Video bounceInUp animated">
+      <div class="img">
+         <div class="ImgItem Video">
+           <img src="static/image/png/CreateVideo.png" alt="">
+         </div>
+      </div>
+      <p>视频</p>
+    </li>
+  </ul>
+</div>
+
 </div>
 
 </template>
@@ -53,13 +83,21 @@
 	export default{
 		data(){
 			return{
-
+        CreateProjectshow:false,
 			}
 		},
 
 		mounted(){
 
-		}
+		},
+    methods:{
+      ShowCreate:function(){
+        this.CreateProjectshow=!this.CreateProjectshow;
+      },
+      GoCreate:function(){
+        this.$router.push('/createphoto');
+      }
+    },
 	}
 </script>
 
@@ -106,5 +144,32 @@
 
 }
 
+  }
+  .CreateProject{
+    position:absolute;top:0rem;left:0rem;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:10000;display:flex;align-items:center;justify-content:center;
+    .ul_Create{
+      list-style:none;width:100%;height:3.2rem;
+      .CreateItem{
+        width:33.3%;height:100%;float:left;
+        &.Photo{animation-delay:0.1s;}
+        &.Article{animation-delay:0.2s;}
+        &.Video{animation-delay:0.3s;}
+        .img{
+          width:100%;height:2rem;display:flex;align-items:center;justify-content:center;
+          .ImgItem{
+            width:2rem;height:2rem;border-radius:1rem;overflow:hidden;display:flex;align-items:center;justify-content:center;
+            &.Photo{background:#50c3dc;}
+            &.Article{background:#fecc4b;}
+            &.Video{background:#fba2a8;}
+            img{
+              width:1rem;height:1rem;
+            }
+          }
+        }
+        p{
+          font-size:0.5rem;line-height:1.2rem;width:100%;height:1.2rem;text-align:center;
+        }
+      }
+    }
   }
 </style>

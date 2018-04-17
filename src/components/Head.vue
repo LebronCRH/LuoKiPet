@@ -17,7 +17,7 @@
      </div>
      </slot>
      <slot name="right">
-     <div class="shopheadedit" ui-sref="zx_article" onclick="onback()">
+     <div class="shopheadedit">
      <img src="static/image/dian.png">
      </div>
      </slot>
@@ -67,7 +67,7 @@ export default {
   width:10rem;height:1.5rem;padding-top:0.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
   .shopheadback{
     height:100%;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
-    display:flex;justify-content:content;align-items:content;
+    display:flex;justify-content:center;align-items:center;
     img{
       width:0.6rem;height:0.6rem;
     }
@@ -82,9 +82,15 @@ export default {
   }
   .shopheadedit{
     width:1.5rem;height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
-    display:flex;justify-content:content;align-items:content;
+    display:flex;justify-content:center;align-items:center;
     img{
       width:0.6rem;height:0.6rem;
+    }
+  }
+  .rightSpanEdit{
+    width:1.5rem;height:100%;position:absolute;top:0rem;right:0rem;z-index:99;display:flex;justify-content:center;align-items:center;
+    span{
+      font-size:0.4rem;
     }
   }
 }
