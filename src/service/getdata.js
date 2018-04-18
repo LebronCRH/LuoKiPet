@@ -58,6 +58,11 @@ import fetch from '../config/fetch'
 //登录API结束 
 
 
+//爱秀宠物API开始
+    export const GetLoveShowPhotos=()=>fetch('/loveshow/GetLoveShowPhotos');
+//爱秀宠物API结束
+
+
 //宠物服务店的API开始
     
     /*获取所有服务店的信息*/

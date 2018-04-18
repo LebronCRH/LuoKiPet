@@ -84,7 +84,7 @@
 
 <script>
 import petshowlist from '@/page/petshow/components/petshowlist'
-import { Swiper, Scroller, Spinner } from 'vux'
+import { Swiper, Scroller, Spinner,XImg} from 'vux'
 import axios from 'axios'
 
 const baseList = [{

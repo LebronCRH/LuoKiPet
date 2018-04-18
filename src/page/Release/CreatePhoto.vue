@@ -13,9 +13,9 @@
 
             </textarea>
             <ul class="ul_Photos">
-              <li class="PhotoItem" v-for="(item,index) in SelectPhotos">
-                <img :src="item" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete" @click="CancelImgItem(index)">
+              <li class="PhotoItem" v-for="(item,index) in AllSelectImg">
+                <img :src="item.url" class="Photo" alt="">
+                <img src="static/image/png/photodelete.png" alt="" class="Delete" @click="CancelImgItem(item)">
               </li>
               <li class="AddItem PhotoItem" @click="TaggleSelectShow()">
                 <img src="static/image/png/addphoto.png" alt="">
@@ -54,12 +54,12 @@
               <img src="static/image/png/weibo.png" alt="">
             </li>
           </ul>
-          <div class="rt"></div>
+          <div class="rt"><p v-for="item in fenge(plist)">{{item}}</p></div>
         </div>
-
         </div>
       </scroller>
   </div>
+
 
 <div class="zhe" v-show="SelectShow" @click="TaggleSelectShow()"></div>
 <transition name="fade">
@@ -102,7 +102,10 @@ export default {
         MidType:1,
         EditBtn:true,
         SelectShow:false,
-        SelectPhotos:['static/image/user1.jpg','static/image/user2.jpg','static/image/user3.jpg','static/image/user1.jpg','static/image/user2.jpg','static/image/user3.jpg'],
+        SelectPhotos:[{url:'static/image/user1.jpg',type:1},{url:'static/image/user2.jpg',type:1},{url:'static/image/user3.jpg',type:1},{url:'static/image/user1.jpg',type:1}],
+        // SelectPhotos:[],
+        SelectCamera:[{url:'static/image/user2.jpg',type:2},{url:'static/image/user3.jpg',type:2}],
+        plist:'12,34,56,78',
       }
     },
     mounted(){
@@ -115,6 +118,16 @@ export default {
       ...mapState([
                 'PackageCartList'
             ]),
+      AllSelectImg:function(){
+        var arr=[];
+        this.SelectPhotos.forEach((item)=>{
+          arr.push(item);
+        });
+        this.SelectCamera.forEach((item2)=>{
+          arr.push(item2);
+        })
+        return arr;
+      }
     },
     props:[],
     methods: {
@@ -124,26 +137,51 @@ export default {
       TaggleSelectShow(){
         this.SelectShow=!this.SelectShow;
       },
+      fenge(val){
+        var numberArray = val.split(",");
+        return numberArray;
+      },
       getCamera(){
+        this.TaggleSelectShow();
         var cr=plus.camera.getCamera(1);
-        cr.captureImage(function( path ){
-          // this.SelectPhotos.push()
-          alert( "Capture video success: " + path );  
+        cr.captureImage((path)=>{
+          // let path2="file:///"+path;
+          // this.SelectPhotos.push(path2);
+          // alert( "Capture video success: " + path2 );  
+          plus.io.resolveLocalFileSystemURL(path,(entry)=>{
+            alert("真实路径："+entry.fullPath); 
+            var Obj={url:entry.fullPath,type:2}
+            this.SelectPhotos.push(Obj);
+          },(e)=>{
+            outLine('读取文件错误：'+e.message);
+          } );
         },
         function( error ) {
           alert( "Capture video failed: " + error.message );
         });
       },
-      CancelImgItem(index){//删除一个图片选项
-        this.SelectPhotos.splice(index,1);
+      CancelImgItem(item){//删除一个图片选项
+        // this.SelectPhotos.splice(index,1);
+        if(item.type==1)
+        {
+          var index = this.SelectPhotos.indexOf(item.url);
+          this.SelectPhotos.splice(index, 1);
+        }
+        else if(item.type==2)
+        {
+          var index = this.SelectCamera.indexOf(item.url);
+          this.SelectCamera.splice(index, 1);
+        }
       },
       galleryImg(){
-        plus.gallery.pick( function(e){
+        this.TaggleSelectShow();
+        plus.gallery.pick( (e)=>{
           for(var i in e.files){
-            this.SelectPhotos=e.files;
+            var Obj={url:e.files[i],type:1}
+            this.SelectPhotos.push(Obj);
             console.log(e.files[i]);
           }
-        }, function (e){
+        },(e)=>{
           console.log( "取消选择图片" );
         },{filter:"image",multiple:true,selected:this.SelectPhotos,maximum:9,system:false});
       },
@@ -199,7 +237,7 @@ export default {
       .ul_Photos{
         width:100%;list-style:none;overflow:hidden;
         .PhotoItem{
-          width:1.7rem;height:1.7rem;float:left;margin:0.1rem;position:relative;margin-top:0.1rem;
+          width:1.7rem;height:1.7rem;float:left;margin:0.1rem;position:relative;margin-top:0.1rem;overflow:hidden;
           img.Photo{width:1.7rem;height:1.7rem;}
           img.Delete{width:0.5rem;height:0.5rem;position:absolute;top:0rem;right:0rem;background:#fff;border-radius:0.25rem;}
           &.AddItem{

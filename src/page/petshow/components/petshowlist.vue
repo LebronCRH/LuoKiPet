@@ -1,6 +1,6 @@
 <template>
 	<div>
-<div class="ps_Item" v-for="item in ImgList">
+<div class="ps_Item" v-if="LoveShowList.length>0" v-for="item in LoveShowList">
    <router-link :to="{ path: '/petshowIndex/petshowdetails'}">
      <div class="ps_Top">
        <div class="ps_Userimg">
@@ -19,14 +19,17 @@
      <p>哈哈，我的小洛奇
      </p>
    </div>
-   <ul class="ulImgList" v-if="item.List.length==3||item.List.length>=5">
-     <li class="ImgItem" v-for="ImgItem in item.List"><img :src="ImgItem" v-ImgEdit="{ width: 3, height: 3 }" alt=""></li>
+   <ul class="ulImgList" v-if="fenge(item.PhotoList).length==3||fenge(item.PhotoList).length>=5">
+     <li class="ImgItem" v-for="ImgItem in fenge(item.PhotoList)">
+<!--      <x-img :src="ImgItem" :offset="-50" v-ImgEdit="{ width: 3, height: 3 }"></x-img> -->
+     <img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 3, height: 3 }" alt="">
+     </li>
    </ul>
-   <ul class="ulImgListEven" v-if="item.List.length==2||item.List.length==4">
-     <li class="ImgItem" v-for="ImgItem in item.List"><img :src="ImgItem" v-ImgEdit="{ width: 4.6, height: 4.6 }" alt=""></li>
+   <ul class="ulImgListEven" v-if="fenge(item.PhotoList).length==2||fenge(item.PhotoList).length==4">
+     <li class="ImgItem" v-for="ImgItem in fenge(item.PhotoList)"><img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 4.6, height: 4.6 }" alt=""></li>
    </ul>
-   <div class="ps_listimg" v-if="item.List.length==1">
-     <img v-for="ImgItem in item.List" :src="ImgItem" v-ImgEdit="{ width:9.6,height:9.6 }">
+   <div class="ps_listimg" v-if="fenge(item.PhotoList).length==1">
+     <img v-for="ImgItem in fenge(item.PhotoList)" :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width:9.6,height:9.6 }">
    </div>
    <div class="psdiv_Support">
      <ul class="ps_Support">
@@ -91,6 +94,10 @@
 </template>
 
 <script>
+import { Swiper, Scroller, Spinner,XImg} from 'vux'
+import {GetLoveShowPhotos} from '@/service/getdata'
+import {imgPCBaseUrl} from '@/config/env'
+
 	export default{
 		data(){
 			return{
@@ -107,14 +114,26 @@
         },{
           List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg','static/image/Slides3.jpg']
         }],
+        imgPCBaseUrl:imgPCBaseUrl,
+        LoveShowList:[],
 			}
 		},
-
+    components: {
+      XImg
+    },
 		mounted(){
-
+      this.initData();
 		},
 	   methods: {
-     
+      async initData(){
+        await GetLoveShowPhotos().then(response=>{
+          this.LoveShowList=response;
+        })
+      },
+      fenge(val){
+        var numberArray = val.split(",");
+        return numberArray;
+      },
     },
     directives: {
       ImgEdit: {//图片显示按长宽等比居中显示的指令方法
