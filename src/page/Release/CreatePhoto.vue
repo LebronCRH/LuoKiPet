@@ -13,29 +13,9 @@
 
             </textarea>
             <ul class="ul_Photos">
-              <li class="PhotoItem">
-                <img src="static/image/user1.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
-              </li>
-              <li class="PhotoItem">
-                <img src="static/image/user2.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
-              </li>
-              <li class="PhotoItem">
-                <img src="static/image/user3.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
-              </li>
-              <li class="PhotoItem">
-                <img src="static/image/user1.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
-              </li>
-              <li class="PhotoItem">
-                <img src="static/image/user2.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
-              </li>
-              <li class="PhotoItem">
-                <img src="static/image/user3.jpg" class="Photo" alt="">
-                <img src="static/image/png/photodelete.png" alt="" class="Delete">
+              <li class="PhotoItem" v-for="(item,index) in SelectPhotos">
+                <img :src="item" class="Photo" alt="">
+                <img src="static/image/png/photodelete.png" alt="" class="Delete" @click="CancelImgItem(index)">
               </li>
               <li class="AddItem PhotoItem" @click="TaggleSelectShow()">
                 <img src="static/image/png/addphoto.png" alt="">
@@ -84,7 +64,7 @@
 <div class="zhe" v-show="SelectShow" @click="TaggleSelectShow()"></div>
 <transition name="fade">
   <ul class="SelectModel" v-show="SelectShow">
-    <li class="SelectItem">
+    <li class="SelectItem" @click="galleryImg()">
       <span>从手机相册中选择</span>
     </li>
     <li class="SelectItem">
@@ -122,6 +102,7 @@ export default {
         MidType:1,
         EditBtn:true,
         SelectShow:false,
+        SelectPhotos:['static/image/user1.jpg','static/image/user2.jpg','static/image/user3.jpg','static/image/user1.jpg','static/image/user2.jpg','static/image/user3.jpg'],
       }
     },
     mounted(){
@@ -145,7 +126,26 @@ export default {
       },
       getCamera(){
         var cr=plus.camera.getCamera(1);
-        cr.captureImage();
+        cr.captureImage(function( path ){
+          // this.SelectPhotos.push()
+          alert( "Capture video success: " + path );  
+        },
+        function( error ) {
+          alert( "Capture video failed: " + error.message );
+        });
+      },
+      CancelImgItem(index){//删除一个图片选项
+        this.SelectPhotos.splice(index,1);
+      },
+      galleryImg(){
+        plus.gallery.pick( function(e){
+          for(var i in e.files){
+            this.SelectPhotos=e.files;
+            console.log(e.files[i]);
+          }
+        }, function (e){
+          console.log( "取消选择图片" );
+        },{filter:"image",multiple:true,selected:this.SelectPhotos,maximum:9,system:false});
       },
     },
     directives: {
