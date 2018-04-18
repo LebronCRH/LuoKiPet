@@ -1,243 +1,92 @@
 <template>
 	<div>
-<div class="ps_Item">
-<router-link :to="{ path: '/petshowIndex/petshowdetails'}">
-   <div class="ps_Top">
-     <div class="ps_Userimg">
-     <img src="../../../assets/image/user1.jpg">
+<div class="ps_Item" v-for="item in ImgList">
+   <router-link :to="{ path: '/petshowIndex/petshowdetails'}">
+     <div class="ps_Top">
+       <div class="ps_Userimg">
+       <img src="../../../assets/image/user1.jpg">
+       </div>
+       <div class="ps_Userinfo">
+         <p class="pt"><span class="ps_username">不良人</span><span class="ps_addr">杭州市</span></p>
+         <p class="pb"><img class="ps_petimg" src="../../../assets/image/user2.jpg"><span class="ps_petname">小洛奇</span><span class="ps_petcategory">拉布拉多</span></p>
+       </div>
+       <div class="ps_gz">
+          <button class="ps_bt">+关注</button>
+       </div>
      </div>
-     <div class="ps_Userinfo">
-       <p class="pt"><span class="ps_username">不良人</span><span class="ps_addr">杭州市</span></p>
-       <p class="pb"><img class="ps_petimg" src="../../../assets/image/user2.jpg"><span class="ps_petname">小洛奇</span><span class="ps_petcategory">拉布拉多</span></p>
-     </div>
-     <div class="ps_gz">
-     <button class="ps_bt">+关注</button>
-     </div>
-   </div>
    </router-link>
    <div class="ps_message">
-   <p>哈哈，我的小洛奇
-   </p>
+     <p>哈哈，我的小洛奇
+     </p>
    </div>
-   <div class="ps_listimg" ui-sref="petshow_details">
-   <img src="../../../assets/image/user3.jpg">
+   <ul class="ulImgList" v-if="item.List.length==3||item.List.length>=5">
+     <li class="ImgItem" v-for="ImgItem in item.List"><img :src="ImgItem" v-ImgEdit="{ width: 3, height: 3 }" alt=""></li>
+   </ul>
+   <ul class="ulImgListEven" v-if="item.List.length==2||item.List.length==4">
+     <li class="ImgItem" v-for="ImgItem in item.List"><img :src="ImgItem" v-ImgEdit="{ width: 4.6, height: 4.6 }" alt=""></li>
+   </ul>
+   <div class="ps_listimg" v-if="item.List.length==1">
+     <img v-for="ImgItem in item.List" :src="ImgItem" v-ImgEdit="{ width:9.6,height:9.6 }">
    </div>
    <div class="psdiv_Support">
-   <ul class="ps_Support">
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-   </ul>
-      <div class="ps_SupportNum">
-   <span>5</span>
-   </div>
+     <ul class="ps_Support">
+       <li class="ps_liSupport">
+       <img src="../../../assets/image/user1.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user2.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user3.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user1.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user2.jpg">
+       </li>
+       <li class="ps_liSupport">
+       <img src="../../../assets/image/user1.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user2.jpg">
+       </li>
+          <li class="ps_liSupport">
+       <img src="../../../assets/image/user3.jpg">
+       </li>
+     </ul>
+     <div class="ps_SupportNum">
+       <span>5</span>
+     </div>
    </div>
    <ul class="ps_edit">
-   <li class="ps_editLi ps_editLi1" ng-class="select==true?'active':''" ng-click="favorite()">
-   <i></i>
-   <span>点赞</span>
-   </li>
-      <li class="ps_editLi ps_editLi2">
-         <i></i>
-   <span>评论</span>
-   </li>
-      <li class="ps_editLi ps_editLi3">
-         <i></i>
-   <span>收藏</span>
-   </li>
-      <li class="ps_editLi ps_editLi4">
-         <i></i>
-   <span>分享</span>
-   </li>
+     <li class="ps_editLi ps_editLi1" ng-class="select==true?'active':''" ng-click="favorite()">
+     <i></i>
+     <span>点赞</span>
+     </li>
+     <li class="ps_editLi ps_editLi2">
+        <i></i>
+        <span>评论</span>
+     </li>
+     <li class="ps_editLi ps_editLi3">
+        <i></i>
+        <span>收藏</span>
+     </li>
+     <li class="ps_editLi ps_editLi4">
+        <i></i>
+        <span>分享</span>
+     </li>
    </ul>
    <ul class="ps_comment">
-   <li class="comment_li">
-   <span class="comment_user">可惜没如果</span><span class="mao">:</span><span class="comment_content">好可爱啊</span>
-   </li>
-   <li class="comment_li">
-   <span class="comment_user">不能说的秘密</span><span class="mao">:</span><span class="comment_content">竟然比你还高哦，简直不可思议</span>
-   </li>
+     <li class="comment_li">
+     <span class="comment_user">可惜没如果</span><span class="mao">:</span><span class="comment_content">好可爱啊</span>
+     </li>
+     <li class="comment_li">
+     <span class="comment_user">不能说的秘密</span><span class="mao">:</span><span class="comment_content">竟然比你还高哦，简直不可思议</span>
+     </li>
    </ul>
 </div>
-<div class="ps_Item">
-   <div class="ps_Top">
-     <div class="ps_Userimg">
-     <img src="../../../assets/image/user2.jpg">
-     </div>
-     <div class="ps_Userinfo">
-       <p class="pt"><span class="ps_username">不良人</span><span class="ps_addr">杭州市</span></p>
-       <p class="pb"><img class="ps_petimg" src="../../../assets/image/user3.jpg"><span class="ps_petname">小洛奇</span><span class="ps_petcategory">拉布拉多</span></p>
-     </div>
-     <div class="ps_gz">
-     <button class="ps_bt">+关注</button>
-     </div>
-   </div>
-   <div class="ps_message">
-   <p>哈哈，我的小洛奇
-   </p>
-   </div>
-   <div class="ps_listimg" ui-sref="petshow_details">
-   <img src="../../../assets/image/user2.jpg">
-   </div>
-<div class="psdiv_Support">
-   <ul class="ps_Support">
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-   </ul>
-   <div class="ps_SupportNum">
-   <span>5</span>
-   </div>
-   </div>
-      <ul class="ps_edit">
-   <li class="ps_editLi ps_editLi1" ng-class="select==true?'active':''" ng-click="favorite()">
-   <i></i>
-   <span>点赞</span>
-   </li>
-      <li class="ps_editLi ps_editLi2">
-         <i></i>
-   <span>评论</span>
-   </li>
-      <li class="ps_editLi ps_editLi3">
-         <i></i>
-   <span>收藏</span>
-   </li>
-      <li class="ps_editLi ps_editLi4">
-         <i></i>
-   <span>分享</span>
-   </li>
-   </ul>
-   <ul class="ps_comment">
-   <li class="comment_li">
-   <span class="comment_user">可惜没如果</span><span class="mao">:</span><span class="comment_content">好可爱啊</span>
-   </li>
-   <li class="comment_li">
-   <span class="comment_user">不能说的秘密</span><span class="mao">:</span><span class="comment_content">竟然比你还高哦，简直不可思议</span>
-   </li>
-   </ul>
-</div>
-<div class="ps_Item">
-   <router-link :to="{ path: '/petshowIndex/petshowdetails'}">
-   <div class="ps_Top">
-     <div class="ps_Userimg">
-     <img src="../../../assets/image/user2.jpg">
-     </div>
-     <div class="ps_Userinfo">
-       <p class="pt"><span class="ps_username">不良人</span><span class="ps_addr">杭州市</span></p>
-       <p class="pb"><img class="ps_petimg" src="../../../assets/image/user3.jpg"><span class="ps_petname">小洛奇</span><span class="ps_petcategory">拉布拉多</span></p>
-     </div>
-     <div class="ps_gz">
-     <button class="ps_bt">+关注</button>
-     </div>
-   </div>
-   </router-link>
-   <div class="ps_message">
-   <p>哈哈，我的小洛奇
-   </p>
-   </div>
-   <div class="ps_listimg" ui-sref="petshow_details">
-   <img src="../../../assets/image/user1.jpg">
-   </div>
-<div class="psdiv_Support">
-   <ul class="ps_Support">
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-   <li class="ps_liSupport">
-   <img src="../../../assets/image/user1.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user2.jpg">
-   </li>
-      <li class="ps_liSupport">
-   <img src="../../../assets/image/user3.jpg">
-   </li>
-   </ul>
-      <div class="ps_SupportNum">
-   <span>5</span>
-   </div>
-   </div>
-      <ul class="ps_edit">
-   <li class="ps_editLi ps_editLi1" ng-class="select==true?'active':''" ng-click="favorite()">
-   <i></i>
-   <span>点赞</span>
-   </li>
-      <li class="ps_editLi ps_editLi2">
-         <i></i>
-   <span>评论</span>
-   </li>
-      <li class="ps_editLi ps_editLi3">
-         <i></i>
-   <span>收藏</span>
-   </li>
-      <li class="ps_editLi ps_editLi4">
-         <i></i>
-   <span>分享</span>
-   </li>
-   </ul>
-   <ul class="ps_comment">
-   <li class="comment_li">
-   <span class="comment_user">可惜没如果</span><span class="mao">:</span><span class="comment_content">好可爱啊</span>
-   </li>
-   <li class="comment_li">
-   <span class="comment_user">不能说的秘密</span><span class="mao">:</span><span class="comment_content">竟然比你还高哦，简直不可思议</span>
-   </li>
-   </ul>
-</div>
+
 </div>
 </template>
 
@@ -245,16 +94,52 @@
 	export default{
 		data(){
 			return{
-
+        ImgList:[{
+          List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg']
+        },{
+          List:['static/image/Slides.jpg']
+        },{
+          List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg','static/image/Slides3.jpg']
+        },{
+          List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg','static/image/Slides1.jpg','static/image/Slides2.jpg']
+        },{
+          List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg','static/image/Slides1.jpg','static/image/Slides1.jpg','static/image/Slides1.jpg']
+        },{
+          List:['static/image/Slides.jpg','static/image/Slides2.jpg','static/image/Slides3.jpg','static/image/Slides3.jpg']
+        }],
 			}
 		},
 
 		mounted(){
 
 		},
-	    methods: {
+	   methods: {
      
-  }
+    },
+    directives: {
+      ImgEdit: {//图片显示按长宽等比居中显示的指令方法
+        // 指令的定义
+        inserted: function (el,binding) {
+          var image=new Image();
+          image.src=el.src; //获取图像路径
+          var width1=image.width; //获取图像宽度
+          var height1=image.height; //获取图像高度
+          var RequestW=binding.value.width/10*window.screen.width;
+          var RequestH=binding.value.height/10*window.screen.width;
+          var a1=height1/width1;
+          var a2=RequestH/RequestW;
+          if(a1>a2){
+            el.width=RequestW;
+            el.height=height1*RequestW/width1;
+            el.style.marginTop='-' + Math.round((el.height-RequestH)/2)+ 'px';
+          }else{
+            el.height=RequestH;
+            el.width=width1*RequestH/height1;
+            el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
+          }
+        }
+      }
+    },
 	}
 </script>
 
@@ -298,8 +183,24 @@
 		p{line-height:0.8rem;font-size:0.4rem;color:#000;padding:0rem;margin:0rem;}
 	}
 	.ps_listimg{
-		img{width:10rem;}
+    width:10rem;height:10rem;padding:0.2rem 0.2rem;
 	}
+
+  .ulImgList{
+    list-style:none;width:100%;padding:0rem 0.2rem;
+    .ImgItem{
+      width:3rem;height:3rem;margin:0.06rem 0.1rem;overflow:hidden;float:left;
+    }
+  }
+
+  .ulImgListEven{
+    list-style:none;width:100%;padding:0rem 0.2rem;
+    .ImgItem{
+      width:4.6rem;height:4.6rem;margin:0.06rem 0.1rem;overflow:hidden;float:left;
+    }
+  }
+
+
 	.psdiv_Support{width:100%;overflow:hidden;
 				.ps_SupportNum{
 			float:left;width:0.7rem;height:0.7rem;border-radius:0.35rem;text-align:center;border:solid 0.05rem #ddd;box-sizing:border-box;margin:0.2rem 0.1rem;
