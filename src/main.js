@@ -8,6 +8,9 @@ import store from './store/'
 import Home from './components/HelloFromVux'
 import routes from './router/index'
 import  { ToastPlugin } from 'vux'
+import initRichText from './common/initHTMLEditor';
+import 'font-awesome/css/font-awesome.css'
+initRichText();
 
 Vue.use(VueRouter)
 Vue.use(ToastPlugin)
