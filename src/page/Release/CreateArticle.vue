@@ -1,7 +1,7 @@
 <template>
 <div class="rating_page">
   <head-top :Title="Title" :Color="Color" :MidType="MidType">
-      <div slot="right" class="rightSpanEdit">
+      <div slot="right" class="rightSpanEdit" @click="CompleteCreate()">
         <span>发表</span>
       </div>
   </head-top>
@@ -15,10 +15,10 @@
     </div>
     <ul class="ul_Title">
       <li class="li_Title">
-        <input type="text" class="BigTitle" placeholder="标题">
+        <input type="text" class="BigTitle" v-model="ArticleTitle" placeholder="标题">
       </li>
       <li class="li_Title">
-        <input type="text" class="SmallTitle" placeholder="副标题">
+        <input type="text" class="SmallTitle" v-model="AarticleSubtitle" placeholder="副标题">
       </li>
     </ul>
     <div class="line"></div>
@@ -60,6 +60,9 @@
           content: '请输入文章内容', 
           width: 0, 
           height: 300,
+          ArticleTitle:"",
+          AarticleSubtitle:"",
+          ArticleCove:"static/image/Slides1.jpg",
         }
       },
       mounted(){
@@ -70,7 +73,7 @@
       },
       computed: {
         ...mapState([
-                  'PackageCartList'
+                  'PackageCartList','CreateArticleTest'
               ]),
       },
       props:[],
@@ -79,11 +82,21 @@
                   'UPDATE_PACKAGECART',
               ]),
         updateData(e = ''){
-        let c1 = e.replace(/<img width="100%"/g, '<img');
-        let c2 = c1.replace(/<img/g, '<img width="100%"');
-        this.content = c2;
-        // console.log(this.content);
-      }
+          let c1 = e.replace(/<img width="100%"/g, '<img');
+          let c2 = c1.replace(/<img/g, '<img width="100%"');
+          this.content = c2;
+          // console.log(this.content);
+        },
+        CompleteCreate(){
+          var Data={
+            "ArticleTitle":this.ArticleTitle,
+            "AarticleSubtitle":this.AarticleSubtitle,
+            "ArticleCove":this.ArticleCove,
+            "content":this.content,
+          }
+          this.$store.state.CreateArticleTest=Data;
+          this.$router.push('/articleview');
+        },
       },
       directives: {
         ImgEdit: {//图片显示按长宽等比居中显示的指令方法

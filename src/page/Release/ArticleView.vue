@@ -8,7 +8,7 @@
           <p>文章标题</p>
        </div>
        <div class="shopheadedit" ui-sref="zx_article" onclick="onback()">
-          <img src="static/image/dian.png">
+          <img :src="this.CreateArticleTest.ArticleCove">
        </div>
     </div>
   <div class="Middle">
@@ -18,10 +18,10 @@
           <img src="static/image/gou.jpg" alt="">
         </div>
         <div class="ArticleTitle">
-          <p>文章的主要标题撒旦画撒大所大所大萨达撒</p>
+          <p>{{this.CreateArticleTest.ArticleTitle}}</p>
         </div>
         <div class="SmallTitle">
-          <p>撒大声地阿打算</p>
+          <p>{{this.CreateArticleTest.AarticleSubtitle}}</p>
         </div>
         <div class="Line1"></div>
         <div class="AarticleAuthor">
@@ -36,15 +36,16 @@
           <span>正文</span>
           <div class="Line2"></div>
         </div>
-        <div class="ArticleContent">
-          <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
+        <div class="ArticleContent" v-html="CreateArticleTest.content">
+<!--           <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
           <img src="static/image/Slides1.jpg" alt="">
           <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
           <img src="static/image/Slides2.jpg" alt="">
           <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
           <img src="static/image/Slides3.jpg" alt="">
           <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
-          <img src="static/image/Slides1.jpg" alt="">
+          <img src="static/image/Slides1.jpg" alt=""> -->
+          {{CreateArticleTest.content}}
         </div>
         </div>
         </scroller>
@@ -92,7 +93,7 @@
       },
       computed: {
         ...mapState([
-                  'PackageCartList'
+                  'PackageCartList','CreateArticleTest'
               ]),
       },
       props:[],
