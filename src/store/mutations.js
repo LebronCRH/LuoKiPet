@@ -6,7 +6,7 @@ import {
 	USER_ISLOGIN,
 	LOCAL_USER,
 } from './mutation-types.js'
-import {setStore,getStore,removeStore} from '@/config/mUtils.js'
+import {setStore, getStore,removeStore,setSessionStore, getSessionStore,removeSessionStore,} from '../config/mUtils'
 
 export default {
 	[ADD_PACKAGECART](state,{

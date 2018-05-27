@@ -9,6 +9,9 @@ import Home from './components/HelloFromVux'
 import routes from './router/index'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 import  { ToastPlugin } from 'vux'
+import initRichText from './common/initHTMLEditor';
+import 'font-awesome/css/font-awesome.css'
+initRichText();
 
 Vue.use(VueRouter)
 Vue.use(ToastPlugin)
@@ -32,7 +35,7 @@ const router = new VueRouter({
 // });
 router.beforeEach((to, from, next) => {
 	let Topath=to;
-	console.log(Topath);
+	// console.log(Topath);
 	var TopathSplit=Topath.fullPath.split("/");
 	if(TopathSplit.length==3)
 	{

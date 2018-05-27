@@ -25,6 +25,7 @@ const state = {
 	UserNode:null,//用户所在地址
 	UserSelectNode:null,//服务店用户选择的地址
 	UserChangeOrderPhone:null,//购买服务时用户更改的订单编号
+	CreateArticleTest:null,
 }
 
 export default new Vuex.Store({

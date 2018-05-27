@@ -30,6 +30,8 @@ import LuoKiFriend from '@/page/luokifriend/index.vue'
 import FriendChat from '@/page/luokifriend/friendchat.vue'
 import CreatePhoto from '@/page/Release/CreatePhoto.vue'
 import Setting from '@/page/home/childrens/profile/childrens/setting.vue' 
+import CreateArticle from '@/page/Release/CreateArticle.vue'
+import ArticleView from '@/page/Release/ArticleView.vue'
 
 // Routes
 export default [
@@ -174,5 +176,15 @@ export default [
     name:'createphoto',
     path:'/createphoto',
     component:CreatePhoto
+  },
+  {
+    name:'createarticle',
+    path:'/createarticle',
+    component:CreateArticle
+  },
+  {
+    name:'articleview',
+    path:'/articleview',
+    component:ArticleView
   }
 ]
