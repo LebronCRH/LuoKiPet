@@ -29,6 +29,7 @@ import Login from '@/page/login/login.vue'
 import LuoKiFriend from '@/page/luokifriend/index.vue'
 import FriendChat from '@/page/luokifriend/friendchat.vue'
 import CreatePhoto from '@/page/Release/CreatePhoto.vue'
+import Setting from '@/page/home/childrens/profile/childrens/setting.vue' 
 
 // Routes
 export default [
@@ -52,6 +53,10 @@ export default [
           components:{
             Conter:Profile
           },
+          children:[{
+            path:'setting',
+            component:Setting
+          }]
           },{
             path:'mall',
             components:{

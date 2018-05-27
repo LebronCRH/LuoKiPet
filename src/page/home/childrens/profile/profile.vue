@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="rating_page">
 	    <div class="UserBJ" ref="UserBJ" :class="isLogin?'Login':'NoLogin'">
     <ul class="TopMenu">
        <li class="MenuItem">
@@ -169,15 +169,22 @@
                    <p>商户入驻</p>
                    <p class="Rborder"></p>
                 </li>
-                <li class="li_Menu4">
+<!--                 <li class="li_Menu4"> -->
+                 <router-link :to="{ path: 'setting',append:true}" tag="li" class="li_Menu4">
                   <p><img src="static/image/Set.png"></p>
                    <p>设置</p>
-                </li>
+                   </router-link>
+<!--                 </li> -->
              </ul>
           </div>
+          <div style="width:100%;height:1rem;background:#fff;"></div>
       </div>
     </scroller>
     </div>
+
+           <transition name="router-slid" mode="out-in">
+            <router-view></router-view>
+        </transition>
 	</div>
 </template>
 
@@ -247,6 +254,19 @@
 </script>
 
 <style lang="scss" scoped="">
+  .rating_page{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #f7f3f7;
+      z-index:98;
+          p, span{
+              font-family: Helvetica Neue,Tahoma,Arial;
+          }
+  }
+
   .UserBJ{width:10rem;height:6rem;z-index:100;position:relative; 
   }
   .Login{background:url(../../../../../static/image/UserBJ.png) center center no-repeat;background-size:10rem auto;}
@@ -364,4 +384,12 @@
       }
 
    }
+
+    .router-slid-enter-active, .router-slid-leave-active {
+        transition: all .4s;
+    }
+    .router-slid-enter, .router-slid-leave-active {
+        transform: translate3d(2rem, 0, 0);
+        opacity: 0;
+    }
 </style>

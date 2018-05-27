@@ -3,7 +3,7 @@
   <div class="home_Middle">
   	  <router-view name="Conter"></router-view>
   </div>
-  <div class="Footer">
+  <div class="Footer" v-if="FooterShow">
     <div class="LuoKiFoot">
        <div class="MenuItem">
           <router-link :to="{ path: '/home/community'}">
@@ -79,7 +79,8 @@
 </template>
 
 <script>
-	
+	import {mapState, mapMutations} from 'vuex'
+
 	export default{
 		data(){
 			return{
@@ -90,6 +91,14 @@
 		mounted(){
 
 		},
+    computed: {
+      ...mapState([
+                  'LoginFrontPageUrl','isLogin','userInfo','FooterShow',
+              ]),
+      // Footer:function(){
+      //   return this.FooterShow;
+      // }
+    },
     methods:{
       ShowCreate:function(){
         this.CreateProjectshow=!this.CreateProjectshow;
@@ -103,7 +112,7 @@
 
 <style lang="scss" scoped>
   .home_Middle{
-  	position:absolute;left:0rem;bottom:1.3rem;width:100%;top:0rem;
+  	position:absolute;left:0rem;bottom:0rem;width:100%;top:0rem;
   }
   .Footer{
   	position: fixed;bottom:0px;left: 0px;z-index:99;width:100%;height:1.3rem;

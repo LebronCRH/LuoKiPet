@@ -73,6 +73,9 @@
             ]),
     },
     methods:{
+      ...mapMutations([
+          'LOCAL_USER',
+      ]),
       TagglePassword(){
         this.PasswordState=!this.PasswordState;
       },
@@ -97,8 +100,9 @@
             userLogin(this.UserName, this.UserPassword).then(res => {
               if(res!=null)
               {
-                this.$store.state.userInfo=res;
-                this.$store.state.isLogin=true;
+                // this.$store.state.userInfo=res;
+                // this.$store.state.isLogin=true;
+                this.LOCAL_USER(res);
                 this.$vux.toast.text('登录成功!', 'bottom')
                 this.$router.replace(this.LoginFrontPageUrl.fullPath);
                 console.log(res);

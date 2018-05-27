@@ -7,6 +7,7 @@ import App from './App'
 import store from './store/'
 import Home from './components/HelloFromVux'
 import routes from './router/index'
+import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 import  { ToastPlugin } from 'vux'
 
 Vue.use(VueRouter)
@@ -15,6 +16,37 @@ Vue.use(ToastPlugin)
 const router = new VueRouter({
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+// 	let user = JSON.parse(localStorage.getItem("user"))
+// 	if(to.meta.auth && !logined && !user.account) {
+// 		console.error("需先登录")
+// 		next(false);
+// 		router.push({
+// 			name: 'login'
+// 		});
+// 	} 
+// 	else {
+// 		next();
+// 	}
+// });
+router.beforeEach((to, from, next) => {
+	let Topath=to;
+	console.log(Topath);
+	var TopathSplit=Topath.fullPath.split("/");
+	if(TopathSplit.length==3)
+	{
+		// setStore("FooterShow",true);
+		store.commit("ToggleFooterShow", true);
+	}
+	else
+	{
+		// setStore("FooterShow",false);
+		store.commit("ToggleFooterShow", false);
+		console
+	}
+	next();
+});
 
 FastClick.attach(document.body)
 

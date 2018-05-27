@@ -6,11 +6,11 @@
 	<div>
 	            <div class="Co_BigDiv">
               <div class="BDMobile">
-              <router-link  :to="{ path: 'changeorderphone',append:true}">
-                 <span class="Msg">将订单凭证码发送至</span>
-                 <p ui-sref="Identity_verification">
-                 <span class="mobile">{{OrderPhone}}<i></i></span>
-                 </p>
+                 <router-link  :to="{ path: 'changeorderphone',append:true}">
+                   <span class="Msg">将订单凭证码发送至</span>
+                   <p ui-sref="Identity_verification">
+                   <span class="mobile">{{OrderPhone}}<i></i></span>
+                   </p>
                  </router-link>
               </div>
               <div class="ShopNmae">

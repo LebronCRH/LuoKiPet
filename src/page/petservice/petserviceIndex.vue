@@ -115,7 +115,7 @@
          </div>
       </div>
     </transition>
-    </div>
+</div>
 <div class="ModalZhe" v-show="ModalZhe" @click="CloseModal"></div>
 <div class="Middle">
     <scroller ref="scroller" lock-x height="-90" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">

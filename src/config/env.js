@@ -10,6 +10,7 @@
 let baseUrl = ''; 
 let routerMode = 'history';
 let imgBaseUrl = 'http://120.78.183.108:6786/Images/ServiceShop/';
+// let imgBaseUrl = 'http://localhost:8080/Images/ServiceShop/';
 let imgUserBaseUrl='http://localhost:8084';
 let imgPCBaseUrl='http://localhost:8080';
 let socketBaseUrl='http://www.joingp.com:3000/';

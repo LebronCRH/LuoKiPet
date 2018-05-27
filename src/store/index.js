@@ -3,16 +3,18 @@ import Vuex from 'vuex'
 import mutations from './mutations'
 import actions from './action'
 import getters from './getters'
+import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 
 Vue.use(Vuex)
 
 const state = {
 	PackageCartList: {}, // 加入购物车的商品列表
 	shopDetail: null, //商家详情信息
-	userInfo: null, //用户信息
+	userInfo: JSON.parse(getStore('userInfo')) || null, //用户信息
+	FooterShow:true,
 	shopid: null,//商铺id
 	cartId: null, //购物车id
-	isLogin: false,//是否登录
+	isLogin: getStore('userInfo')!=null?true : false,//是否登录
 	imgPath:null,//头像地址
 	removeAddress:[],//移除地址
 	addAddress:'',		//新增地址

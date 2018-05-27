@@ -4,7 +4,10 @@ import {
 	JIAN_PACKAGECART,
 	UPDATE_PACKAGECART,
 	USER_ISLOGIN,
+	LOCAL_USER,
 } from './mutation-types.js'
+import {setStore,getStore,removeStore} from '@/config/mUtils.js'
+
 export default {
 	[ADD_PACKAGECART](state,{
 		shopid,
@@ -126,5 +129,14 @@ export default {
 		else{
 			return true;
 		}
+	},
+	[LOCAL_USER](state,user){
+		setStore("userInfo", user);
+		console.log(user);
+		state.userInfo = user;
+		state.isLogin=true;
+	},
+	ToggleFooterShow(state,flag){
+		state.FooterShow=flag;
 	},
 }
