@@ -81,11 +81,12 @@ export default {
     p{line-height:1.5rem;color:#000;font-size:0.5rem;}
   }
   .shopheadedit{
-    width:1.5rem;height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
+    height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
     display:flex;justify-content:center;align-items:center;
     img{
       width:0.6rem;height:0.6rem;
     }
+    span{font-size:0.4rem;color:#fff;}
   }
   .rightSpanEdit{
     width:1.5rem;height:100%;position:absolute;top:0rem;right:0rem;z-index:99;display:flex;justify-content:center;align-items:center;

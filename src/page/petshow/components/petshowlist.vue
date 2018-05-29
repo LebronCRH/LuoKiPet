@@ -141,21 +141,23 @@ import {imgPCBaseUrl} from '@/config/env'
         inserted: function (el,binding) {
           var image=new Image();
           image.src=el.src; //获取图像路径
-          var width1=image.width; //获取图像宽度
-          var height1=image.height; //获取图像高度
-          var RequestW=binding.value.width/10*window.screen.width;
-          var RequestH=binding.value.height/10*window.screen.width;
-          var a1=height1/width1;
-          var a2=RequestH/RequestW;
-          if(a1>a2){
-            el.width=RequestW;
-            el.height=height1*RequestW/width1;
-            el.style.marginTop='-' + Math.round((el.height-RequestH)/2)+ 'px';
-          }else{
-            el.height=RequestH;
-            el.width=width1*RequestH/height1;
-            el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
-          }
+          image.onload=function(){
+            var width1=image.width; //获取图像宽度
+            var height1=image.height; //获取图像高度
+            var RequestW=binding.value.width/10*window.screen.width;
+            var RequestH=binding.value.height/10*window.screen.width;
+            var a1=height1/width1;
+            var a2=RequestH/RequestW;
+            if(a1>a2){
+              el.width=RequestW;
+              el.height=height1*RequestW/width1;
+              el.style.marginTop='-' + Math.round((el.height-RequestH)/2)+ 'px';
+            }else{
+              el.height=RequestH;
+              el.width=width1*RequestH/height1;
+              el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
+            }
+          };
         }
       }
     },

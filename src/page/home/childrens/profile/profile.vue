@@ -125,10 +125,10 @@
                    <p>售后</p>
                    <p class="Rborder"></p>
                 </li>
-                <li class="li_Menu3">
+                <router-link :to="{ path: 'address',append:true}" tag="li" class="li_Menu3">
                   <p><img src="static/image/shouhuonode.png"></p>
                    <p>地址</p>
-                </li>
+                </router-link>
              </ul>
           </div>
 

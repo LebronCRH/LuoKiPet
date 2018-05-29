@@ -30,6 +30,8 @@ import LuoKiFriend from '@/page/luokifriend/index.vue'
 import FriendChat from '@/page/luokifriend/friendchat.vue'
 import CreatePhoto from '@/page/Release/CreatePhoto.vue'
 import Setting from '@/page/home/childrens/profile/childrens/setting.vue' 
+import Address from '@/page/home/childrens/profile/childrens/address.vue' 
+import EditAddress from '@/page/home/childrens/profile/childrens/editaddress.vue' 
 import CreateArticle from '@/page/Release/CreateArticle.vue'
 import ArticleView from '@/page/Release/ArticleView.vue'
 
@@ -58,6 +60,13 @@ export default [
           children:[{
             path:'setting',
             component:Setting
+          },{
+            path:'address',
+            component:Address,
+            children: [{
+              path:'editaddress',
+              component:EditAddress
+            }]
           }]
           },{
             path:'mall',
