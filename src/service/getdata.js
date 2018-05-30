@@ -55,6 +55,14 @@ import fetch from '../config/fetch'
 		UserId:userid,
 	})
 
+	/*获取用户的收货地址*/
+	export const GetUserReceivingAddress=(userid)=>fetch('/user/GetUserReceivingAddress',{
+		UserId:userid,
+	})
+
+	/*添加用户的收获地址*/
+	export const AddUserReceivingAddress=(Obj)=>fetch('/user/AddUserReceivingAddress',Obj,'Post')
+
 //登录API结束 
 
 

@@ -9,14 +9,17 @@
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
       <ul class="ul_address">
-          <li class="addressItem">
+          <li class="addressItem" v-for="item in this.addressList">
               <div class="addressInfo">
-                  <p><span>陈仁辉</span><span>15007932468</span></p>
-                  <p><span>浙江 杭州 西湖区</span><span>益乐新村北五区81号</span></p>
+                  <p><span>{{item.Consignee}}</span><span>{{item.ContactPhone}}</span></p>
+                  <p><span>{{item.Area}}</span><span>{{item.DetailedNode}}</span></p>
               </div>
               <div class="addressEdit">
-                  <div class="Left">
+                  <div class="Left" v-if="item.IsDefault==1">
                     <img src="static/image/duigou.png" alt=""><span>默认地址</span>
+                  </div>
+                  <div class="Left" v-if="item.IsDefault!=1">
+                    <img src="static/image/duigouhui.png" alt=""><span>设为默认</span>
                   </div>
                   <div class="Right">
                     <div class="edit edit1">
@@ -45,6 +48,7 @@ import {mapState, mapMutations} from 'vuex'
 import headTop from '@/components/Head.vue'
 import lineMenu from '@/components/common/LineMenu.vue'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
+import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress} from '@/service/getdata'
 import { Scroller } from 'vux'
 export default {
     components: {
@@ -57,10 +61,11 @@ export default {
         Title:'我的收货地址',
         Color:0,
         MidType:0,
+        addressList:[],
       }
     },
     mounted(){
-
+      this.initData();
     },
     destroyed(){
 
@@ -78,6 +83,12 @@ export default {
         AddAddress(){
 
         },
+        async initData(){
+          await GetUserReceivingAddress(this.userInfo.UserID).then(response=>{
+            this.addressList=response;
+            console.log(response);
+          })
+        }
     }
 }
 </script>
@@ -110,8 +121,11 @@ export default {
 }
 .ul_address{
     width:100%;list-style:none;
+    .addressItem:nth-child(1){
+      margin-top:0rem;
+    }
     .addressItem{
-        width:100%;height:3.2rem;background:#fff;
+        width:100%;height:3.2rem;background:#fff;margin-top:0.3rem;
         .addressInfo{
             width:100%;height:2rem;padding:0rem 0.3rem;border-bottom:dotted 2px #9e9e9e;
             p{

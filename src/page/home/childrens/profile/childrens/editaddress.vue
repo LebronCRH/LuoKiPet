@@ -11,19 +11,19 @@
         <ul class="ul_Line">
           <li class="Item">
             <p>收货人</p>
-            <input type="text" placeholder="名字">
+            <input type="text" placeholder="姓名" v-model="addressItem.Consignee">
           </li>
           <li class="Item">
             <p>手机号码</p>
-            <input type="text" placeholder="11位手机号">
+            <input type="text" placeholder="11位手机号" v-model="addressItem.ContactPhone">
           </li>
           <li class="Item">
             <p>所在地区</p>
-            <input type="text" placeholder="地区信息" id="picker5">
+            <input type="text" ref="Area" placeholder="地区信息" id="picker5">
           </li>
           <li class="Item">
             <p>详细地址</p>
-            <input type="text" placeholder="街道门牌信息">
+            <input type="text" placeholder="街道门牌信息" v-model="addressItem.DetailedNode">
           </li>
         </ul>
 
@@ -43,6 +43,7 @@ import headTop from '@/components/Head.vue'
 import lineMenu from '@/components/common/LineMenu.vue'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 import { Scroller,Group,XSwitch} from 'vux'
+import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress,AddUserReceivingAddress} from '@/service/getdata'
 import picker from '@/assets/js/index'
 
 export default {
@@ -55,11 +56,19 @@ export default {
     },
     data () {
       return {
-        Title:'我的收货地址',
+        Title:'编辑收货地址',
         Color:0,
         Title2:'设置为默认地址',
         Setdefault:false,
         MidType:0,
+        addressItem:{
+          'UserID':'',
+          'Consignee':'',
+          'ContactPhone':'',
+          'Area':'',
+          'DetailedNode':'',
+          'IsDefault':0
+        }
       }
     },
     mounted(){
@@ -82,8 +91,23 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
-        AddAddress(){
-
+        async AddAddress(){
+          this.addressItem.UserID=this.userInfo.UserID;
+          this.addressItem.Area=this.$refs.Area.value;
+          if(this.Setdefault){
+            this.addressItem.IsDefault=1;
+          }
+          await AddUserReceivingAddress(this.addressItem).then(response=>{
+            if(response!=null)
+            {
+              console.log("成功");
+              this.$router.push('/home/profile/address');
+            }
+            else
+            {
+              console.log("失败");
+            }
+          })
         },
     }
 }
