@@ -19,7 +19,7 @@
           </li>
           <li class="Item">
             <p>所在地区</p>
-            <input type="text" placeholder="地区信息">
+            <input type="text" placeholder="地区信息" id="picker5">
           </li>
           <li class="Item">
             <p>详细地址</p>
@@ -43,6 +43,8 @@ import headTop from '@/components/Head.vue'
 import lineMenu from '@/components/common/LineMenu.vue'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 import { Scroller,Group,XSwitch} from 'vux'
+import picker from '@/assets/js/index'
+
 export default {
     components: {
     	headTop,
@@ -61,7 +63,11 @@ export default {
       }
     },
     mounted(){
-
+      var nameEl = document.getElementById('picker5');
+      picker.init(nameEl);
+      nameEl.addEventListener('click', function () {
+        picker.show();
+      });
     },
     destroyed(){
 

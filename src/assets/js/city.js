@@ -1,4 +1,4 @@
-var city = [
+export const city = [
   {
     "name": "北京",
     "sub": [

@@ -1,4 +1,10 @@
-var nameEl = document.getElementById('picker5');
+// var nameEl = document.getElementById('picker5');
+import {city} from '@/assets/js/city'
+
+Picker.prototype.init=function(obj){
+  this.nameEl=obj;
+  // console.log(this.nameEl);
+}
 
 var first = []; /* 省，直辖市 */
 var second = []; /* 市 */
@@ -37,12 +43,13 @@ var picker = new Picker({
 	title: '地址选择'
 });
 
+
 picker.on('picker.select', function (selectedVal, selectedIndex) {
   var text1 = first[selectedIndex[0]].text;
   var text2 = second[selectedIndex[1]].text;
   var text3 = third[selectedIndex[2]] ? third[selectedIndex[2]].text : '';
-
-	nameEl.innerText = text1 + ' ' + text2 + ' ' + text3;
+  // console.log(this);
+	this.nameEl.value = text1 + ' ' + text2 + ' ' + text3;
 });
 
 picker.on('picker.change', function (index, selectedIndex) {
@@ -104,9 +111,7 @@ picker.on('picker.valuechange', function (selectedVal, selectedIndex) {
   console.log(selectedIndex);
 });
 
-nameEl.addEventListener('click', function () {
-	picker.show();
-});
+export default picker
 
 
 
