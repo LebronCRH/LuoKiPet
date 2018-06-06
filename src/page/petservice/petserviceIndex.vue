@@ -36,6 +36,15 @@
                </ul>
          </div>
          <div class="Right">
+             <div class="ul_AreaItem" v-if="Area!=0">
+                <p class="FirstEn">#</p>
+                <ul class="SmallArea">
+                    <li class="SmallAreaItem" :class="CurrentNode==Area?'active':''" @click="SelectAreaAllNode(Area)">
+                        <span>全部</span>
+                        <img v-show="CurrentNode==Area" src="static/image/yes.png">
+                    </li>
+                </ul>
+             </div>
              <div class="ul_AreaItem" v-for="item in CurrentNodeList">
                <p class="FirstEn">{{item.FirstEN}}</p>
                <ul class="SmallArea">
@@ -145,11 +154,12 @@
 </template>
 
 <script>
+  import {mapState, mapMutations} from 'vuex'
   import serviceshoplist from '@/page/petservice/components/serviceshoplist'
   import axios from 'axios'
   import loading from '@/components/common/loading.vue'
   import { Swiper, Scroller, Spinner } from 'vux'
-  import {GetAllPetServiceShop,GetAllShopScreen,GetAllCityArea} from '../../service/getdata'  
+  import {GetAllPetServiceShop,GetAllShopScreen,GetAllCityArea,GetPetShopByCityAndJwd,GetMCityViewModel,PostPetShopByQueryModel} from '../../service/getdata'  
 
   export default {
       components: {
@@ -187,13 +197,36 @@
           MerchantCategoryList:[],
           SpecialShopCategoryList:[],
           YouHuiActiveCategoryList:[],
+          QueryViewModel:{
+            CityName:'',
+            lng:'',
+            lat:'',
+            AreaId:0,
+            NodeId:0,
+            PageIndex:1,
+            PageSize:10,
+          },
         }
       },
       mounted(){
+        this.QueryViewModel.CityName=this.CurrentUserNode.name;
+        this.QueryViewModel.lng=this.CurrentUserNode.longitude;
+        this.QueryViewModel.lat=this.CurrentUserNode.latitude;
         this.initData();
       },
       computed: {
-    
+        ...mapState([
+                'PackageCartList','UserNode','UserSelectNode',
+            ]),
+        CurrentUserNode:function(){
+            if(this.UserSelectNode){
+              return this.UserSelectNode;
+            }
+            else
+            {
+              return this.UserNode;
+            }
+          },
       },
       props:[],
       methods: {
@@ -205,11 +238,23 @@
           this.showLoading = false;
         },
         async initData(){
-          await GetAllPetServiceShop().then(response=>{
+          // await GetAllPetServiceShop().then(response=>{
+          //   this.shoplistdata=response;
+          //   console.log(response[0].ShopName);
+          // });
+          // await GetPetShopByCityAndJwd("杭州",120.206911,30.297499).then(response=>{
+          // await GetPetShopByCityAndJwd(this.CurrentUserNode.name,this.CurrentUserNode.longitude,this.CurrentUserNode.latitude).then(response=>{
+          //   this.shoplistdata=response;
+          //   console.log(response);
+          // });
+          await PostPetShopByQueryModel(this.QueryViewModel).then(response=>{
             this.shoplistdata=response;
-            console.log(response[0].ShopName);
+            console.log(response);
           });
-          await GetAllCityArea().then(response=>{
+          // await GetAllCityArea().then(response=>{//MongoDB数据库的数据获取
+          await GetMCityViewModel(this.CurrentUserNode.name).then(response=>{//SQL数据库的数据获取
+            if(response!=null)
+            {
               this.Arealist=response.AreaList; 
               this.Arealist.forEach((item,index)=>{
                 item.AreaList.forEach((item2,index)=>{
@@ -228,6 +273,7 @@
                 })
                 this.CurrentNodeList=this.CurrentAllNodeList;
               })
+            }
           });
           await GetAllShopScreen().then(response=>{
             this.MerchantCategoryList=response.MerchantCategory;
@@ -303,6 +349,13 @@
         },
         ChangeAreaAll(){
         	this.CurrentNodeList=this.CurrentAllNodeList;
+          this.Area=0;
+        },
+        SelectAreaAllNode(area)
+        {
+          this.CurrentNode=area;
+          this.sortBy='';
+          this.ModalZhe=false;
         },
         PageSlide (pos) {
 
@@ -321,13 +374,26 @@
         	this.ModalZhe=false;
         	this.sortBy='';
         },
-        UpPagedade () {
+        async UpPagedade () {
           console.log(66);
-          this.$nextTick(() => {
+          this.QueryViewModel.PageIndex+=1;
+          await PostPetShopByQueryModel(this.QueryViewModel).then(response=>{
           setTimeout(() => {
+            response.forEach(item=>{
+              this.shoplistdata.push(item);
+            });
             this.$refs.scroller.donePullup()
           }, 1000)
-          })
+            // response.forEach(item=>{
+            //   this.shoplistdata.push(item);
+            // });
+            // this.$refs.scroller.donePullup()
+          });
+          // this.$nextTick(() => {
+          // setTimeout(() => {
+          //   this.$refs.scroller.donePullup()
+          // }, 1000)
+          // })
         },
         DownPageData () {
           console.log("555");

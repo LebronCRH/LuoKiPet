@@ -4,16 +4,19 @@
    <router-link :to="'/petserviceIndex/serviceshopdetails/'+item.Shop_id">
    <div class="ps_liInfo">
      <div class="shop_img">
-       <img :src="imgBaseUrl + item.ShopImg[0]">
+<!--        <img :src="imgBaseUrl + item.ShopImg[0]"> -->
+       <img :src="GetImgList(item.ShopImg)">
      </div>
    <div class="ps_Right">
    <p class="shoptitle">{{item.ShopName}}</p>
      <div class="ps_m">
-       <i></i><span class="xinji">0.0</span>
+        <i></i><span class="xinji">{{FormatEvaluate(item.Evaluate)}}</span> 
+<!--             <i></i><span class="xinji">{{item.Evaluate}}</span> -->
        <span class="price">￥{{item.MinPrice}}起</span>
      </div>
      <div class="ps_b">
-       <span class="s1">{{item.Node}}</span><span class="s2">{{item.Distance}}</span><span class="s3">已售{{item.SaleNum}}</span>
+       <span class="s1">{{item.Node}}</span><span class="s2">{{FormatDistance(item.Distance)}}.km</span><span class="s3">已售{{item.SaleNum}}</span>
+<!--        <span class="s1">{{item.Node}}</span><span class="s2">{{item.Distance}}.km</span><span class="s3">已售{{item.SaleNum}}</span> -->
      </div>
    </div>
    </div>
@@ -42,7 +45,22 @@ import {imgBaseUrl} from '@/config/env'
         },
         props: ['shoplistdata'],
         methods: {
-            
+            GetImgList(imglist){
+              var firstimg=imglist.split(",")[0];
+              return firstimg;
+            },
+            FormatDistance(val){
+              var value=val.toFixed(2);
+              return value;
+            },
+            FormatEvaluate(val){
+              if(val%1===0){
+                return val+'.0';
+              }
+              else{
+                return val;
+              }
+            }
         }
     }
 </script>

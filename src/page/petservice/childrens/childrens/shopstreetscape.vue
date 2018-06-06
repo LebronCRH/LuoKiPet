@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import {GetPetShopItemByShopId} from '@/service/getdata'  
 export default {
     components: {
 
@@ -27,6 +28,7 @@ export default {
     data () {
       return {
       	panorama:null,
+        CurrentShopInfo:null,
       }
     },
     mounted(){
@@ -40,11 +42,20 @@ export default {
     	async initData(){
     		this.InitMap();
         },
-        InitMap(){
-        	  this.panorama = new BMap.Panorama('panorama');
-              this.panorama.setPosition(new BMap.Point(116.038336,28.688249));//坐标点在天安门
-
-              var labelPosition = new BMap.Point(116.038336,28.688249);
+       async InitMap(){
+        await GetPetShopItemByShopId(this.$route.query.shopid).then(response=>{
+          this.CurrentShopInfo=response;
+        })
+        	  // this.panorama = new BMap.Panorama('panorama');
+           //    this.panorama.setPosition(new BMap.Point(116.038336,28.688249));//师大的地图位置
+           //    var labelPosition = new BMap.Point(116.038336,28.688249);
+           //    var labelOptions = {
+           //        position: labelPosition,
+           //      altitude:5
+           //    };//设置标注点的经纬度位置和高度
+            this.panorama = new BMap.Panorama('panorama');
+              this.panorama.setPosition(new BMap.Point(this.CurrentShopInfo.lng,this.CurrentShopInfo.lat));//
+              var labelPosition = new BMap.Point(this.CurrentShopInfo.lng,this.CurrentShopInfo.lat);
               var labelOptions = {
                   position: labelPosition,
                 altitude:5

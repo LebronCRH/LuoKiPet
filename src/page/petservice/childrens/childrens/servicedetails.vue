@@ -1,12 +1,12 @@
 <template>
 	<div class="rating_page">
-	<head-top :Title="Service.serviceName" :Color="Color" :MidType="MidType"></head-top>
+	<head-top :Title="Service.MShopService.ServiceName" :Color="Color" :MidType="MidType"></head-top>
 	<div class="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
         <div class="psd_details">
    <p class="serviceTitle">
-    <span>{{Service.serviceName}}</span>
+    <span>{{Service.MShopService.ServiceName}}</span>
      <img src="static/image/discount.png">
    </p>
    <p class="service_saleNumAndPj"><span class="saleNum">已售0</span><span class="mid">|</span><span class="commentNum">暂无评价</span></p>
@@ -206,7 +206,7 @@
    <div v-if="CartTotalNum>0" class="Right Active">去结算</div>
    <div v-else class="Right">去结算</div>
 </div>
-<buyservice :ServiceId='Service.ForServiceID' ref="buyservice"></buyservice>
+<buyservice :ServiceId='Service.MShopService.ServiceId' ref="buyservice"></buyservice>
 <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
@@ -218,7 +218,7 @@ import axios from 'axios'
 import headTop from '@/components/Head.vue'
 import {mapState, mapMutations} from 'vuex'
 import { Scroller } from 'vux'
-import {GetShopServiceInfoByServiceID} from '@/service/getdata' 
+import {GetShopServiceDetail} from '@/service/getdata' 
 import buyservice from '@/page/petservice/components/buyservice.vue'
 export default {
     components: {
@@ -233,10 +233,12 @@ export default {
         Color:0,
         MidType:1,
         Service:{
-        	serviceName:null,
-        	Category:null,
-        	ForServiceID:null,
-        	Category:null
+        	// serviceName:null,
+        	// Category:null,
+        	// ForServiceID:null,
+        	// Category:null
+          MShopService:null,
+          MServicePackageList:[], 
         },
         servicelistdata:[],
         ShopPackageCartList:[],
@@ -282,16 +284,12 @@ export default {
         this.$refs.buyservice.modalTaggle();
         },
     	  async GetShopList(){
-          // axios.get("./static/data/ServiceCategory.json").then((response)=>{
-          //   this.servicelistdata=response.data;
-          //   this.servicelistdata.forEach((item,index)=>{
-          //   	if(item.ForServiceID==this.$route.query.id){
-          //   		this.Service=item;
-          //   	}
-          //   })
+          // await GetShopServiceInfoByServiceID(this.$route.params.serviceid).then(response=>{
+          //   this.Service=response;
           // })
-          await GetShopServiceInfoByServiceID(this.$route.params.serviceid).then(response=>{
-            this.Service=response;
+          await GetShopServiceDetail(this.$route.params.serviceid).then(response=>{
+              this.Service=response;
+              console.log(response);
           })
         },
         TagglePackageCartList(){

@@ -20,7 +20,7 @@
 <div class="MapShopInfo" v-show="showShopInfo">
 <router-link :to="'/petserviceIndex/serviceshopdetails/'+CurrentShopInfo.Shop_id">
     <div class="ShopImg" ui-sref="service_shopdetails({id:ShopInfo.Shop_id})">
-      <img :src="imgBaseUrl+CurrentShopInfo.ShopImg[0]">
+      <img :src="GetImgFirst(CurrentShopInfo.ShopImg)">
     </div>
     </router-link>
     <div class="ShopContent">
@@ -30,7 +30,7 @@
     </div>
     <p class="ShopNode">{{CurrentShopInfo.Address}}</p>
         </div>
-        <router-link :to="{ path: 'ShopStreetscape',append:true}">
+        <router-link :to="{ path: 'ShopStreetscape',query:{shopid:CurrentShopInfo.Shop_id},append:true}">
     <div class="daohang" ui-sref="ShopStreetscape">
       <img src="static/image/daohang.png">
       <span>导航</span>
@@ -38,25 +38,6 @@
     </router-link>
 </div>
 </transition>
-
-<!-- <transition name="showlist">
-<div class="MapShopInfo" v-show="showShopInfo">
-    <div class="ShopImg" ui-sref="service_shopdetails({id:ShopInfo.Shop_id})">
-      <img :src="'static/image/'+CurrentShopInfo.ShopImg[0]">
-    </div>
-    <div class="ShopContent">
-    <p class="ShopName" ui-sref="service_shopdetails({id:ShopInfo.Shop_id})">{{CurrentShopInfo.ShopName}}</p>  <div class="ShopCommeng">
-       <img src="static/image/star1.png">
-       <span>3人点评</span>
-    </div>
-    <p class="ShopNode">{{CurrentShopInfo.Address}}</p>
-        </div>
-    <div class="daohang" ui-sref="ShopStreetscape">
-      <img src="static/image/daohang.png">
-      <span>导航</span>
-    </div>
-</div>
-</transition> -->
 
 </div>
 <transition name="router-slid" mode="out-in">
@@ -67,7 +48,7 @@
 
 <script>
 import axios from 'axios'
-import {GetAllPetServiceShop,GetAllShopScreen,GetAllCityArea} from '@/service/getdata'  
+import {GetAllPetServiceShop,GetAllShopScreen,GetAllCityArea,GetPetShopItemByShopId,GetPetShopMapByShopId} from '@/service/getdata'  
 import {imgBaseUrl} from '@/config/env'
 export default {
     components: {
@@ -90,7 +71,7 @@ export default {
         CurrentShop:null,
         CurrentShopInfo:{
         	Shop_id:0,
-        	ShopImg:[],
+        	ShopImg:null,
         	ShopName:"",
         	Address:"",
         },
@@ -124,7 +105,7 @@ export default {
         },
         async GetShopList(){
           // axios.get("./static/data/PetServiceShopList.json").then((response)=>{
-          await GetAllPetServiceShop().then(response=>{
+          await GetPetShopMapByShopId(this.$route.query.shopid).then(response=>{
             this.NearAllShop=response;
             this.NearAllShop.forEach((item,index)=>{
             	if(item.Shop_id==this.$route.query.shopid){
@@ -195,8 +176,6 @@ export default {
                      this.map.panTo(marker.target.point, 16);
                      this.CurrentShop=marker.target;
                      console.log(this.CurrentShop);
-
-
                      this.NearAllShop.forEach((item,index)=>{
                         if(item.lng==marker.target.point.lng && item.lat==marker.target.point.lat)
                         {
@@ -220,6 +199,38 @@ export default {
         ShowShopInfo(){
         	this.showShopInfo=true;
         },
+        GetImgList(imglist){
+          if(imglist!=null)
+          {
+            var firstimg=imglist.split(",");
+            return firstimg.slice(1,15);
+          }
+          else{
+            return null;
+          }
+        },
+        GetImgFirst(imglist){
+          if(imglist!=null)
+          {
+            var firstimg=imglist.split(",")[0];
+            return firstimg;
+          }
+          else{
+            return null;
+          }
+        },
+        FormatDistance(val){
+              var value=val.toFixed(2);
+              return value;
+        },
+        FormatEvaluate(val){
+              if(val%1===0){
+                return val+'.0';
+              }
+              else{
+                return val;
+              }
+        }
     }
 }
 </script>

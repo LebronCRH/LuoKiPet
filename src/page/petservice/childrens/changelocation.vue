@@ -39,9 +39,9 @@
         <li class="HistoryItem" v-for="item in placeHistory" @click="SelectPlaceHistoryItem(item)"><p class="Top">{{item.name}}</p><p class="Bottom">{{item.address}}</p></li>
       </ul>
 
-      <ul class="ul_NodeHistory">
+<!--       <ul class="ul_NodeHistory">
         <li class="HistoryItem" v-for="item in chat" ><p class="Top">{{item}}</p></li>
-      </ul>
+      </ul> -->
     </div>
 
     <div class="State2" ref="State2" v-show="SerachFoucs && !SerachNodeLength">
@@ -145,7 +145,7 @@
           groupcity:[],
           hotcity:[],
           SelectCityShow:false,
-          chat:["12345","34456"],
+          // chat:["12345","34456"],
           socket:null,
           messagesend:"啊哈哈哈哈",
         }

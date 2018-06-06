@@ -128,6 +128,8 @@ import {imgPCBaseUrl} from '@/config/env'
       async initData(){
         await GetLoveShowPhotos().then(response=>{
           this.LoveShowList=response;
+          // this.showLoading=false;
+          this.$emit('hideLoading');
         })
       },
       fenge(val){

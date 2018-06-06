@@ -229,7 +229,7 @@ export default {
     }
   }
   .Input{
-    width:6.5rem;height:1rem;border:solid 1px #ddd;border-radius:0.1rem;background:#f3f3f3;padding:0rem 0.2rem;
+    width:6.5rem;height:1rem;border:solid 1px #ddd;border-radius:0.1rem;background:#f3f3f3;padding:0rem 0.2rem;display:flex;align-items:center;
     input{
       padding:0rem;margin:0rem;border:none;font-size:0.4rem;background:none;
     }

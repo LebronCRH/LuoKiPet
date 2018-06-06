@@ -18,7 +18,7 @@
               </div>
               <div class="ServiceInfo">
                 <p class="serviceName">
-                  <img src="static/image/discount.png"><span>{{Service.serviceName}}</span>
+                  <img src="static/image/discount.png"><span>{{Service.MShopService.ServiceName}}</span>
                 </p>
                 <p class="serviceCate">
                 <span class="name">{{BuyPackage.name}}</span><span class="num">x{{BuyNum}}</span>
@@ -76,6 +76,7 @@ import axios from 'axios'
 import headTop from '@/components/Head.vue'
 import {mapState, mapMutations} from 'vuex'
 import { Scroller,XSwitch,Group  } from 'vux'
+import {GetShopServiceDetail} from '@/service/getdata' 
 
 export default {
     components: {
@@ -91,10 +92,8 @@ export default {
         Color:0,
         MidType:1,
         Service:{
-        	serviceName:null,
-        	Category:null,
-        	ForServiceID:null,
-        	Category:null
+          MShopService:null,
+          MServicePackageList:null,
         },
         servicelistdata:[],
         Title2:"可用30洛奇豆抵扣￥3",
@@ -105,9 +104,11 @@ export default {
         Discount:10,
         UseDiscount:true,
         BuyPackage:{
+          PackageId:0,
         	name:null,
         	sprice:0,
-        	oldprice:0
+        	Oldprice:0,
+          ForServiceID:0,
         }
       }
     },
@@ -182,16 +183,25 @@ export default {
         },
         BuyService(){
         },
-        GetOrderData(){
-          axios.get("./static/data/ServiceCategory.json").then((response)=>{
-            this.servicelistdata=response.data;
-            this.servicelistdata.forEach((item,index)=>{
-            	if(item.ForServiceID==this.$route.query.ServiceId){
-            		this.Service=item;
-            		this.BuyPackage=item.Category[this.$route.query.Index];
-            	}
+        async GetOrderData(){
+          // axios.get("./static/data/ServiceCategory.json").then((response)=>{
+          //   this.servicelistdata=response.data;
+          //   this.servicelistdata.forEach((item,index)=>{
+          //   	if(item.ForServiceID==this.$route.query.ServiceId){
+          //   		this.Service=item;
+          //   		this.BuyPackage=item.Category[this.$route.query.Index];
+          //   	}
+          //   })
+          // });
+          await GetShopServiceDetail(this.$route.query.ServiceId).then(response=>{
+            this.Service=response;
+            this.Service.MServicePackageList.forEach(item=>{
+              if(item.PackageId==this.$route.query.PackageId)
+              {
+                this.BuyPackage=item;
+              }
             })
-          })
+          });
         },
     }
 }

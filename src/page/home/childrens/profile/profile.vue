@@ -122,12 +122,12 @@
                 </li>
                 <li class="li_Menu3 Item">
                   <p><img src="static/image/shouhou.png"></p>
-                   <p>售后</p>
+                   <p>售后服务</p>
                    <p class="Rborder"></p>
                 </li>
                 <router-link :to="{ path: 'address',append:true}" tag="li" class="li_Menu3">
                   <p><img src="static/image/shouhuonode.png"></p>
-                   <p>地址</p>
+                   <p>收获地址</p>
                 </router-link>
              </ul>
           </div>
@@ -172,7 +172,7 @@
 <!--                 <li class="li_Menu4"> -->
                  <router-link :to="{ path: 'setting',append:true}" tag="li" class="li_Menu4">
                   <p><img src="static/image/Set.png"></p>
-                   <p>设置</p>
+                   <p>洛奇设置</p>
                    </router-link>
 <!--                 </li> -->
              </ul>

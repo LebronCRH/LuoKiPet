@@ -63,7 +63,7 @@
   import loading from '@/components/common/loading.vue'
 	import axios from 'axios'
   import { Swiper, Scroller, Spinner } from 'vux'
-  import {GetAllPetServiceShop,cityGuess} from '../../../../service/getdata'
+  import {GetAllPetServiceShop,cityGuess,GetPetShopByCityAndJwd} from '../../../../service/getdata'
 
 	export default {
 		data () {
@@ -75,6 +75,7 @@
           pulldownStatus: 'default',
           pullupStatus: 'default'
         },
+        imgliststr:'123,456,789',
 			}
 		},
 		 components: {
@@ -112,13 +113,14 @@
         this.$router.push('/petserviceIndex/changelocation');
       },
       async initData(){
-        this.GetShopList();
         if(this.UserNode==null)
         {
           await cityGuess().then(res => {
               this.$store.state.UserNode=res;
+              console.log(res);
           })
-        }
+        };
+        this.GetShopList();
       },
       initPackCartData(){
         Object.keys(this.PackageCartList).forEach(shopid=>{
@@ -135,10 +137,15 @@
       async GetShopList () {
       	// axios.get("./static/data/PetServiceShopList.json").then((response)=>{
         // axios.get("api/GetAllPetServiceShop").then((response)=>{ 
-        await GetAllPetServiceShop().then(response=>{
-      		this.shoplistdata=response;
-      		console.log(response);
-      	})
+       //  await GetAllPetServiceShop().then(response=>{
+      	// 	this.shoplistdata=response;
+      	// 	console.log(response);
+      	// })
+        // await GetPetShopByCityAndJwd("杭州",120.206911,30.297499).then(response=>{
+        await GetPetShopByCityAndJwd(this.CurrentNode.name,this.CurrentNode.longitude,this.CurrentNode.latitude).then(response=>{
+          this.shoplistdata=response;
+          console.log(response);
+        })
         console.log("完成了");
         await this.initPackCartData();
         this.hideLoading();
@@ -172,58 +179,58 @@
 </script>
 
 <style lang="less" scoped="">
-// @import '../../../../style/mixin';
-.service_Head{
-	width:100%;height:2.2rem;z-index:99;position:absolute;top:0rem;left:0rem;
-}
-    .Middle{
-    	position:absolute;top:2.2rem;left:0rem;bottom:0rem;width:100%;
-    }
-	.ps_Indextop{
-	width:10rem;height:1rem;padding:0rem 0.5rem;background-color:#fff;display:flex;position:relative;
-    align-items: center;
-	span{height:1rem;line-height:1rem;color:#555555;font-size:0.4rem;float:left;}
-  img{width:0.4rem;height:0.4rem;}
-	div{width:0.7rem;height:1rem;float:right;position:absolute;right:0.2rem;
-    a{width:100%;height:100%;display:flex;align-items:center;
-		img{width:100%;height:70%;float:left;}
-    .Num{position:absolute;width:0.4rem;height:0.4rem;border-radius:0.2rem;top:0rem;right:0rem;background-color:#f75952;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.2rem;line-height:0.4rem;}
+  // @import '../../../../style/mixin';
+  .service_Head{
+  	width:100%;height:2.2rem;z-index:99;position:absolute;top:0rem;left:0rem;
   }
-	}
-}
-.ps_serach{height:1.2rem;width:10rem;padding:0rem 0.2rem 0rem 0.5rem;background-color:#fff;display:flex;align-items:center;
-	.ps_divserach{width:100%;height:1rem;border-radius:0.2rem;background-color:#f7f7ff;
-		img{height:1rem;width:1rem;float:left;padding:0.2rem;    box-sizing: border-box;}
-		input{width:8rem;height:1rem;padding:0rem;margin:0rem;float:left;border:none;color:#e0e0e0;background-color:#f7f7ff;}
-	}
-}
-.ps_Img{width:10rem;height:5rem;
-	img{width:100%;height:100%;}
-}
-.ps_topcate{width:10rem;height:1.2rem;padding:0rem 0.3rem;background-color:#fff;margin-top:0.2rem;margin-bottom:0.1rem;box-sizing:border-box;
-	.ps_ulcate{height:1.2rem;width:6.6rem;float:left;list-style:none;
-		li{height:1.2rem;padding:0rem 0.15rem;margin-right:0.5rem;float:left;line-height:1.2rem;font-size:0.43rem;color:#000;box-sizing:padding-box;border-bottom:solid 0.1rem #fff;text-align:center;
-			&.active{border-bottom:solid 0.1rem #f6443c;color:#f6443c;}
-		}
-	}
-	.AllShop{height:1.2rem;width:2rem;float:right;line-height:1.2rem;font-size:0.37rem;color:#afb0af;display:flex;align-items:center;
-		i{background:url(../../../../assets/image/right_.png);background-size:0.3rem 0.3rem;display:inline-block;width:0.3rem;height:0.3rem;margin-left:0.2rem;margin-top:-0.1rem;}
-	}
-}
-.shop_back_svg_container{
-        position: fixed;
-        // @include wh(100%, 100%);
-        width:100%;height:100%;
-        img{
-            // @include wh(100%, 100%);
-            width:100%;height:100%;
-        }
+      .Middle{
+      	position:absolute;top:2.2rem;left:0rem;bottom:0rem;width:100%;
+      }
+  	.ps_Indextop{
+  	width:10rem;height:1rem;padding:0rem 0.5rem;background-color:#fff;display:flex;position:relative;
+      align-items: center;
+  	span{height:1rem;line-height:1rem;color:#555555;font-size:0.4rem;float:left;}
+    img{width:0.4rem;height:0.4rem;}
+  	div{width:0.7rem;height:1rem;float:right;position:absolute;right:0.2rem;
+      a{width:100%;height:100%;display:flex;align-items:center;
+  		img{width:100%;height:70%;float:left;}
+      .Num{position:absolute;width:0.4rem;height:0.4rem;border-radius:0.2rem;top:0rem;right:0rem;background-color:#f75952;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.2rem;line-height:0.4rem;}
     }
-    .router-slid-enter-active, .router-slid-leave-active {
-        transition: all .4s;
-    }
-    .router-slid-enter, .router-slid-leave-active {
-        transform: translate3d(2rem, 0, 0);
-        opacity: 0;
-    }
+  	}
+  }
+  .ps_serach{height:1.2rem;width:10rem;padding:0rem 0.2rem 0rem 0.5rem;background-color:#fff;display:flex;align-items:center;
+  	.ps_divserach{width:100%;height:1rem;border-radius:0.2rem;background-color:#f7f7ff;
+  		img{height:1rem;width:1rem;float:left;padding:0.2rem;    box-sizing: border-box;}
+  		input{width:8rem;height:1rem;padding:0rem;margin:0rem;float:left;border:none;color:#e0e0e0;background-color:#f7f7ff;}
+  	}
+  }
+  .ps_Img{width:10rem;height:5rem;
+  	img{width:100%;height:100%;}
+  }
+  .ps_topcate{width:10rem;height:1.2rem;padding:0rem 0.3rem;background-color:#fff;margin-top:0.2rem;margin-bottom:0.1rem;box-sizing:border-box;
+  	.ps_ulcate{height:1.2rem;width:6.6rem;float:left;list-style:none;
+  		li{height:1.2rem;padding:0rem 0.15rem;margin-right:0.5rem;float:left;line-height:1.2rem;font-size:0.43rem;color:#000;box-sizing:padding-box;border-bottom:solid 0.1rem #fff;text-align:center;
+  			&.active{border-bottom:solid 0.1rem #f6443c;color:#f6443c;}
+  		}
+  	}
+  	.AllShop{height:1.2rem;width:2rem;float:right;line-height:1.2rem;font-size:0.37rem;color:#afb0af;display:flex;align-items:center;
+  		i{background:url(../../../../assets/image/right_.png);background-size:0.3rem 0.3rem;display:inline-block;width:0.3rem;height:0.3rem;margin-left:0.2rem;margin-top:-0.1rem;}
+  	}
+  }
+  .shop_back_svg_container{
+          position: fixed;
+          // @include wh(100%, 100%);
+          width:100%;height:100%;
+          img{
+              // @include wh(100%, 100%);
+              width:100%;height:100%;
+          }
+      }
+      .router-slid-enter-active, .router-slid-leave-active {
+          transition: all .4s;
+      }
+      .router-slid-enter, .router-slid-leave-active {
+          transform: translate3d(2rem, 0, 0);
+          opacity: 0;
+      }
 </style>

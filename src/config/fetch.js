@@ -26,34 +26,34 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch',request
 		}
 	}
 
-	if (window.fetch && method == 'fetch') {
-		let requestConfig = {
-			// credentials: 'include',
-			credentials: 'true',
-			method: type,
-			headers: {
-				// 'Access-Control-Allow-Origin':'*',
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			mode: "cors",
-			cache: "force-cache"
-		}
+	// if (window.fetch && method == 'fetch') {
+	// 	let requestConfig = {
+	// 		// credentials: 'include',
+	// 		credentials: 'true',
+	// 		method: type,
+	// 		headers: {
+	// 			// 'Access-Control-Allow-Origin':'*',
+	// 			'Accept': 'application/json',
+	// 			'Content-Type': 'application/json'
+	// 		},
+	// 		mode: "cors",
+	// 		cache: "force-cache"
+	// 	}
 
-		if (type == 'POST') {
-			Object.defineProperty(requestConfig, 'body', {
-				value: JSON.stringify(data)
-			})
-		}
+	// 	if (type == 'POST') {
+	// 		Object.defineProperty(requestConfig, 'body', {
+	// 			value: JSON.stringify(data)
+	// 		})
+	// 	}
 		
-		try {
-			const response = await fetch(url, requestConfig);
-			const responseJson = await response.json();
-			return responseJson
-		} catch (error) {
-			throw new Error(error)
-		}
-	} else {
+	// 	try {
+	// 		const response = await fetch(url, requestConfig);
+	// 		const responseJson = await response.json();
+	// 		return responseJson
+	// 	} catch (error) {
+	// 		throw new Error(error)
+	// 	}
+	// } else {
 		return new Promise((resolve, reject) => {
 			let requestObj;
 			if (window.XMLHttpRequest) {
@@ -68,7 +68,11 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch',request
 			}
 
 			requestObj.open(type, url, true);
-			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
+			if(type=='POST')
+			{
+				requestObj.setRequestHeader("Content-type", "application/json");
+			}
+			// requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {
@@ -85,5 +89,5 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch',request
 				}
 			}
 		})
-	}
+	// }
 }

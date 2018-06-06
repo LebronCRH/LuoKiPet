@@ -18,14 +18,16 @@
                   <div class="Left" v-if="item.IsDefault==1">
                     <img src="static/image/duigou.png" alt=""><span>默认地址</span>
                   </div>
-                  <div class="Left" v-if="item.IsDefault!=1">
+                  <div class="Left" v-if="item.IsDefault!=1" @click="UpdateDefault(item.AddressID)">
                     <img src="static/image/duigouhui.png" alt=""><span>设为默认</span>
                   </div>
                   <div class="Right">
-                    <div class="edit edit1">
+                   <!-- <div class="edit edit1"> -->
+                    <router-link :to="{ path: 'editaddress',query:{addressid:item.AddressID},append:true}" class="edit edit1" tag="div">
                       <img src="static/image/png/edit.png" alt=""><span>编辑</span>
-                    </div>
-                    <div class="edit delete">
+                    </router-link>
+                    <!-- </div> -->
+                    <div class="edit delete" @click="DeleteAddressItem(item.AddressID)">
                       <img src="static/image/png/delete.png" alt=""><span>删除</span>
                     </div>
                   </div>
@@ -34,6 +36,14 @@
       </ul>
       </div>
     </scroller>
+    <div v-transfer-dom>
+      <confirm v-model="deleteAddressItemshow"
+      :title="'提示'"
+      :content="'确认要删除改地址吗'"
+      @on-cancel="CancelDeleteAddressItem"
+      @on-confirm="ConfirmDeleteAddressItem">
+      </confirm>
+    </div>
 </div>
 
         <transition name="router-slid" mode="out-in">
@@ -48,12 +58,16 @@ import {mapState, mapMutations} from 'vuex'
 import headTop from '@/components/Head.vue'
 import lineMenu from '@/components/common/LineMenu.vue'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
-import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress} from '@/service/getdata'
-import { Scroller } from 'vux'
+import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress,DeleteAddressItemAndReturnList,UpdateUserDefaultAddress} from '@/service/getdata'
+import { Scroller,Confirm,TransferDomDirective as TransferDom } from 'vux'
 export default {
+    directives: {
+        TransferDom
+    },
     components: {
     	headTop,
     	Scroller,
+      Confirm,
         lineMenu
     },
     data () {
@@ -61,7 +75,9 @@ export default {
         Title:'我的收货地址',
         Color:0,
         MidType:0,
+        deleteAddressItemshow:false,
         addressList:[],
+        CurrentPlanDeleteAddressId:null,
       }
     },
     mounted(){
@@ -88,11 +104,40 @@ export default {
             this.addressList=response;
             console.log(response);
           })
-        }
+        },
+        CancelDeleteAddressItem(){
+            
+        },
+        async ConfirmDeleteAddressItem(){
+          await DeleteAddressItemAndReturnList(this.CurrentPlanDeleteAddressId).then(response=>{
+            this.addressList=response;
+          })
+        },
+        DeleteAddressItem(addressid)
+        {
+          this.CurrentPlanDeleteAddressId=addressid;
+          this.deleteAddressItemshow=true;
+        },
+        async UpdateDefault(addressid)
+        {
+          this.addressList.forEach(item=>{
+            item.IsDefault=0;
+            if(item.AddressID==addressid)
+            {
+              item.IsDefault=1;
+            }
+          });
+          await UpdateUserDefaultAddress(addressid);
+        },
+    },
+    watch:{
+      '$route':function(){
+        this.initData();
+      },
     }
 }
 </script>
-
+ 
 <style lang="scss" scoped="">
 .rating_page{
 		position: absolute;

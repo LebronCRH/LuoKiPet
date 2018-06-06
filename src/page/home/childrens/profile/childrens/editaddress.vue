@@ -19,7 +19,7 @@
           </li>
           <li class="Item">
             <p>所在地区</p>
-            <input type="text" ref="Area" placeholder="地区信息" id="picker5">
+            <input type="text" ref="Area" Value="" placeholder="地区信息" id="picker5">
           </li>
           <li class="Item">
             <p>详细地址</p>
@@ -42,8 +42,8 @@ import {mapState, mapMutations} from 'vuex'
 import headTop from '@/components/Head.vue'
 import lineMenu from '@/components/common/LineMenu.vue'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
-import { Scroller,Group,XSwitch} from 'vux'
-import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress,AddUserReceivingAddress} from '@/service/getdata'
+import { Scroller,Group,XSwitch,Confirm,TransferDomDirective as TransferDom} from 'vux'
+import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm,GetUserReceivingAddress,AddUserReceivingAddress,GetUserReceivingAddressItem} from '@/service/getdata'
 import picker from '@/assets/js/index'
 
 export default {
@@ -51,6 +51,7 @@ export default {
     	headTop,
     	Scroller,
       XSwitch,
+      Confirm,
       Group,
         lineMenu
     },
@@ -77,6 +78,7 @@ export default {
       nameEl.addEventListener('click', function () {
         picker.show();
       });
+      this.GetAddressInfo();
     },
     destroyed(){
 
@@ -101,13 +103,21 @@ export default {
             if(response!=null)
             {
               console.log("成功");
-              this.$router.push('/home/profile/address');
+              this.$router.replace('/home/profile/address');
             }
             else
             {
               console.log("失败");
             }
           })
+        },
+        async GetAddressInfo(){
+          if(this.$route.query.addressid){
+            await GetUserReceivingAddressItem(this.$route.query.addressid).then(response=>{
+              this.addressItem=response;
+              this.$refs.Area.value=this.addressItem.Area;
+            })
+          }
         },
     }
 }

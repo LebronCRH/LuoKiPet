@@ -1,11 +1,11 @@
 <template>
-  <div class="rating_page">
+  <div class="rating_page" v-if="shopinfo.PetShopInfo.ShopImg">
     <div class="ShopHead">
        <div class="shopheadback" @click="$router.go(-1)">
          <img src="static/image/back.png">
        </div>
        <div class="shopheadmid" ref="my_shopheadmid">
-          <p>{{shopinfo.ShopName}}</p>
+          <p>{{shopinfo.PetShopInfo.ShopName}}</p>
        </div>
        <div class="shopheadedit" ui-sref="zx_article" onclick="onback()">
           <img src="static/image/dian.png">
@@ -15,29 +15,29 @@
       <scroller ref="scroller" lock-x height="-45" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
         <div>
           <swiper auto  v-model="Swiper_index" dots-position="center">
-            <swiper-item v-for="(item,index) in shopinfo.ShopImg" :key="index">
+            <swiper-item v-for="(item,index) in GetImgList(shopinfo.PetShopInfo.ShopImg)" :key="index">
                <div class="TopSlideImg" @click="show(index)">
-                <img class="TopSlideImgItem" :src="ShopimgBaseUrl + item">
+                <img class="TopSlideImgItem" :src="item">
                </div>
             </swiper-item>
           </swiper>
           <div class="psd_Mid">
-              <p class="shopname">{{shopinfo.ShopName}}</p>
-              <router-link :to="{ path: 'shopmap',query:{shopid:shopinfo.Shop_id},append:true}">
+              <p class="shopname">{{shopinfo.PetShopInfo.ShopName}}</p>
+              <router-link :to="{ path: 'shopmap',query:{shopid:shopinfo.PetShopInfo.Shop_id},append:true}">
                 <div class="shopnode">
                   <img src="static/image/node1.png">
-                  <span>{{shopinfo.Address}}</span>
+                  <span>{{shopinfo.PetShopInfo.Address.substring(0,17)}}…</span>
                 </div>
               </router-link>
               <div class="shopjuli"> 
                 <img src="static/image/qizi.png">
-                <span>距离{{shopinfo.Distance}} | {{shopinfo.Node}}</span>
+                <span>距离{{shopinfo.PetShopInfo.Distance}} | {{shopinfo.PetShopInfo.Node}}</span>
               </div>
               <div class="shop_evaluate">
                 <p class="pinjia">5.5</p>
               <div class="xingji">
               </div>
-                <p class="shouNum">已售{{shopinfo.SaleNum}}</p>
+                <p class="shouNum">已售{{shopinfo.PetShopInfo.SaleNum}}</p>
               </div>
               <div class="shopyuyue">
                  <router-link :to="{ path: '/petserviceIndex/serviceshopdetails/confirmorder'}">
@@ -98,32 +98,32 @@
                              <p class="Title">营业时间</p>
                             <div class="Content">
                              <img src="static/image/yuandian.png">
-                             <span>{{shopinfo.BusinessHours}}</span>
+                             <span>{{shopinfo.PetShopInfo.BusinessHours}}</span>
                             </div>
                       </div>
                       <div class="ShopCart ShopItem">
                         <p class="Title">车位情况</p>
                           <div class="Content">
                            <img src="static/image/yuandian.png">
-                            <span>{{shopinfo.WiFi}}</span>
+                            <span>{{shopinfo.PetShopInfo.WiFi}}</span>
                           </div>
                       </div>
                       <div class="ShopWiFi ShopItem">
                           <p class="Title">有无WiFi</p>
                           <div class="Content">
                              <img src="static/image/yuandian.png">
-                              <span>{{shopinfo.Cart}}</span>
+                              <span>{{shopinfo.PetShopInfo.Cart}}</span>
                           </div>
                       </div>
                       <div class="ShopIntro ShopItem">
                          <p class="Title">商户介绍</p>
                           <div class="Content">
                             <img src="static/image/yuandian.png">
-                             <span>{{shopinfo.ShopIntro}}</span>
+                             <span>{{shopinfo.PetShopInfo.ShopIntro}}</span>
                           </div>
                       </div>
                   </div>
-                  <ul class="ul_ShopTeach">
+<!--                   <ul class="ul_ShopTeach">
                           <li class="TeachItem" v-for="item in shopinfo.ShopTeach">
                             <div class="TeachImg">
                             <img :src="imgBaseUrl+item.Image">
@@ -136,7 +136,7 @@
                               <p class="Intro">{{item.Intro}}…</p>
                             </div>
                           </li>
-                  </ul>
+                  </ul> -->
                 </div>
              </swiper-item>
           </swiper>
@@ -188,17 +188,17 @@
     <div class="zhemodale" v-show="showPackageCartList" @click="TagglePackageCartList"></div>
     <div class="ps_ServiceBag">
        <div class="Left">
-       <div class="Img" @click="TagglePackageCartList">
-       <img src="static/image/bag1.png">
-       <p v-if="CartTotalNum>0" class="Num">{{this.CartTotalNum}}</p>
-       </div>
+         <div class="Img" @click="TagglePackageCartList">
+           <img src="static/image/bag1.png">
+           <p v-if="CartTotalNum>0" class="Num">{{this.CartTotalNum}}</p>
+         </div>
          <p v-if="CartTotalMoney>0" class="TotalMoney">￥{{this.CartTotalMoney}}</p>
          <p v-else>券包为空</p>
        </div>
        <div v-if="CartTotalNum>0" class="Right Active">去结算</div>
        <div v-else class="Right">去结算</div>
     </div>
-           <buyservice :ServiceId='ServiceId' :ShopId='shopinfo.Shop_id' :ShopName='shopinfo.ShopName' ref="buyservice"></buyservice>
+           <buyservice :ServiceId='ServiceId' :ShopId='shopinfo.PetShopInfo.Shop_id' :ShopName='shopinfo.PetShopInfo.ShopName' ref="buyservice"></buyservice>
            <section class="animation_opactiy shop_back_svg_container" v-show="showLoading">
                <img src="static/image/shop_back_svg.svg">
            </section>
@@ -222,7 +222,7 @@
   import {mapState, mapMutations} from 'vuex'
   import { Swiper,Scroller,Spinner,SwiperItem,Previewer,TransferDom} from 'vux'
   import buyservice from '@/page/petservice/components/buyservice.vue'
-  import {GetPetServiceShopByID,cityGuess} from '@/service/getdata' 
+  import {GetPetServiceShopByID,cityGuess,GetPetShopByShopId} from '@/service/getdata' 
   import loading from '@/components/common/loading.vue'
   import {imgBaseUrl} from '@/config/env'
 
@@ -255,10 +255,6 @@
     },
     data () {
       return {
-        // note: changing this line won't causes changes
-        // with hot-reload because the reloaded component
-        // preserves its current state and we are modifying
-        // its initial state.
         SlideList:baseList,
         Swiper_index: 0,
         ShowBigImg:false,
@@ -271,24 +267,29 @@
         y:0,
         shoplistdata:[],
         shopinfo:{
-          Shop_id:null,
-          ShopImg:[],
-          ShopName:null,
-          lng:null,
-          lat:null,
-          Evaluate:null,
-          MinPrice:null,
-          Address:null,
-          Node:null,
-          Distance:null,
-          SaleNum:null,
-          ShopPhone:null,
-          ShopServiceCate:[],
-          BusinessHours:null,
-          WiFi:null,
-          Cart:null,
-          ShopIntro:null,
-          ShopTeach:[],
+          PetShopInfo:{
+            Shop_id:null,
+            ShopImg:null,
+            ShopName:null,
+            lng:null,
+            lat:null,
+            Evaluate:null,
+            MinPrice:null,
+            Address:null,
+            Node:null,
+            Distance:null,
+            SaleNum:null,
+            ShopPhone:null,
+            BusinessHours:null,
+            WiFi:null,
+            Cart:null,
+            ShopIntro:null,
+          },
+          ShopServiceCate:{
+            CateId:null,
+            CateName:null,
+            ServiceList:null,
+          },
         },
         imgBaseUrl:"./static/image/",
         ShopimgBaseUrl:imgBaseUrl, 
@@ -298,20 +299,12 @@
         showLoading:true,
         Chaju:0,
         swiperHeight:0,
-        ServiceId:10001,
+        ServiceId:83275,
         InfoActiveIndex:0,
         CurrentParamsShopId:null,
         ShopPackageCartList:[],
         showPackageCartList:false,
         swiper:null,
-        // list: [{
-        //   src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
-        // },
-        // {
-        //   src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
-        // }, {
-        //   src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwwcynw2j20p00b4js9.jpg'
-        // }],
         options: {
           getThumbBoundsFn (index) {
             let thumbnail = document.querySelectorAll('.TopSlideImgItem')[index]
@@ -333,8 +326,17 @@
     },
     computed:{
       ...mapState([
-                  'PackageCartList'
+                  'PackageCartList','UserNode','UserSelectNode',
               ]),
+              CurrentNode:function(){
+                if(this.UserSelectNode){
+                  return this.UserSelectNode;
+                }
+                else
+                {
+                  return this.UserNode;
+                }
+              },
       //当前商店券包信息
               shopPackageCart: function (){
                   return {...this.PackageCartList[this.CurrentParamsShopId]};
@@ -355,8 +357,8 @@
               },
               list:function(){
                 let imglist=[];
-                this.shopinfo.ShopImg.forEach(item=>{
-                  imglist.push({src:this.ShopimgBaseUrl + item,msrc:this.ShopimgBaseUrl + item,w: 1200,h: 900});
+                this.GetImgList(this.shopinfo.PetShopInfo.ShopImg).forEach(item=>{
+                  imglist.push({src:item,msrc:item,w: 1200,h: 900});
                 });
                 return imglist;
               },
@@ -370,13 +372,17 @@
               ]),
         async initData(){
           console.log(this.$route);
-          console.log(this.$route.query.ServiceId);
-          this.CurrentParamsShopId=this.$route.params.shopid;
+          this.CurrentParamsShopId=this.$route.params.shopid;//获取店铺id
           console.log(this.CurrentParamsShopId);
-          await GetPetServiceShopByID(this.CurrentParamsShopId).then(response=>{
-                this.shopinfo=response;
-                console.log(this.shopinfo.ShopImg);
-          });
+          // await GetPetServiceShopByID(this.CurrentParamsShopId).then(response=>{//MongoDB的
+          //       this.shopinfo=response;
+          //       console.log(this.shopinfo.ShopImg);
+          // });
+          // await GetPetShopByShopId(this.CurrentParamsShopId,120.206911,30.297499).then(response=>{//SQL数据库的
+          await GetPetShopByShopId(this.CurrentParamsShopId,this.CurrentNode.longitude,this.CurrentNode.latitude).then(response=>{//SQL数据库的
+            this.shopinfo=response;
+            console.log(response);
+          })
           await cityGuess().then(res => {
             console.log(res);
         })
@@ -430,18 +436,10 @@
                 }
         },
         GetShopList(){
-            // axios.get("./static/data/PetServiceShopList.json").then((response)=>{
-            //   this.shoplistdata=response.data;
-            //   this.shoplistdata.forEach((item,index)=>{
-            //     if(item.Shop_id==this.CurrentParamsShopId){
-            //       this.shopinfo=item;
-            //     }
-            //   })
-            // })
-              GetPetServiceShopByID(this.CurrentParamsShopId).then(response=>{
-                this.shopinfo=response;
-              });
-              console.log(this.shopinfo);
+              // GetPetServiceShopByID(this.CurrentParamsShopId).then(response=>{
+              //   this.shopinfo=response;
+              // });
+              // console.log(this.shopinfo);
         },
         initPackageCartList(){
           this.ShopPackageCartList=[];
@@ -484,6 +482,28 @@
             this.$refs.scroller.donePulldown()
           }, 1000)
          })
+        },
+        GetImgList(imglist){
+          if(imglist!=null)
+          {
+            var firstimg=imglist.split(",");
+            return firstimg.slice(1,15);
+          }
+          else{
+            return null;
+          }
+        },
+        FormatDistance(val){
+              var value=val.toFixed(2);
+              return value;
+        },
+        FormatEvaluate(val){
+              if(val%1===0){
+                return val+'.0';
+              }
+              else{
+                return val;
+              }
         }
     },
     watch:{
@@ -503,6 +523,7 @@
       },
       shopPackageCart:function (value){
           this.initPackageCartList();
+          console.log("6789");
       },
     },
   }

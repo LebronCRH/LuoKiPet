@@ -54,7 +54,7 @@
               <img src="static/image/png/weibo.png" alt="">
             </li>
           </ul>
-          <div class="rt"><p v-for="item in fenge(plist)">{{item}}</p></div>
+<!--           <div class="rt"><p v-for="item in fenge(plist)">{{item}}</p></div> -->
         </div>
         </div>
       </scroller>
@@ -192,22 +192,23 @@ export default {
         inserted: function (el,binding) {
           var image=new Image();
           image.src=el.src; //获取图像路径
-          var width1=image.width; //获取图像宽度
-          var height1=image.height; //获取图像高度
-          var RequestW=binding.value.width/10*window.screen.width;
-          var RequestH=binding.value.height/10*window.screen.width;
-          console.log(window.screen.width);
-          var a1=height1/width1;
-          var a2=RequestH/RequestW;
-          if(a1>a2){
-            el.width=RequestW;
-            el.height=height1*RequestW/width1;
-            el.style.marginTop='-' + Math.round((el.height-RequestH)/2)+ 'px';
-          }else{
-            el.height=RequestH;
-            el.width=width1*RequestH/height1;
-            el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
-          }
+          image.onload=function(){
+            var width1=image.width; //获取图像宽度
+            var height1=image.height; //获取图像高度
+            var RequestW=binding.value.width/10*window.screen.width;
+            var RequestH=binding.value.height/10*window.screen.width;
+            var a1=height1/width1;
+            var a2=RequestH/RequestW;
+            if(a1>a2){
+              el.width=RequestW;
+              el.height=height1*RequestW/width1;
+              el.style.marginTop='-' + Math.round((el.height-RequestH)/2)+ 'px';
+            }else{
+              el.height=RequestH;
+              el.width=width1*RequestH/height1;
+              el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
+            }
+          };
         }
       }
     },
@@ -215,85 +216,85 @@ export default {
 </script>
 
 <style lang="scss" scoped="">
-.rating_page{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #f7f3f7;
-    z-index: 200;
-        p, span{
-            font-family: Helvetica Neue,Tahoma,Arial;
+  .rating_page{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #f7f3f7;
+      z-index: 200;
+          p, span{
+              font-family: Helvetica Neue,Tahoma,Arial;
+          }
+  }
+  .Middle{
+      position:absolute;top:1.5rem;left:0rem;bottom:0rem;width:100%;
+      .BigPhotoContent{
+        width:100%;min-height:6rem;border-top:solid 1px #dfdfdf;border-bottom:solid 1px #dfdfdf;background:#fbfbfc;padding:0.25rem;
+        textarea{
+          width:100%;height:3.5rem;border:none;padding:0rem;margin:0rem;background:#fbfbfc;font-size: 0.4rem;color:#c9c9c9;
         }
-}
-.Middle{
-    position:absolute;top:1.5rem;left:0rem;bottom:0rem;width:100%;
-    .BigPhotoContent{
-      width:100%;min-height:6rem;border-top:solid 1px #dfdfdf;border-bottom:solid 1px #dfdfdf;background:#fbfbfc;padding:0.25rem;
-      textarea{
-        width:100%;height:3.5rem;border:none;padding:0rem;margin:0rem;background:#fbfbfc;font-size: 0.4rem;color:#c9c9c9;
-      }
-      .ul_Photos{
-        width:100%;list-style:none;overflow:hidden;
-        .PhotoItem{
-          width:1.7rem;height:1.7rem;float:left;margin:0.1rem;position:relative;margin-top:0.1rem;overflow:hidden;
-          img.Photo{width:1.7rem;height:1.7rem;}
-          img.Delete{width:0.5rem;height:0.5rem;position:absolute;top:0rem;right:0rem;background:#fff;border-radius:0.25rem;}
-          &.AddItem{
-            border:solid 1px #c9c9c9;display:flex;align-items:center;justify-content:center;
-            img{width:0.8rem;height:0.8rem;}
+        .ul_Photos{
+          width:100%;list-style:none;overflow:hidden;
+          .PhotoItem{
+            width:1.7rem;height:1.7rem;float:left;margin:0.1rem;position:relative;margin-top:0.1rem;overflow:hidden;
+            img.Photo{width:1.7rem;height:1.7rem;}
+            img.Delete{width:0.5rem;height:0.5rem;position:absolute;top:0rem;right:0rem;background:#fff;border-radius:0.25rem;}
+            &.AddItem{
+              border:solid 1px #c9c9c9;display:flex;align-items:center;justify-content:center;
+              img{width:0.8rem;height:0.8rem;}
+            }
           }
         }
       }
-    }
-    .ul_Middle{
-      width:100%;list-style:none;margin-top:0.3rem;background:#fbfbfc;
-      .CategoryItem{
-        width:100%;height:1.3rem;border-top:solid 1px #dfdfdf;display:flex;justify-content:center;
-        .Left{width:1.3rem;height:1.3rem;display:flex;align-items:center;justify-content:center;
-          img{width:0.6rem;height:0.6rem;}
-        }
-        .Middle2{width:7.4rem;height:1.3rem;display:flex;align-items:center;justify-content:space-between;
-          span{font-size:0.42rem;color:#5a5a62;}
-        }
-        .Right{width:1.3rem;height:1.3rem;display:flex;align-items:center;justify-content:center;
-          img{width:0.5rem;height:0.5rem;}
-        }
-      }
-    }
-    .bottom{
-      width:100%;height:1.5rem;display:flex;align-items:center;justify-content:center;background:#f9f9fa;border-top:solid 1px #dfdfdf;
-      .lf{width:2.3rem;height:100%;display:flex;align-items:center;justify-content:center;
-        span{font-size:0.47rem;}
-      }
-      .ulShare{
-        width:5rem;height:100%;list-style:none;display:flex;justify-content:flex-start;
-        .ShareItem{width:1.2rem;height:100%;display:flex;align-items:center;justify-content:center;
-          img{width:0.6rem;height:0.6rem;}
+      .ul_Middle{
+        width:100%;list-style:none;margin-top:0.3rem;background:#fbfbfc;
+        .CategoryItem{
+          width:100%;height:1.3rem;border-top:solid 1px #dfdfdf;display:flex;justify-content:center;
+          .Left{width:1.3rem;height:1.3rem;display:flex;align-items:center;justify-content:center;
+            img{width:0.6rem;height:0.6rem;}
+          }
+          .Middle2{width:7.4rem;height:1.3rem;display:flex;align-items:center;justify-content:space-between;
+            span{font-size:0.42rem;color:#5a5a62;}
+          }
+          .Right{width:1.3rem;height:1.3rem;display:flex;align-items:center;justify-content:center;
+            img{width:0.5rem;height:0.5rem;}
+          }
         }
       }
-      .rt{width:2.7rem;height:100%;}
-    }
-}
+      .bottom{
+        width:100%;height:1.5rem;display:flex;align-items:center;justify-content:center;background:#f9f9fa;border-top:solid 1px #dfdfdf;
+        .lf{width:2.3rem;height:100%;display:flex;align-items:center;justify-content:center;
+          span{font-size:0.47rem;}
+        }
+        .ulShare{
+          width:5rem;height:100%;list-style:none;display:flex;justify-content:flex-start;
+          .ShareItem{width:1.2rem;height:100%;display:flex;align-items:center;justify-content:center;
+            img{width:0.6rem;height:0.6rem;}
+          }
+        }
+        .rt{width:2.7rem;height:100%;}
+      }
+  }
 
-.zhe{position:absolute;width:100%;height:100%;top:0rem;left:0rem;z-index:98;background-color: rgba(0,0,0,0.7);}
-.SelectModel{
-  width:100%;list-style:none;position:absolute;left:0rem;bottom:0rem;background:#e5e3e4;z-index:99;
-  .SelectItem{
-    width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;border-bottom:solid 1px #e5e3e4;
-    span{font-size:0.5rem;}
+  .zhe{position:absolute;width:100%;height:100%;top:0rem;left:0rem;z-index:98;background-color: rgba(0,0,0,0.7);}
+  .SelectModel{
+    width:100%;list-style:none;position:absolute;left:0rem;bottom:0rem;background:#e5e3e4;z-index:99;
+    .SelectItem{
+      width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;border-bottom:solid 1px #e5e3e4;
+      span{font-size:0.5rem;}
+    }
+    .SelectCancel{
+      width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;margin-top:0.2rem;
+      span{font-size:0.5rem;}
+    }
   }
-  .SelectCancel{
-    width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;margin-top:0.2rem;
-    span{font-size:0.5rem;}
+  .fade-enter-active, .fade-leave-active {
+          transition: all .4s;
+          transform: translateY(0%);
   }
-}
-.fade-enter-active, .fade-leave-active {
-        transition: all .4s;
-        transform: translateY(0%);
-}
-.fade-enter, .fade-leave-active {
-        transform: translateY(100%);
-}
+  .fade-enter, .fade-leave-active {
+          transform: translateY(100%);
+  }
 </style>

@@ -65,7 +65,7 @@
       </router-link>
    </li>
 </ul>
-<petshowlist></petshowlist>
+<petshowlist @hideLoading="hideLoading"></petshowlist>
 </div>
 <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height:1.4rem; line-height:1.4rem; top:-1.4rem; text-align: center;">
         <span v-show="scrollerStaues.pulldownStatus === 'default'"></span>
@@ -79,11 +79,14 @@
       </div>
 </scroller>
 </div>
+<div style="background:#000;opacity:0.3;width:100vw;height:100vh;" v-show="showLoading"></div>
+<loading v-show="showLoading"></loading>
 </div>
 </template>
 
 <script>
 import petshowlist from '@/page/petshow/components/petshowlist'
+import loading from '@/components/common/loading.vue'
 import { Swiper, Scroller, Spinner,XImg} from 'vux'
 import axios from 'axios'
 
@@ -107,6 +110,7 @@ export default{
 			return{
         SlideList:baseList,
         Swiper_index: 0,
+        showLoading: true, //显示加载动画
         scrollerStaues: {
           pulldownStatus: 'default',
           pullupStatus: 'default'
@@ -118,6 +122,7 @@ export default{
       Swiper,
       Scroller,
       Spinner,
+      loading,
         },
 		mounted(){
       // this.MessageSend();
@@ -125,6 +130,9 @@ export default{
 	    methods: {
       onRefresh(done) {
           done()
+      },
+      hideLoading(){
+          this.showLoading = false;
       },
       MessageSend(){
               axios.get("api/MessageSend?Phone=15007932468").then(res=>{
