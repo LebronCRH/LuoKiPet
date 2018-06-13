@@ -27,6 +27,7 @@ import ForgetPasswordSecond from '@/page/login/forgetpasswordsecond.vue'
 import ForgetPasswordThirdly from '@/page/login/forgetpasswordthirdly.vue'
 import Login from '@/page/login/login.vue'
 import LuoKiFriend from '@/page/luokifriend/index.vue'
+import P2PChat from '@/page/luokifriend/P2PChat.vue'
 import FriendChat from '@/page/luokifriend/friendchat.vue'
 import CreatePhoto from '@/page/Release/CreatePhoto.vue'
 import Setting from '@/page/home/childrens/profile/childrens/setting.vue' 
@@ -127,7 +128,8 @@ export default [
     path:'/petshowIndex',
     component:petshowIndex,
     children:[{
-      path:'petshowdetails',
+      name:'petshowdetails',
+      path:'petshowdetails/:detailsid',
       component:petshowDetails
     }]
   },
@@ -195,5 +197,10 @@ export default [
     name:'articleview',
     path:'/articleview',
     component:ArticleView
-  }
+  },
+  {
+    name: 'chat',
+    path: '/chat/:sessionId',
+    component:P2PChat
+  },
 ]

@@ -1,7 +1,7 @@
 <template>
 <div class="rating_page">
   <head-top :Title="Title" :Color="Color" :MidType="MidType">
-      <div slot="right" class="rightSpanEdit">
+      <div slot="right" class="rightSpanEdit" @click="PublishLoveShow">
         <span>发表</span>
       </div>
   </head-top>
@@ -9,12 +9,12 @@
     <scroller ref="scroller" lock-x height="-56" scrollbar-y>
         <div>
         <div class="BigPhotoContent">
-            <textarea name="" id="" cols="30" rows="10" placeholder="讲述我和他们的故事">
+            <textarea name="" id="" cols="30" v-model="LoveShowPhotoContent" rows="10" placeholder="讲述我和他们的故事">
 
             </textarea>
             <ul class="ul_Photos">
               <li class="PhotoItem" v-for="(item,index) in AllSelectImg">
-                <img :src="item.url" class="Photo" alt="">
+                <img :src="item.url" class="Photo" alt="" v-ImgEdit="{ width: 1.7, height: 1.7 }">
                 <img src="static/image/png/photodelete.png" alt="" class="Delete" @click="CancelImgItem(item)">
               </li>
               <li class="AddItem PhotoItem" @click="TaggleSelectShow()">
@@ -87,6 +87,8 @@ import {mapState, mapMutations} from 'vuex'
 import headTop from '@/components/Head.vue'
 import { Scroller } from 'vux'
 import selectpackage from '@/page/petservice/components/selectpackage.vue'
+import {AddLoveShowPhotos} from '@/service/getdata'
+import {convertBase64UrlToBlob,getBase64Image} from '@/config/mUtils'
 
 export default {
     components: {
@@ -102,10 +104,23 @@ export default {
         MidType:1,
         EditBtn:true,
         SelectShow:false,
-        SelectPhotos:[{url:'static/image/user1.jpg',type:1},{url:'static/image/user2.jpg',type:1},{url:'static/image/user3.jpg',type:1},{url:'static/image/user1.jpg',type:1}],
+        LoveShowPhotoContent:'',
+        SelectPhotos:[{url:'static/image/user1.jpg',type:1},{url:'static/image/user2.jpg',type:1},{url:'static/image/user3.jpg',type:1}],
         // SelectPhotos:[],
-        SelectCamera:[{url:'static/image/user2.jpg',type:2},{url:'static/image/user3.jpg',type:2}],
+        SelectCamera:[{url:'static/image/user4.jpeg',type:2},{url:'static/image/user5.jpeg',type:2}],
         plist:'12,34,56,78',
+      }
+    },
+    // beforeRouteEnter (to, from, next) {
+
+    // },
+    beforeCreate(){
+      
+    },
+    created(){
+      if(this.userInfo==null){
+        console.log("去登录");
+        this.$router.replace('/loginIndex');
       }
     },
     mounted(){
@@ -116,7 +131,7 @@ export default {
     },
     computed: {
       ...mapState([
-                'PackageCartList'
+                'PackageCartList','userInfo'
             ]),
       AllSelectImg:function(){
         var arr=[];
@@ -164,12 +179,16 @@ export default {
         // this.SelectPhotos.splice(index,1);
         if(item.type==1)
         {
-          var index = this.SelectPhotos.indexOf(item.url);
+          console.log("类型1");
+          var index = this.SelectPhotos.indexOf(item);
+          console.log(index);
           this.SelectPhotos.splice(index, 1);
         }
         else if(item.type==2)
         {
-          var index = this.SelectCamera.indexOf(item.url);
+          console.log("类型2");
+          var index = this.SelectCamera.indexOf(item);
+          console.log(index);
           this.SelectCamera.splice(index, 1);
         }
       },
@@ -185,6 +204,42 @@ export default {
           console.log( "取消选择图片" );
         },{filter:"image",multiple:true,selected:this.SelectPhotos,maximum:9,system:false});
       },
+      async InitImg(imglist){
+        var img = imglist;
+        var list=[];
+        img.forEach((item)=>{
+          let image = new Image();
+          image.crossOrigin = '';
+          image.src = item.url;
+          console.log(item.url);     
+          image.onload =()=>{
+            var base64 = getBase64Image(image);
+            console.log(base64);
+            var img2 = convertBase64UrlToBlob(base64);
+            console.log(img2);
+            list.push(img2);
+            this.bloblist=list;
+            console.log(this.bloblist)
+          } 
+        })
+      },
+      async PublishLoveShow(){//发布动态
+        var fd=new FormData();
+        var data={
+          LspTitle:this.LoveShowPhotoContent,
+          LspCreateUserID:this.userInfo.UserID
+        }
+        fd.append('LoveShowPhotos',JSON.stringify(data));
+        console.log(this.bloblist)
+        this.bloblist.forEach((item,index)=>{
+          console.log("wenjian")
+          fd.append('file'+index,item)
+        });
+        AddLoveShowPhotos(fd).then(response=>{
+          console.log(response);
+          this.$router.replace('/petshowIndex/petshowdetails/'+response.LoveShowPhotoID);
+        })
+        }
     },
     directives: {
       ImgEdit: {//图片显示按长宽等比居中显示的指令方法
@@ -212,6 +267,12 @@ export default {
         }
       }
     },
+    watch:{
+      AllSelectImg:function(value){
+        console.log(value);
+        this.InitImg(value);
+      }
+    }
 }
 </script>
 

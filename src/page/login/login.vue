@@ -49,6 +49,7 @@
 <script>
 	  import axios from 'axios'
     import {mapState, mapMutations} from 'vuex'
+    import cookie from '@/utils/cookie'
     import {userLogin,MessageSend,JudgeHasUser,GetUserInfoByYzm} from '../../service/getdata'
 	export default{
 		data(){
@@ -106,6 +107,8 @@
                 this.$vux.toast.text('登录成功!', 'bottom')
                 this.$router.replace(this.LoginFrontPageUrl.fullPath);
                 console.log(res);
+                // cookie.setCookie('uid', res.UserName);
+                // cookie.setCookie('sdktoken', res.Password);
               }
               else
               {
@@ -123,6 +126,8 @@
               this.$store.state.userInfo=res;
               this.$store.state.isLogin=true;
               this.$vux.toast.text('登录成功!', 'bottom')
+              // cookie.setCookie('uid', res.UserName);
+              // cookie.setCookie('sdktoken', res.Password);
               this.$router.replace(this.LoginFrontPageUrl.fullPath);
             }
             else
@@ -170,7 +175,6 @@
           this.YzmDjs=60;
         }
       },
-
     }
 	}
 </script>

@@ -65,6 +65,15 @@
           ArticleCove:"static/image/Slides1.jpg",
         }
       },
+      beforeCreate(){
+        
+      },
+      created(){
+        if(this.userInfo==null){
+          console.log("去登录");
+          this.$router.replace('/loginIndex');
+        }
+      },
       mounted(){
 
       },

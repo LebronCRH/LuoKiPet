@@ -57,7 +57,7 @@
     </li>
     <li class="CreateItem Article bounceInUp animated">
       <div class="img">
-         <div class="ImgItem Article">
+         <div class="ImgItem Article" @click="GoCreateArticle()">
            <img src="static/image/png/CreateArticle.png" alt="">
          </div>
       </div>
@@ -105,6 +105,9 @@
       },
       GoCreate:function(){
         this.$router.push('/createphoto');
+      },
+      GoCreateArticle(){
+        this.$router.push('/createarticle');
       }
     },
 	}

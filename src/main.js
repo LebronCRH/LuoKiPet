@@ -10,9 +10,11 @@ import routes from './router/index'
 import {setStore,getStore,removeStore} from '@/config/mUtils.js'
 import  { ToastPlugin } from 'vux'
 import initRichText from './common/initHTMLEditor';
+import VueTouch from '@/plugins/touchEvent'
 import 'font-awesome/css/font-awesome.css'
 initRichText();
 
+Vue.use(VueTouch)
 Vue.use(VueRouter)
 Vue.use(ToastPlugin)
 

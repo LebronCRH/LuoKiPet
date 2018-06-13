@@ -81,6 +81,12 @@ import fetch from '../config/fetch'
 
 //爱秀宠物API开始
     export const GetLoveShowPhotos=()=>fetch('/loveshow/GetLoveShowPhotos');
+    /*爱秀宠物添加*/
+    export const AddLoveShowPhotos=(data)=>fetch('/loveshow/AddLoveShowPhotos',data,'POST','fetch','','formdata');
+    /*根据爱秀萌宠ID获取一条爱秀萌照的详细信息*/
+    export const GetLoveShowPhotosById=(id)=>fetch('/loveshow/GetLoveShowPhotosById',{
+    	Id:id
+    });
 //爱秀宠物API结束
 
 

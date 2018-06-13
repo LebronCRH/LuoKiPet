@@ -26,7 +26,8 @@
                       </div>
                     </div>
                     <ul class="ul_friend">
-                      <router-link v-for="item in UserFriendList" :key="item.UserID" :to="{ name: 'friendchat',query:{userid:item.UserID}}" tag="li" class="lifriendItem">
+                      <router-link v-for="item in UserFriendList" :to="{path:'/chat/p2p-'+item.UserName,query:{userId:item.UserID}}" tag="li" :key="item.UserID" class="lifriendItem">
+                      <!-- <router-link v-for="item in UserFriendList" :key="item.UserID" :to="{ name: 'friendchat',query:{userid:item.UserID}}" tag="li" class="lifriendItem"> -->
                         <img :src="imgUserBaseUrl + item.UserPhotos" alt="">
                         <p><span>{{item.UserName}}</span></p>
                       </router-link>
