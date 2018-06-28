@@ -1,7 +1,7 @@
 <template>
 <div class="BigBJ">
   <div class="TopHead">
-    <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
+    <img src="static/image/back2.png" alt="" @click="$router.goBack()">
     <span @click="TaggleMessageError()">没有收到？</span>
   </div>
   <div class="PageTitle">

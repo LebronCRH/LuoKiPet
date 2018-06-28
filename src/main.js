@@ -21,6 +21,10 @@ Vue.use(ToastPlugin)
 const router = new VueRouter({
   routes
 })
+VueRouter.prototype.goBack = function () {
+  this.isBack = true
+  this.go(-1)
+}
 
 // router.beforeEach((to, from, next) => {
 // 	let user = JSON.parse(localStorage.getItem("user"))
@@ -37,6 +41,8 @@ const router = new VueRouter({
 // });
 router.beforeEach((to, from, next) => {
 	let Topath=to;
+	// console.log(router);
+	// router.PriveUrl=from;
 	// console.log(Topath);
 	var TopathSplit=Topath.fullPath.split("/");
 	if(TopathSplit.length==3)
@@ -52,6 +58,9 @@ router.beforeEach((to, from, next) => {
 	}
 	next();
 });
+router.afterEach((to, from) => {
+  router.isBack=false;
+})
 
 FastClick.attach(document.body)
 

@@ -21,7 +21,6 @@
    </div>
    <ul class="ulImgList" v-if="fenge(item.PhotoList).length==3||fenge(item.PhotoList).length>=5">
      <li class="ImgItem" v-for="ImgItem in fenge(item.PhotoList)">
-<!--      <x-img :src="ImgItem" :offset="-50" v-ImgEdit="{ width: 3, height: 3 }"></x-img> -->
      <img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 3, height: 3 }" alt="">
      </li>
    </ul>

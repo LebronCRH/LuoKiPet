@@ -1,10 +1,10 @@
 <template>
 	<div class="ShopHead" ref="HeadTop">
 	<slot name="left">
-     <div class="shopheadback" v-show="MidType=='0'" @click="$router.go(-1)">
+     <div class="shopheadback" v-show="MidType=='0'" @click="$router.goBack()">
        <img src="static/image/back.png">
      </div>
-     <div class="shopheadback" v-show="MidType=='1'" @click="$router.go(-1)">
+     <div class="shopheadback" v-show="MidType=='1'" @click="$router.goBack()">
        <img src="static/image/Bback.png">
      </div>
      </slot>

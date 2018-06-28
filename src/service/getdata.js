@@ -75,7 +75,6 @@ import fetch from '../config/fetch'
 	export const UpdateUserDefaultAddress=(addressid)=>fetch('/user/UpdateUserDefaultAddress',{
 		addressId:addressid,
 	});
-
 //登录API结束 
 
 
@@ -141,8 +140,30 @@ import fetch from '../config/fetch'
     });
     /*SQL数据库按条件进行分页POST查询*/
     export const PostPetShopByQueryModel=(Obj)=>fetch('/serviceshop/PostPetShopByQueryModel',Obj,'POST');
-
+    /*购买服务订单POST数据*/
+    export const UserBuyServiceOrder=(Obj)=>fetch('/serviceshop/UserBuyServiceOrder',Obj,'POST');
+    /*获取一条订单详细的数据*/
+    export const GetServiceOrderInfo=(orderid)=>fetch('/serviceshop/GetServiceOrderInfo',{
+    	OrderId:orderid
+    });
+    /*根据用户的ID获取用户所有服务订单的信息数据*/
+    export const GetUserServiceOrderInfoList=(userid)=>fetch('/serviceshop/GetUserServiceOrderInfoList',{
+    	UserId:userid
+    });
+    /*支付某个服务订单*/
+    export const PayServiceOrder=(orderid)=>fetch('/serviceshop/PayServiceOrder',{
+        OrderId:orderid
+    });
 //宠物服务店的API结束
+
+//宠物种类的API开始
+    /*获取很多*/
+    export const GetPetCategoryAll=()=>fetch('/petcategory/GetPetCategoryAll');
+    /*根据Id获取单个*/
+    export const GetPetCategoryById=(categordId)=>fetch('/petcategory/GetPetCategoryById',{
+        Id:categordId,
+    });
+//宠物种类的API结束
 
 //仿饿了么项目API接口开始
    export const cityGuess = () => fetch('/v1/cities', {

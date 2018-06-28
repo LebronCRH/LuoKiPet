@@ -25,7 +25,7 @@
 	<swiper :list="SlideList" auto  v-model="Swiper_index" dots-position="center"></swiper>
 <ul class="ul_IndexCategory">
    <li class="li_IndexCategory">
-   <router-link :to="{ path: '/articleIndex'}">
+   <router-link :to="{ path: '/petcategoryIndex'}">
       <div>
       <div class="div_Icon">
       <img class="Icon" src="../../../../assets/image/PetCategoryIcon2.png">

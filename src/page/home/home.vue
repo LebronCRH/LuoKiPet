@@ -1,7 +1,9 @@
 <template>
 <div>
   <div class="home_Middle">
+  <keep-alive>
   	  <router-view name="Conter"></router-view>
+  </keep-alive>
   </div>
   <div class="Footer" v-if="FooterShow">
     <div class="LuoKiFoot">

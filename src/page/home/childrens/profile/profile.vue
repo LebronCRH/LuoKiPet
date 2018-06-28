@@ -1,190 +1,188 @@
 <template>
 	<div class="rating_page">
-	    <div class="UserBJ" ref="UserBJ" :class="isLogin?'Login':'NoLogin'">
-    <ul class="TopMenu">
-       <li class="MenuItem">
-          <div class="Centent">
-             <p>3</p>
-             <p>赞</p>
+	  <div class="UserBJ" ref="UserBJ" :class="isLogin?'Login':'NoLogin'">
+        <ul class="TopMenu">
+          <li class="MenuItem">
+              <div class="Centent">
+                 <p>3</p>
+                 <p>赞</p>
+              </div>
+          </li>
+          <li class="MenuItem">
+             <div class="Centent">
+                 <p>0</p>
+                 <p>魅力值</p>
+              </div>
+          </li>
+          <li class="MenuItem">
+              <div class="Centent">
+                <p>3</p>
+                 <p>关注</p>
+              </div>
+          </li>
+          <li class="MenuItem">
+              <div class="Centent">
+                 <p>3</p>
+                 <p>粉丝</p>
+              </div>
+          </li>
+        </ul>
+        <div class="UserInfo">
+          <div class="UserImg">
+             <img v-show="isLogin" src="static/image/UserBJ.png">
+             <img v-show="!isLogin" src="static/image/png/userLogin.png" @click="GoLogin()">
           </div>
-       </li>
-       <li class="MenuItem">
-         <div class="Centent">
-             <p>0</p>
-             <p>魅力值</p>
+          <div class="UserName">
+            <span class="Level" v-show="isLogin">Lv4</span>
+            <span class="Name" v-if="isLogin">{{this.userInfo.UserName}}<i class="man"></i></span>
+            <span class="Name" v-show="!isLogin">登录/注册</span>
           </div>
-       </li>
-      <li class="MenuItem">
-          <div class="Centent">
-            <p>3</p>
-             <p>关注</p>
+          <div class="UserNode">
+             <span v-show="isLogin">浙江 杭州</span>
+             <span v-show="!isLogin">登录享受更多的功能</span>
           </div>
-      </li>
-      <li class="MenuItem">
-          <div class="Centent">
-             <p>3</p>
-             <p>粉丝</p>
-          </div>
-      </li>
-    </ul>
-    <div class="UserInfo">
-      <div class="UserImg">
-         <img v-show="isLogin" src="static/image/UserBJ.png">
-         <img v-show="!isLogin" src="static/image/png/userLogin.png" @click="GoLogin()">
-      </div>
-      <div class="UserName">
-        <span class="Level" v-show="isLogin">Lv4</span>
-        <span class="Name" v-if="isLogin">{{this.userInfo.UserName}}<i class="man"></i></span>
-        <span class="Name" v-show="!isLogin">登录/注册</span>
-      </div>
-      <div class="UserNode">
-         <span v-show="isLogin">浙江 杭州</span>
-         <span v-show="!isLogin">登录享受更多的功能</span>
-      </div>
-    </div>
+        </div>
     </div>
     <div class="Middle">
-    <scroller ref="scroller" lock-x height="-230" scrollbar-y @on-scroll="PageSlide">
-<div class="UserContent">
-          <div class="SignAndNews">
-            <div class="Sign Item">
-               <img src="static/image/qiandao.png">
-               <span>签到</span>
+      <scroller ref="scroller" lock-x height="-230" scrollbar-y @on-scroll="PageSlide">
+        <div class="UserContent">
+            <div class="SignAndNews">
+              <div class="Sign Item">
+                 <img src="static/image/qiandao.png">
+                 <span>签到</span>
+              </div>
+              <div class="News Item">
+                  <img src="static/image/xiaoxi.png">
+                 <span>消息</span>
+              </div>
             </div>
-            <div class="News Item">
-                <img src="static/image/xiaoxi.png">
-               <span>消息</span>
+            <ul class="CententMenu1">
+               <li class="MenuItem">
+                  <div class="Centent">
+                      <p class="Num">0</p>
+                      <p class="Titlemenu1">洛奇豆</p>
+                   </div>
+               </li>
+               <li class="MenuItem">
+                   <div class="Centent">
+                       <p class="Num">119</p>
+                       <p class="Titlemenu1">洛奇币</p>
+                    </div>
+               </li>
+               <li class="MenuItem">
+                   <div class="Centent">
+                       <p class="Num">3</p>
+                      <p class="Titlemenu1">优惠券</p>
+                    </div>
+               </li>
+               <li class="MenuItem">
+                   <div class="Centent">
+                       <p class="Num">3</p>
+                       <p class="Titlemenu1">礼物</p>
+                    </div>        
+               </li>
+            </ul>
+            <div class="ContentMenu2">
+               <p class="MenuTitle">日常管理</p>
+               <ul class="ul_Menu2">
+                  <li class="li_Menu2 Item">
+                     <p><img src="static/image/usercenter_pet.png"></p>
+                     <p>宠物</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <router-link to="/luokifriend" tag="li" class="li_Menu2 Item">
+                     <p><img src="static/image/usercenter_fr.png"></p>
+                     <p>宠友</p>
+                     <p class="Rborder"></p>
+                  </router-link>
+                  <li class="li_Menu2 Item">
+                    <p><img src="static/image/usercenter_sq.png"></p>
+                     <p>社区</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu2">
+                    <p><img src="static/image/usercenter_sc.png"></p>
+                     <p>收藏</p>
+                  </li>
+               </ul>
             </div>
-          </div>
-          <ul class="CententMenu1">
-             <li class="MenuItem">
-                <div class="Centent">
-                    <p class="Num">0</p>
-                    <p class="Titlemenu1">洛奇豆</p>
-                 </div>
-             </li>
-             <li class="MenuItem">
-                 <div class="Centent">
-                     <p class="Num">119</p>
-                     <p class="Titlemenu1">洛奇币</p>
-                  </div>
-             </li>
-             <li class="MenuItem">
-                 <div class="Centent">
-                     <p class="Num">3</p>
-                    <p class="Titlemenu1">优惠券</p>
-                  </div>
-             </li>
-             <li class="MenuItem">
-                 <div class="Centent">
-                     <p class="Num">3</p>
-                     <p class="Titlemenu1">礼物</p>
-                  </div>        
-             </li>
-          </ul>
-          <div class="ContentMenu2">
-             <p class="MenuTitle">日常管理</p>
-             <ul class="ul_Menu2">
-                <li class="li_Menu2 Item">
-                   <p><img src="static/image/usercenter_pet.png"></p>
-                   <p>宠物</p>
-                   <p class="Rborder"></p>
-                </li>
-                <router-link to="/luokifriend" tag="li" class="li_Menu2 Item">
-                   <p><img src="static/image/usercenter_fr.png"></p>
-                   <p>宠友</p>
-                   <p class="Rborder"></p>
-                </router-link>
-                <li class="li_Menu2 Item">
-                  <p><img src="static/image/usercenter_sq.png"></p>
-                   <p>社区</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu2">
-                  <p><img src="static/image/usercenter_sc.png"></p>
-                   <p>收藏</p>
-                </li>
-             </ul>
-          </div>
 
-          <div class="ContentMenu3">
-             <p class="MenuTitle">商城购物</p>
-             <ul class="ul_Menu3">
-                <li class="li_Menu3 Item">
-                   <p><img src="static/image/cart.png"></p>
-                   <p>购物车</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu3 Item">
-                   <p><img src="static/image/order.png"></p>
-                   <p>购物订单</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu3 Item">
-                  <p><img src="static/image/shouhou.png"></p>
-                   <p>售后服务</p>
-                   <p class="Rborder"></p>
-                </li>
-                <router-link :to="{ path: 'address',append:true}" tag="li" class="li_Menu3">
-                  <p><img src="static/image/shouhuonode.png"></p>
-                   <p>收获地址</p>
-                </router-link>
-             </ul>
-          </div>
+            <div class="ContentMenu3">
+               <p class="MenuTitle">商城购物</p>
+               <ul class="ul_Menu3">
+                  <li class="li_Menu3 Item">
+                     <p><img src="static/image/cart.png"></p>
+                     <p>购物车</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <router-link :to="{ path: 'myserviceorder',append:true}" tag="li" class="li_Menu3">
+                     <p><img src="static/image/order.png"></p>
+                     <p>购物订单</p>
+                     <p class="Rborder"></p>
+                  </router-link>
+                  <li class="li_Menu3 Item">
+                    <p><img src="static/image/shouhou.png"></p>
+                     <p>售后服务</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <router-link :to="{ path: 'address',append:true}" tag="li" class="li_Menu3">
+                    <p><img src="static/image/shouhuonode.png"></p>
+                     <p>收获地址</p>
+                  </router-link>
+               </ul>
+            </div>
 
-          <div class="ContentMenu4">
-             <p class="MenuTitle">其他</p>
-             <ul class="ul_Menu4">
-                <li class="li_Menu4 Item">
-                   <p><img src="static/image/AssestDetails.png"></p>
-                   <p>账户明细</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu4 Item">
-                   <p><img src="static/image/Attire.png"></p>
-                   <p>个性装扮</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu4 Item">
-                  <p><img src="static/image/games.png"></p>
-                   <p>游戏中心</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu4">
-                  <p><img src="static/image/Opinion.png"></p>
-                   <p>意见反馈</p>
-                </li>
-                                <li class="li_Menu4 Item">
-                   <p><img src="static/image/welfare.png"></p>
-                   <p>有宠公益</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu4 Item">
-                   <p><img src="static/image/Authentication.png"></p>
-                   <p>专业认证</p>
-                   <p class="Rborder"></p>
-                </li>
-                <li class="li_Menu4 Item">
-                  <p><img src="static/image/Settled.png"></p>
-                   <p>商户入驻</p>
-                   <p class="Rborder"></p>
-                </li>
-<!--                 <li class="li_Menu4"> -->
-                 <router-link :to="{ path: 'setting',append:true}" tag="li" class="li_Menu4">
-                  <p><img src="static/image/Set.png"></p>
-                   <p>洛奇设置</p>
-                   </router-link>
-<!--                 </li> -->
-             </ul>
-          </div>
-          <div style="width:100%;height:1rem;background:#fff;"></div>
-      </div>
-    </scroller>
+            <div class="ContentMenu4">
+               <p class="MenuTitle">其他</p>
+               <ul class="ul_Menu4">
+                  <li class="li_Menu4 Item">
+                     <p><img src="static/image/AssestDetails.png"></p>
+                     <p>账户明细</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu4 Item">
+                     <p><img src="static/image/Attire.png"></p>
+                     <p>个性装扮</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu4 Item">
+                    <p><img src="static/image/games.png"></p>
+                     <p>游戏中心</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu4">
+                    <p><img src="static/image/Opinion.png"></p>
+                     <p>意见反馈</p>
+                  </li>
+                                  <li class="li_Menu4 Item">
+                     <p><img src="static/image/welfare.png"></p>
+                     <p>有宠公益</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu4 Item">
+                     <p><img src="static/image/Authentication.png"></p>
+                     <p>专业认证</p>
+                     <p class="Rborder"></p>
+                  </li>
+                  <li class="li_Menu4 Item">
+                    <p><img src="static/image/Settled.png"></p>
+                     <p>商户入驻</p>
+                     <p class="Rborder"></p>
+                  </li>
+                   <router-link :to="{ path: 'setting',append:true}" tag="li" class="li_Menu4">
+                    <p><img src="static/image/Set.png"></p>
+                     <p>洛奇设置</p>
+                     </router-link>
+               </ul>
+            </div>
+            <div style="width:100%;height:1rem;background:#fff;"></div>
+        </div>
+      </scroller>
     </div>
 
-           <transition name="router-slid" mode="out-in">
+    <transition :name="transitionName" :mode="transitionMode">
             <router-view></router-view>
-        </transition>
+    </transition>
 	</div>
 </template>
 
@@ -199,11 +197,36 @@
       	XSwitch,
       	Group
       },
+      beforeRouteEnter (to, from, next) {
+        next()
+      },
+      beforeRouteLeave (to, from, next) {
+        next();
+      },
+      beforeRouteUpdate (to, from, next) {
+            // 如果isBack为true时，证明是用户点击了回退，执行slide-right动画
+            console.log(to);
+            console.log(from);
+             let isBack = this.$router.isBack
+             if (isBack) {
+                this.transitionName = 'slide-right'
+                this.transitionMode='';
+                console.log("后退");
+             } else {
+                this.transitionName = 'router-slid'
+                this.transitionMode='in-out';
+             }
+             // 做完回退动画后，要设置成前进动画，否则下次打开页面动画将还是回退
+             // this.$router.isBack = false
+             next()
+      },
       data () {
         return {
         	UserBJH:0,
         	UserBJW:0, 
         	FirstGetUserBJH:true,
+          transitionName:'router-slid',
+          transitionMode:'in-out',
           // isLogin:false,
         }
       },
@@ -391,5 +414,18 @@
     .router-slid-enter, .router-slid-leave-active {
         transform: translate3d(2rem, 0, 0);
         opacity: 0;
+    }
+    .slide-right-enter-active,.slide-right-leave-active{
+      transition: all .4s;
+    }
+    .slide-right-leave-to {
+        transform: translate3d(2rem, 0, 0);
+        opacity: 0;
+    }
+    .slide-right-enter{
+      opacity: 0;
+    }
+    .slide-right-enter-to{
+      opacity: 1;
     }
 </style>

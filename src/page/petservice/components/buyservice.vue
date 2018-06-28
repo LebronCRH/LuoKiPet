@@ -1,48 +1,48 @@
 <template>
   <div>
   <transition name="fade">
-<div class="Buy_ServiceSelect" v-show="modal" v-if="currentservice.MShopService">
-<div class="zhe2" @click="modalTaggle()"></div>
-   <div class="Buy_ServiceContent">
+     <div class="Buy_ServiceSelect" v-show="modal" v-if="currentservice.MShopService">
+       <div class="zhe2" @click="modalTaggle()"></div>
+       <div class="Buy_ServiceContent">
 
-   <div class="Close" @click="modalTaggle()">
-     <img src="static/image/Close1.png">
-   </div>
-
-   <div class="Top">
-     <p class="p_title">{{currentservice.MShopService.ServiceName}}  {{selectPackage.name}}</p>
-     <p class="p_price"><span class="new_price">￥{{selectPackage.sprice || currentservice.MShopService.MinPrice}}</span><span class="old_price"><del>￥{{selectPackage.Oldprice || currentservice.MShopService.OldPrice}}</del></span></p>
-     <p class="p_discount"><img src="static/image/discount.png"><span>全场服务85折优惠(最高优惠50元)</span></p>
-   </div>
-
-     <div class="Mid_MServicePackageList">
-       <p class="Title">服务类型</p>
-       <ul class="ul_serviceCate">
-         <li class="li_serviceCate" v-for="(item,index) in currentservice.MServicePackageList" :class="{active:selectPackId==index}" @click="selectPack(item,index)">
-         <span>{{item.name}}</span>
-         </li>
-       </ul>
-       <div class="BuyNum">
-         <p class="message">购买数量</p>
-         <div class="Edit">
-         <div class="jian" @click="ReduceNum">-</div>
-         <div class="num">{{BuyNum}}</div>
-         <div class="Add" @click="AddNum">+</div>
+         <div class="Close" @click="modalTaggle()">
+           <img src="static/image/Close1.png">
          </div>
+
+         <div class="Top">
+           <p class="p_title">{{currentservice.MShopService.ServiceName}}  {{selectPackage.name}}</p>
+           <p class="p_price"><span class="new_price">￥{{selectPackage.sprice || currentservice.MShopService.MinPrice}}</span><span class="old_price"><del>￥{{selectPackage.Oldprice || currentservice.MShopService.OldPrice}}</del></span></p>
+           <p class="p_discount"><img src="static/image/discount.png"><span>全场服务85折优惠(最高优惠50元)</span></p>
+         </div>
+
+         <div class="Mid_MServicePackageList">
+           <p class="Title">服务类型</p>
+           <ul class="ul_serviceCate">
+             <li class="li_serviceCate" v-for="(item,index) in currentservice.MServicePackageList" :class="{active:selectPackId==index}" @click="selectPack(item,index)">
+             <span>{{item.name}}</span>
+             </li>
+           </ul>
+           <div class="BuyNum">
+             <p class="message">购买数量</p>
+             <div class="Edit">
+             <div class="jian" @click="ReduceNum">-</div>
+             <div class="num">{{BuyNum}}</div>
+             <div class="Add" @click="AddNum">+</div>
+             </div>
+           </div>
+         </div>
+
+         <div class="Service_Edit">
+            <div class="AddBagActive" v-show="HasselectPack" @click="AddPackageCart(ShopId,ShopName,ServiceId,currentservice.MShopService.ServiceName,selectPackage.PackageId,selectPackage.name,BuyNum,selectPackage.sprice || ServicePackage[0].sprice,selectPackage.Oldprice || ServicePackage[0].Oldprice)">加入券包</div>
+            <div class="AddBag" v-show="!HasselectPack">加入券包</div>
+            <router-link v-show="HasselectPack" :to="{ path: 'confirmorder',query:{Type:1,ServiceId:currentservice.MShopService.ServiceId,PackageId:selectPackage.PackageId,BuyNum:BuyNum},append:true}">
+            <div class="Buy_ServiceActive" v-show="HasselectPack" @click="GoConfirmOrder">立即购买</div>
+            </router-link>
+            <div class="Buy_Service" v-show="!HasselectPack">立即购买</div>
+         </div> 
+
        </div>
      </div>
-
-     <div class="Service_Edit">
-      <div class="AddBagActive" v-show="HasselectPack" @click="AddPackageCart(ShopId,ShopName,ServiceId,currentservice.MShopService.ServiceName,selectPackage.PackageId,selectPackage.name,BuyNum,selectPackage.sprice || ServicePackage[0].sprice,selectPackage.Oldprice || ServicePackage[0].Oldprice)">加入券包</div>
-      <div class="AddBag" v-show="!HasselectPack">加入券包</div>
-      <router-link v-show="HasselectPack" :to="{ path: 'confirmorder',query:{ServiceId:currentservice.MShopService.ServiceId,PackageId:selectPackage.PackageId,BuyNum:BuyNum},append:true}">
-      <div class="Buy_ServiceActive" v-show="HasselectPack" @click="GoConfirmOrder">立即购买</div>
-      </router-link>
-      <div class="Buy_Service" v-show="!HasselectPack">立即购买</div>
-     </div> 
-
-   </div>
-   </div>
    </transition>
 </div>
 </template>

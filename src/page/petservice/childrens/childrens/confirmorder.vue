@@ -60,9 +60,11 @@
                   <span class="daiMsg">待支付:</span><span class="Money">￥{{TotalMoney}}</span>
                </div>
                <div class="Bt_Pay">
-               <span class="Bt_ConfirmOrder">确认支付</span>
+               <span class="Bt_ConfirmOrder" @click="InitOrderViewModel()">确认支付</span>
                </div>
             </div>
+
+            <paywayselect ref="payway" :Paymoney="TotalMoney" :OrderId="OrderId"></paywayselect>
 
   <transition name="router-slid" mode="out-in">
             <router-view></router-view>
@@ -76,14 +78,16 @@ import axios from 'axios'
 import headTop from '@/components/Head.vue'
 import {mapState, mapMutations} from 'vuex'
 import { Scroller,XSwitch,Group  } from 'vux'
-import {GetShopServiceDetail} from '@/service/getdata' 
+import {GetShopServiceDetail,UserBuyServiceOrder} from '@/service/getdata' 
+import paywayselect from '@/components/common/PayWaySelect'
 
 export default {
     components: {
     	headTop,
     	Scroller,
     	XSwitch,
-    	Group
+    	Group,
+      paywayselect
     },
     data () {
       return {
@@ -109,7 +113,12 @@ export default {
         	sprice:0,
         	Oldprice:0,
           ForServiceID:0,
-        }
+        },
+        MServiceShopOrderViewModel:null,
+        MPetServiceShopOrder:null,
+        MServiceShopOrderDetailsList:null,
+        ConfirmOrderState:false,
+        OrderId:null,
       }
     },
   beforeCreate(){
@@ -170,6 +179,15 @@ export default {
         }else{
           return this.UserChangeOrderPhone;
         }
+      },
+      OrderLuokiBean:function(){
+        if(this.UseLuokiBean){
+          return this.LuokiBean;
+        }
+        else
+        {
+          return 0;
+        }
       }
   },
     props:[],
@@ -202,6 +220,43 @@ export default {
               }
             })
           });
+        },
+        //初始化要POST的ViewModel订单数据
+        InitOrderViewModel(){
+          if(!this.ConfirmOrderState)
+          {
+            this.MPetServiceShopOrder={
+              ShopID:this.Service.MShopService.ForShopID,
+              ShopName:this.Service.MPetServiceShop.ShopName,
+              OrderTolatPrice:this.BuyPackage.sprice*this.BuyNum,
+              YouHuiQuan:this.Discount,
+              BoQiBean:this.OrderLuokiBean,
+              ActualPrice:this.TotalMoney,
+              CreateUserID:this.userInfo.UserID,
+              OrderServiceNum:this.BuyNum,
+              OrderUserPhone:this.OrderPhone,
+            };
+            var DetailsList=[];
+            var DetailsItem={
+              ServiceID:this.Service.MShopService.ServiceId,
+              ServiceName:this.Service.MShopService.ServiceName,
+              PackageID:this.BuyPackage.PackageId,
+              PackageName:this.BuyPackage.name,
+              ServiceNum:this.BuyNum,
+              OnePrice:this.BuyPackage.sprice,
+            };
+            DetailsList.push(DetailsItem);
+            this.MServiceShopOrderDetailsList=DetailsList;
+            this.MServiceShopOrderViewModel={
+              _MPetServiceShopOrder:this.MPetServiceShopOrder,
+              _MServiceShopOrderDetails:this.MServiceShopOrderDetailsList
+            };
+            UserBuyServiceOrder(this.MServiceShopOrderViewModel).then(response=>{
+              this.OrderId=response._MPetServiceShopOrder.MShopServiceOrderID;
+              this.ConfirmOrderState=true;
+            })
+          }
+          this.$refs.payway.modalTaggle();
         },
     }
 }
