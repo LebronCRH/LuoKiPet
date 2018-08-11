@@ -17,6 +17,9 @@ const state = {
 	shopid: null,//商铺id
 	cartId: null, //购物车id
 	isLogin: getStore('userInfo')!=null?true : false,//是否登录
+	OthenLoginInfo:null,//第三方登录信息
+	OtherAuths:{},//第三方登录版权信息
+	ShareServices:{},//第三方分享服务
 	imgPath:null,//头像地址
 	removeAddress:[],//移除地址
 	addAddress:'',		//新增地址

@@ -11,13 +11,14 @@
 
 <script>
 import cookie from '@/utils/cookie'
+import {mapState, mapMutations} from 'vuex'
 import FullscreenImg from '@/components/IMChat/FullscreenImg'
 import {setStore, getStore,removeStore,} from '@/config/mUtils'
 export default {
   beforeRouteEnter (to, from, next) {
-        console.log("进入zhu路由")  //undefined，不能用this来获取vue实例
-        console.log(from)
-        console.log(to)
+        // console.log("进入zhu路由")  //undefined，不能用this来获取vue实例
+        // console.log(from)
+        // console.log(to)
         next()
       },
   beforeRouteLeave (to, from, next) {
@@ -26,17 +27,17 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
         // 如果isBack为true时，证明是用户点击了回退，执行slide-right动画
-        console.log(this.$router.PriveUrl);
+        // console.log(this.$router.PriveUrl);
          let isBack = this.$router.isBack
          if (isBack) {
             this.transitionName = 'slide-right'
             this.transitionMode='';
-            console.log("后退")
+            // console.log("后退")
          } else {
             this.transitionName = 'router-slid'
             this.transitionMode='in-out';
          }
-         console.log("zhu路由")
+         // console.log("zhu路由")
          // 做完回退动画后，要设置成前进动画，否则下次打开页面动画将还是回退
          // this.$router.isBack = false
          next()
@@ -52,19 +53,54 @@ export default {
     // 提交sdk连接请求
     if(getStore('userInfo'))
     {
-      console.log("有值")
+      // console.log("有值")
       this.$store.dispatch('connect')
       this.$store.dispatch('updateRefreshState')
     }
     else{
-      console.log("没有值")
+      // console.log("没有值")
     }
   },
   components: {
     FullscreenImg,
   },
   computed: {
-    // 是否显示导航条
+    ...mapState([
+                  'ShareServices','OtherAuths',
+              ]),
+  },
+  mounted(){
+      this.initOtherService();
+  },
+  methods:{
+    initOtherService(){
+      var that=this;
+      document.addEventListener("plusready", function(){
+        console.log("设备加载完成");
+          if(window.plus)
+          {
+            plus.share.getServices((services)=>{
+              for(var i in services){
+                var service=services[i];
+                console.log(service.id+": "+service.description);
+                that.$store.state.ShareServices[service.id]=service;
+              }
+            }, function(e){
+              alert( "获取分享服务列表失败："+e.message );
+            } );
+            plus.oauth.getServices((services)=>{
+              console.log(services);
+              for(var i in services){
+                var service=services[i];
+                console.log(service.id+": "+service.description);
+                that.$store.state.OtherAuths[service.id]=service;
+              }
+            },function(e){
+              outLine("获取登录认证失败："+e.message);
+            });
+          }
+        },false);
+    },
   }
 }
 </script>

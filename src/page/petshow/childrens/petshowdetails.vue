@@ -8,7 +8,7 @@
   <div class="ps_Item" v-if="LoveShowViewModel">
      <div class="ps_Top">
        <div class="ps_Userimg">
-       <img :src="imgUserBaseUrl+LoveShowViewModel.userinfo.UserPhotos">
+       <img :src="UserImgFromat(LoveShowViewModel.userinfo.UserPhotos)">
        </div>
        <div class="ps_Userinfo">
          <p class="pt"><span class="ps_username">{{LoveShowViewModel.userinfo.UserName}}</span><span class="ps_addr">杭州市</span></p>
@@ -152,6 +152,7 @@
   import { Scroller,XSwitch,Group,Spinner,Previewer,TransferDom  } from 'vux'
   import {GetLoveShowPhotosById} from '@/service/getdata'
   import {imgUserBaseUrl,imgPCBaseUrl} from '@/config/env'
+  import {UserImgFromat} from '@/config/mUtils'
 
   export default {
       components: {
@@ -167,6 +168,7 @@
           Title:'动态详情',
           Color:0,
           MidType:0,
+          CurrentParamsShowId:null,
           imgUserBaseUrl:imgUserBaseUrl, 
           imgPCBaseUrl:imgPCBaseUrl,
           scrollerStaues: {
@@ -243,6 +245,9 @@
         logIndexChange (arg) {
           console.log(arg)
         },
+        UserImgFromat(userimg){
+           return UserImgFromat(userimg);
+        },
       },
       directives: {
         TransferDom,
@@ -270,6 +275,13 @@
             };
           }
         }
+      },
+      watch:{
+      '$route':function(){
+        if(this.CurrentParamsShowId!=this.$route.params.detailsid){
+          this.InitLoveShowInfo();
+        }
+      },
     },
   }
 </script>

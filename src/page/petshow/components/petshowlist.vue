@@ -1,13 +1,13 @@
 <template>
 	<div>
 <div class="ps_Item" v-if="LoveShowList.length>0" v-for="item in LoveShowList">
-   <router-link :to="{ path: '/petshowIndex/petshowdetails/'+item.LoveShowPhotoID}">
+   <router-link :to="{ path: '/petshowIndex/petshowdetails/'+item.loveshowphoto.LoveShowPhotoID}">
      <div class="ps_Top">
        <div class="ps_Userimg">
-       <img src="../../../assets/image/user1.jpg">
+       <img :src="UserImgFromat(item.userinfo.UserPhotos)">
        </div>
        <div class="ps_Userinfo">
-         <p class="pt"><span class="ps_username">不良人</span><span class="ps_addr">杭州市</span></p>
+         <p class="pt"><span class="ps_username">{{item.userinfo.UserName}}</span><span class="ps_addr">杭州市</span></p>
          <p class="pb"><img class="ps_petimg" src="../../../assets/image/user2.jpg"><span class="ps_petname">小洛奇</span><span class="ps_petcategory">拉布拉多</span></p>
        </div>
        <div class="ps_gz">
@@ -16,19 +16,19 @@
      </div>
    </router-link>
    <div class="ps_message">
-     <p>哈哈，我的小洛奇
+     <p>{{item.loveshowphoto.LspTitle}}
      </p>
    </div>
-   <ul class="ulImgList" v-if="fenge(item.PhotoList).length==3||fenge(item.PhotoList).length>=5">
-     <li class="ImgItem" v-for="ImgItem in fenge(item.PhotoList)">
+   <ul class="ulImgList" v-if="fenge(item.loveshowphoto.PhotoList).length==3||fenge(item.loveshowphoto.PhotoList).length>=5">
+     <li class="ImgItem" v-for="ImgItem in fenge(item.loveshowphoto.PhotoList)">
      <img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 3, height: 3 }" alt="">
      </li>
    </ul>
-   <ul class="ulImgListEven" v-if="fenge(item.PhotoList).length==2||fenge(item.PhotoList).length==4">
-     <li class="ImgItem" v-for="ImgItem in fenge(item.PhotoList)"><img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 4.6, height: 4.6 }" alt=""></li>
+   <ul class="ulImgListEven" v-if="fenge(item.loveshowphoto.PhotoList).length==2||fenge(item.loveshowphoto.PhotoList).length==4">
+     <li class="ImgItem" v-for="ImgItem in fenge(item.loveshowphoto.PhotoList)"><img :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width: 4.6, height: 4.6 }" alt=""></li>
    </ul>
-   <div class="ps_listimg" v-if="fenge(item.PhotoList).length==1">
-     <img v-for="ImgItem in fenge(item.PhotoList)" :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width:9.6,height:9.6 }">
+   <div class="ps_listimg" v-if="fenge(item.loveshowphoto.PhotoList).length==1">
+     <img v-for="ImgItem in fenge(item.loveshowphoto.PhotoList)" :src="imgPCBaseUrl+ImgItem" v-ImgEdit="{ width:9.6,height:9.6 }">
    </div>
    <div class="psdiv_Support">
      <ul class="ps_Support">
@@ -96,6 +96,7 @@
 import { Swiper, Scroller, Spinner,XImg} from 'vux'
 import {GetLoveShowPhotos} from '@/service/getdata'
 import {imgPCBaseUrl} from '@/config/env'
+import {UserImgFromat} from '@/config/mUtils'
 
 	export default{
 		data(){
@@ -123,11 +124,11 @@ import {imgPCBaseUrl} from '@/config/env'
 		mounted(){
       this.initData();
 		},
-	   methods: {
+	  methods: {
       async initData(){
+        console.log("请求数据");
         await GetLoveShowPhotos().then(response=>{
           this.LoveShowList=response;
-          // this.showLoading=false;
           this.$emit('hideLoading');
         })
       },
@@ -135,6 +136,9 @@ import {imgPCBaseUrl} from '@/config/env'
         var numberArray = val.split(",");
         return numberArray;
       },
+      UserImgFromat(userimg){
+           return UserImgFromat(userimg);
+      }
     },
     directives: {
       ImgEdit: {//图片显示按长宽等比居中显示的指令方法

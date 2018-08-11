@@ -50,6 +50,10 @@
 <transition name="router-slid" mode="out-in">
             <router-view></router-view>
 </transition>
+<section class="animation_opactiy shop_back_svg_container" v-show="showLoading">
+           <img src="static/image/shop_back_svg.svg">
+    </section>
+<loading v-show="showLoading"></loading>
 </div>
 </template>
 
@@ -61,11 +65,13 @@ import { Scroller } from 'vux'
 import selectpackage from '@/page/petservice/components/selectpackage.vue'
 import {GetPetCategoryAll} from '@/service/getdata' 
 import {imgBaseUrl,imgPCBaseUrl} from '@/config/env'
+import loading from '@/components/common/loading.vue'
 export default {
     components: {
     	headTop,
     	Scroller,
-    	selectpackage
+    	selectpackage,
+        loading
     },
     data () {
       return {
@@ -76,6 +82,7 @@ export default {
         sortBy:'',
         petcategorylist:[],
         imgPCBaseUrl:imgPCBaseUrl,
+        showLoading:true,
       }
     },
     mounted(){
@@ -97,8 +104,12 @@ export default {
         async initData(){
             await GetPetCategoryAll().then(response=>{
                 this.petcategorylist=response;
-            })
-        }
+            });
+            this.hideLoading();
+        },
+        hideLoading(){
+          this.showLoading = false;
+        },
     }
 }
 </script>
@@ -115,6 +126,14 @@ export default {
         p, span{
             font-family: Helvetica Neue,Tahoma,Arial;
         }
+}
+.shop_back_svg_container {
+    position: fixed;
+    top: 0rem;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    img{width:100vw;height:100vh;}
 }
 .router-slid-enter-active, .router-slid-leave-active {
           transition: all .4s;

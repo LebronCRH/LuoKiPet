@@ -105,6 +105,7 @@
                 // this.$store.state.isLogin=true;
                 this.LOCAL_USER(res);
                 this.$vux.toast.text('登录成功!', 'bottom')
+                console.log(this.LoginFrontPageUrl.fullPath);
                 this.$router.replace(this.LoginFrontPageUrl.fullPath);
                 console.log(res);
                 // cookie.setCookie('uid', res.UserName);

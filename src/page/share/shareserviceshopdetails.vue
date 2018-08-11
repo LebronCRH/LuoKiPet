@@ -1,19 +1,19 @@
 <template>
   <div class="rating_page" v-if="shopinfo.PetShopInfo.ShopImg">
     <div class="ShopHead">
-       <div class="shopheadback" @click="$router.go(-1)">
-         <img src="static/image/back.png">
+       <div class="shopheadback">
+<!--          <img src="static/image/back.png"> -->
        </div>
        <div class="shopheadmid" ref="my_shopheadmid">
           <p>{{shopinfo.PetShopInfo.ShopName}}</p>
        </div>
        <div class="shopheadedit" ui-sref="zx_article">
-          <img src="static/image/dian.png" @click.self="ToggleShareEdit()">
+<!--           <img src="static/image/dian.png" @click.self="ToggleShareEdit()">
           <ul class="ul_ShopEdit" v-show="ShareEdit">
             <li class="editItem top"><img src="static/image/png/SC.png" alt="">收藏</li>
             <li class="editItem top" @click="ToggelshowShareList"><img src="static/image/png/share2.png" alt="">分享</li>
             <li class="editItem"><img src="static/image/png/ruzhu.png" alt="">商家入驻</li>
-          </ul>
+          </ul> -->
        </div>
     </div>
     <div>
@@ -28,7 +28,7 @@
           </swiper>
           <div class="psd_Mid">
               <p class="shopname">{{shopinfo.PetShopInfo.ShopName}}</p>
-              <router-link :to="{ path: 'shopmap',query:{shopid:shopinfo.PetShopInfo.Shop_id},append:true}">
+              <router-link :to="{ path: '/petserviceIndex/serviceshopdetails/'+shopinfo.PetShopInfo.Shop_id+'/shopmap',query:{shopid:shopinfo.PetShopInfo.Shop_id}}">
                 <div class="shopnode">
                   <img src="static/image/node1.png">
                   <span>{{shopinfo.PetShopInfo.Address.substring(0,17)}}…</span>
@@ -359,15 +359,6 @@
       ...mapState([
                   'PackageCartList','UserNode','UserSelectNode','ShareServices',
               ]),
-              CurrentNode:function(){
-                if(this.UserSelectNode){
-                  return this.UserSelectNode;
-                }
-                else
-                {
-                  return this.UserNode;
-                }
-              },
       //当前商店券包信息
               shopPackageCart: function (){
                   if({...this.PackageCartList[this.CurrentParamsShopId]}.ShopName==undefined)
@@ -411,30 +402,40 @@
                   'ADD_PACKAGECART','JIA_PACKAGECART','JIAN_PACKAGECART'
               ]),
         async initData(){
+          await cityGuess().then(res => {
+              this.$store.state.UserNode=res;
+          })
           console.log(this.$route);
           this.CurrentParamsShopId=this.$route.params.shopid;//获取店铺id
           console.log(this.CurrentParamsShopId);
-          // await GetPetServiceShopByID(this.CurrentParamsShopId).then(response=>{//MongoDB的
-          //       this.shopinfo=response;
-          //       console.log(this.shopinfo.ShopImg);
-          // });
-          // await GetPetShopByShopId(this.CurrentParamsShopId,120.206911,30.297499).then(response=>{//SQL数据库的
-          await GetPetShopByShopId(this.CurrentParamsShopId,this.CurrentNode.longitude,this.CurrentNode.latitude).then(response=>{//SQL数据库的
+          await GetPetShopByShopId(this.CurrentParamsShopId,this.UserNode.longitude,this.UserNode.latitude).then(response=>{//SQL数据库的
             this.shopinfo=response;
             console.log(response);
           })
-          await cityGuess().then(res => {
-              console.log(res);
-          })
           this.hideLoading();
         },
-        ShareMessage(id,type){
+        initShareService(){
+          if(window.plus)
+          {
+            plus.share.getServices((services)=>{
+              for(var i in services){
+                var service=services[i];
+                console.log(service.id+": "+service.description);
+                this.$store.state.ShareServices[service.id]=service;
+              }
+            }, function(e){
+              alert( "获取分享服务列表失败："+e.message );
+            } );
+          }
+        },
+        ShareMessage(id,type)
+        {
           var shareservice=this.ShareServices[id];
           var that=this;
           if(shareservice)
           {
             if (shareservice.authenticated) {
-              var MessageContent={title:that.shopinfo.PetShopInfo.ShopName,content:that.shopinfo.PetShopInfo.Address,href:H5LuoKiPetUrl+"#/shareserviceshopdetails/"+that.shopinfo.PetShopInfo.Shop_id,thumbs:["http://www.joingp.com:8080/Images/Icons/Sharelogo.png"]};
+              var MessageContent={title:that.shopinfo.PetShopInfo.ShopName,content:that.shopinfo.PetShopInfo.Address,href:H5LuoKiPetUrl+"#/shareserviceshopdetails/"+that.shopinfo.PetShopInfo.Shop_id,thumbs:["http://www.joingp.com:8080/Images/Icons/ShareLogo.png"]};
               if(id=='weixin')
               {
                 if(type==1)
@@ -456,7 +457,7 @@
             {
               shareservice.authorize(function() {    
                   console.log('授权成功...');   
-                  var MessageContent={title:that.shopinfo.PetShopInfo.ShopName,content:that.shopinfo.PetShopInfo.Address,href:H5LuoKiPetUrl+"#/shareserviceshopdetails/"+that.shopinfo.PetShopInfo.Shop_id,thumbs:["http://www.joingp.com:8080/Images/Icons/Sharelogo.png"]};
+                  var MessageContent={title:that.shopinfo.PetShopInfo.ShopName,content:that.shopinfo.PetShopInfo.Address,href:H5LuoKiPetUrl+"#/shareserviceshopdetails/"+that.shopinfo.PetShopInfo.Shop_id,thumbs:["http://www.joingp.com:8080/Images/Icons/ShareLogo.png"]};
                   if(id=='weixin')
                   {
                     if(type==1)
@@ -622,7 +623,6 @@
       shopPackageCart:function (value){
         if(value.ShopName!=undefined)
           this.initPackageCartList();
-          // console.log("6789");
       },
     },
   }
@@ -646,15 +646,6 @@
     width:100vw;height:100vh;background:#000;z-index:999;position:absolute;top:0rem;left:0rem;
 
   }
-  // .shop_back_svg_container{
-  //         position: fixed;top:0rem;z-index:999;
-  //         // @include wh(100%, 100%);
-  //         width:100%;height:100%;
-  //         img{
-  //             // @include wh(100%, 100%);
-  //             width:100%;height:100%;
-  //         }
-  // }
   .fadePackageList-enter-active, .fadePackageList-leave-active {
           transition: all .2s;
           transform: translateY(0%);
@@ -710,7 +701,7 @@
             .Right{height:0.5rem;line-height:0.5rem;font-size:0.5rem;position:absolute;right:0.3rem;display:flex;align-items:center;
           span{
             color:#a4a4a4;line-height:0.5rem;font-size:0.4rem;
-            i{background:url(../../../../static/image/right_.png) no-repeat center center;width:0.3rem;height:0.3rem;display:inline-block;background-size:0.5rem 0.5rem;margin-left:0.2rem;}
+            i{background:url(../../../static/image/right_.png) no-repeat center center;width:0.3rem;height:0.3rem;display:inline-block;background-size:0.5rem 0.5rem;margin-left:0.2rem;}
             }
           }
       }
@@ -732,7 +723,7 @@
     }
     .shop_evaluate{position:absolute;;top:0.5rem;right:0.4rem;width:2.5rem;height:2.5rem;box-shadow:0rem 0.1rem 0.3rem #cdcdcd;
       .pinjia{width:100%;height:1rem;line-height:1rem;font-size:0.5rem;color:#000;text-align:center;margin:0rem;padding:0rem;}
-      .xingji{width:100%;height:0.5rem;background:url(../../../../static/image/star1.png) no-repeat center center;background-size:2.5rem 0.5rem;}
+      .xingji{width:100%;height:0.5rem;background:url(../../../static/image/star1.png) no-repeat center center;background-size:2.5rem 0.5rem;}
       .shouNum{width:100%;height:1rem;line-height:1rem;font-size:0.3rem;color:#8a8a8a;text-align:center;
         margin:0rem;padding:0rem;}
     }
@@ -749,7 +740,7 @@
       }
     }
     .AllShop{height:1.2rem;width:2rem;float:right;line-height:1.2rem;font-size:0.37rem;color:#afb0af;display:flex;align-items:center;
-      i{background:url(../../../../static/image/right_.png);background-size:0.3rem 0.3rem;display:inline-block;width:0.3rem;height:0.3rem;margin-left:0.2rem;margin-top:-0.1rem;}
+      i{background:url(../../../static/image/right_.png);background-size:0.3rem 0.3rem;display:inline-block;width:0.3rem;height:0.3rem;margin-left:0.2rem;margin-top:-0.1rem;}
     }
   }
   .pss_service{width:100%;background-color:#fff;overflow:hidden;

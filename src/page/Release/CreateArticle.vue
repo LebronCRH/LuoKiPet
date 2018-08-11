@@ -69,10 +69,15 @@
         
       },
       created(){
-        if(this.userInfo==null){
-          console.log("去登录");
-          this.$router.replace('/loginIndex');
-        }
+        // console.log("created")
+        // if(this.userInfo==null){
+        //   console.log("去登录");
+        //   this.$router.replace('/loginIndex');
+        // }
+        // else
+        // {
+        //   console.log("已登录");
+        // }
       },
       mounted(){
 
@@ -82,7 +87,7 @@
       },
       computed: {
         ...mapState([
-                  'PackageCartList','CreateArticleTest'
+                  'PackageCartList','CreateArticleTest','userInfo'
               ]),
       },
       props:[],

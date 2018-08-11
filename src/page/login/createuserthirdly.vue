@@ -7,7 +7,7 @@
   </div>
   <div class="PageTitle">
     <p class="Big">输入验证码</p>
-    <p class="Small">已向15007932468发送了验证码。</p>
+    <p class="Small">已向{{UserRegisterPhone}}发送了验证码。</p>
   </div>
   <div class="BigIput">
     <div class="InputItem">
@@ -41,7 +41,7 @@
 <script>
 	import axios from 'axios'
   import {mapState, mapMutations} from 'vuex'
-  import {UserRegisterPhoneHas,UserRegister,CeShi} from '../../service/getdata'
+  import {UserRegisterPhoneHas,UserRegister,CeShi,UserQQRegister} from '../../service/getdata'
 	export default{
 		data(){
 			return{
@@ -57,7 +57,7 @@
 		},
     computed: {
     ...mapState([
-                'UserRegisterName','UserRegisterPassword','UserRegisterPhone',
+                'UserRegisterName','UserRegisterPassword','UserRegisterPhone','OthenLoginInfo','isLogin','userInfo','LoginFrontPageUrl',
             ]),
     },
     methods:{
@@ -88,13 +88,38 @@
               }
         });
       },
+      GetCurrentYear(){
+        var date=new Date();
+        return date.getFullYear();
+      },
       SubmitRegisterUser(){
         if(this.UserYzm!="")
           {
             // axios.post("user/UserRegister",{"UserName":this.UserRegisterName,"Password":this.UserRegisterPassword,"RPassword":this.UserRegisterPassword,"RegisterPhone":this.UserRegisterPhone,"Expertise":this.UserYzm}).then((response)=>{
             // var Obj={"UserName":this.UserRegisterName,"Password":this.UserRegisterPassword,"RPassword":this.UserRegisterPassword,"RegisterPhone":this.UserRegisterPhone,"Expertise":this.UserYzm};
             // var Obj={"UserName":"yingjiayu","Password":"123456","RPassword":"123456","RegisterPhone":"15007932468"};
-            UserRegister({"UserName":this.UserRegisterName,"Password":this.UserRegisterPassword,"RPassword":this.UserRegisterPassword,"RegisterPhone":this.UserRegisterPhone,"Expertise":this.UserYzm}).then(response=>{
+            if(this.$route.query.CreateByType)
+            {
+              console.log("注册的方式为"+this.$route.query.CreateByType);
+              UserQQRegister({"UserName":this.UserRegisterName,"Password":this.UserRegisterPassword,"RPassword":this.UserRegisterPassword,"RegisterPhone":this.UserRegisterPhone,"Expertise":this.UserYzm,"Age":this.GetCurrentYear()-this.$store.state.OthenLoginInfo.userInfo.year,"Sex":this.$store.state.OthenLoginInfo.userInfo.gender,"UserPhotos":this.$store.state.OthenLoginInfo.userInfo.figureurl_2,"QQAccess_Token":this.$store.state.OthenLoginInfo.authResult.access_token,"QQOpenId":this.$store.state.OthenLoginInfo.authResult.openid}).then(response=>{
+                if(response==null){
+                  this.$vux.toast.text('验证码错误!', 'bottom');
+                }
+                else
+                {
+                  this.$vux.toast.text('登录成功!', 'bottom');
+                  console.log(this.LoginFrontPageUrl)
+                  this.$store.state.userInfo=response;
+                  this.$store.state.isLogin=true;
+                  this.$router.replace(this.LoginFrontPageUrl.fullPath);
+                }
+              })
+              //执行以下更具第三方登录没有注册过的注册用户信息后台操作
+              // this.$router.replace(this.LoginFrontPageUrl.fullPath);//执行本要前往的网页但由于未登录的原因
+            }
+            else
+            {
+              UserRegister({"UserName":this.UserRegisterName,"Password":this.UserRegisterPassword,"RPassword":this.UserRegisterPassword,"RegisterPhone":this.UserRegisterPhone,"Expertise":this.UserYzm}).then(response=>{
               if(response==0){
                 this.$vux.toast.text('验证码错误!', 'bottom');
               }
@@ -104,6 +129,7 @@
                 this.$router.push('/login');
               }
             })
+            }
           }
           else
           {

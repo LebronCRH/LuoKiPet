@@ -18,6 +18,14 @@ Vue.use(VueTouch)
 Vue.use(VueRouter)
 Vue.use(ToastPlugin)
 
+Vue.prototype.$msgbox = function(title, position) {
+    // this.$vux.alert.show({
+    //     title: title,
+    //     content: msg
+    // });
+    this.$vux.toast.text(title,position);
+}
+
 const router = new VueRouter({
   routes
 })
@@ -41,22 +49,32 @@ VueRouter.prototype.goBack = function () {
 // });
 router.beforeEach((to, from, next) => {
 	let Topath=to;
-	// console.log(router);
-	// router.PriveUrl=from;
-	// console.log(Topath);
+	console.log(to);
+    console.log(from);
 	var TopathSplit=Topath.fullPath.split("/");
 	if(TopathSplit.length==3)
 	{
-		// setStore("FooterShow",true);
 		store.commit("ToggleFooterShow", true);
 	}
 	else
 	{
-		// setStore("FooterShow",false);
 		store.commit("ToggleFooterShow", false);
-		console
 	}
-	next();
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+	    if (!store.state.isLogin) {
+	    	console.log(to);
+	    	store.state.LoginFrontPageUrl=to;
+	      next({
+	        path: '/loginIndex',
+	        // query: { redirect: to.fullPath }
+	      })
+	    } else {
+	      next()
+	    }
+	} else {
+	    next() // 确保一定要调用 next()
+	}
+	next()
 });
 router.afterEach((to, from) => {
   router.isBack=false;
@@ -67,8 +85,8 @@ FastClick.attach(document.body)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+const vm=new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app-box')
+}).$mount('#app-box') 

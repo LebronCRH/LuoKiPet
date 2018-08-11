@@ -5,6 +5,7 @@ import {
 	UPDATE_PACKAGECART,
 	USER_ISLOGIN,
 	LOCAL_USER,
+	OUTLOGIN_OTHER,
 } from './mutation-types.js'
 import {setStore, getStore,removeStore,setSessionStore, getSessionStore,removeSessionStore,} from '../config/mUtils'
 import cookie from '../utils/cookie'
@@ -12,6 +13,7 @@ import util from '../utils'
 import config from '../../config/index'
 import store from './'
 import Vue from 'Vue'
+import {imgPCBaseUrl} from '@/config/env'
 
 export default {
 	[ADD_PACKAGECART](state,{
@@ -140,6 +142,18 @@ export default {
 		console.log(user);
 		state.userInfo = user;
 		state.isLogin=true;
+	},
+	[OUTLOGIN_OTHER](state){
+		Object.keys(state.OtherAuths).forEach(s=>{
+          if (state.OtherAuths[s].authResult ) {
+            state.OtherAuths[s].logout(function(e){
+              state.OthenLoginInfo=null;//清除用户登录信息
+              alert( "注销登录认证成功！" );
+            }, function(e){
+              alert( "注销登录认证失败！" );
+            });
+          }
+        })
 	},
 	ToggleFooterShow(state,flag){
 		state.FooterShow=flag;

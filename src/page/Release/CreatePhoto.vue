@@ -105,7 +105,7 @@ export default {
         EditBtn:true,
         SelectShow:false,
         LoveShowPhotoContent:'',
-        SelectPhotos:[{url:'static/image/user1.jpg',type:1},{url:'static/image/user2.jpg',type:1},{url:'static/image/user3.jpg',type:1}],
+        SelectPhotos:[{url:'static/image/user1.jpg',type:1},{url:'static/image/user2.jpg',type:1},{url:'static/image/user3.jpg',type:1},{url:'static/image/mmexport1533180160445.jpg',type:1}],
         // SelectPhotos:[],
         SelectCamera:[{url:'static/image/user4.jpeg',type:2},{url:'static/image/user5.jpeg',type:2}],
         plist:'12,34,56,78',

@@ -109,14 +109,15 @@ export default {
     props:[],
     methods: {
     	...mapMutations([
-                'UPDATE_PACKAGECART',
+                'UPDATE_PACKAGECART','OUTLOGIN_OTHER',
             ]),
         OutLogin(){
             removeStore('userInfo');
             this.$store.state.userInfo=null;
             this.$store.state.isLogin=false;
+            this.OUTLOGIN_OTHER();
             this.$router.back(-1);
-        }
+        },
     }
 }
 </script>

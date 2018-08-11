@@ -59,7 +59,7 @@
 		},
 
 		mounted(){
-
+      this.initData();
 		},
     computed: {
     ...mapState([
@@ -67,6 +67,14 @@
             ]),
     },
     methods:{
+      initData(){
+        if(this.$route.query.UserName)
+        {
+          console.log("mingz");
+          this.UserName=this.$route.query.UserName;
+          this.UserNameChange();
+        }
+      },
       TagglePassword(){
         this.PasswordState=!this.PasswordState;
       },
@@ -94,7 +102,14 @@
         {
           this.$store.state.UserRegisterName=this.UserName;
           this.$store.state.UserRegisterPassword=this.UserPassword;
-          this.$router.push('/createusersecond');
+          if(this.$route.query.CreateByType)
+          {
+            this.$router.push({ path: '/createusersecond', query: {CreateByType:this.$route.query.CreateByType}});
+          }
+          else
+          {
+            this.$router.push('/createusersecond');
+          }
         }
         else
         {

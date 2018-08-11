@@ -15,11 +15,12 @@ let imgUserBaseUrl='http://www.joingp.com:8084';
 let imgPCBaseUrl='http://www.joingp.com:8085';
 let imgPCUrl='http://www.joingp.com:8080';
 let socketBaseUrl='http://www.joingp.com:3000/';
+let H5LuoKiPetUrl="http://www.joingp.com:8083/";
 
 
 if (process.env.NODE_ENV == 'development') {
 	// baseUrl='http://120.78.183.108:6786';
-	baseUrl='http://www.joingp.com:8084';
+	baseUrl='http://localhost:8084';
 
 }else if(process.env.NODE_ENV == 'production'){
 
@@ -35,4 +36,5 @@ export {
 	socketBaseUrl,
 	imgPCBaseUrl,
 	imgPCUrl,
+	H5LuoKiPetUrl,
 }

@@ -61,7 +61,14 @@
                 this.$vux.toast.text('该手机号已被使用!', 'bottom');
               }else{
                 this.$store.state.UserRegisterPhone=this.UserPhone;
-                this.$router.push('/createuserthirdly');
+                if(this.$route.query.CreateByType)
+                {
+                  this.$router.push({ path: '/createuserthirdly', query: {CreateByType:this.$route.query.CreateByType}});
+                }
+                else
+                {
+                  this.$router.push('/createuserthirdly');
+                }
               }
             });
           }

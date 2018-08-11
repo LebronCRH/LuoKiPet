@@ -29,7 +29,7 @@
         </ul>
         <div class="UserInfo">
           <div class="UserImg">
-             <img v-show="isLogin" src="static/image/UserBJ.png">
+             <img v-if="isLogin" :src="UserImgFromat(this.userInfo.UserPhotos)">
              <img v-show="!isLogin" src="static/image/png/userLogin.png" @click="GoLogin()">
           </div>
           <div class="UserName">
@@ -190,6 +190,9 @@
   import axios from 'axios'
   import {mapState, mapMutations} from 'vuex'
   import { Scroller,XSwitch,Group  } from 'vux'
+  import {UserRegisterPhoneHas,UserRegister,CeShi,UserQQRegister} from '@/service/getdata'
+  import {imgPCBaseUrl} from '@/config/env'
+  import {UserImgFromat} from '@/config/mUtils'
 
   export default {
       components: {
@@ -227,6 +230,7 @@
         	FirstGetUserBJH:true,
           transitionName:'router-slid',
           transitionMode:'in-out',
+          imgPCBaseUrl:imgPCBaseUrl,
           // isLogin:false,
         }
       },
@@ -269,9 +273,13 @@
       	    }
       	},
         GoLogin(){
-          this.$store.state.LoginFrontPageUrl=this.$route.path;
+          this.$store.state.LoginFrontPageUrl=this.$route;
+          console.log(this.$route);
           this.$router.push('/loginIndex');
         },
+        UserImgFromat(userimg){
+           return UserImgFromat(userimg);
+        }
       }
   }
 </script>

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="service_Head">
+  <div class="service_Head" v-if="CurrentNode">
 	     <div class="ps_Indextop">
        <span @click="goChangeLocation()">{{CurrentNode.name}}</span>
        <img src="static/image/sjDown.png" alt="">

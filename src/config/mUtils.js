@@ -1,3 +1,4 @@
+import {imgPCBaseUrl} from '@/config/env'
 /**
  * 存储localStorage
  */
@@ -65,7 +66,19 @@ export const getStyle = (element, attr, NumberMode = 'int') => {
     //在获取 opactiy 时需要获取小数 parseFloat
     return  NumberMode == 'float'? parseFloat(target) : parseInt(target);
 } 
-
+/**
+ *格式化用户头像路径
+ */
+export const UserImgFromat=(userimg)=>{
+    if(userimg.search("http")== 0)
+    {
+        return userimg;
+    }
+    else
+    {
+        return imgPCBaseUrl+userimg;
+    }
+}
 /**
  * 页面到达底部，加载更多
  */

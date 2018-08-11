@@ -67,7 +67,7 @@
     </li>
     <li class="CreateItem Video bounceInUp animated">
       <div class="img">
-         <div class="ImgItem Video">
+         <div class="ImgItem Video" @click="GoCeshi()">
            <img src="static/image/png/CreateVideo.png" alt="">
          </div>
       </div>
@@ -110,6 +110,9 @@
       },
       GoCreateArticle(){
         this.$router.push('/createarticle');
+      },
+      GoCeshi(){
+        this.$router.push('/shareserviceshopdetails/6419')
       }
     },
 	}

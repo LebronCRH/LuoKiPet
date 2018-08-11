@@ -19,6 +19,7 @@ import petshowIndex from '@/page/petshow/petshowIndex.vue'
 import ShopMap from '@/page/petservice/childrens/childrens/shopmap.vue'
 import ShopStreetscape from '@/page/petservice/childrens/childrens/shopstreetscape.vue'
 import loginIndex from '@/page/login/index.vue'
+import OtherLogin from '@/page/login/otherlogin.vue'
 import CreateUserFirst from '@/page/login/createuserfirst.vue'
 import CreateUserSecond from '@/page/login/createusersecond.vue'
 import CreateUserThirdly from '@/page/login/createuserthirdly.vue'
@@ -39,6 +40,7 @@ import CreateArticle from '@/page/Release/CreateArticle.vue'
 import ArticleView from '@/page/Release/ArticleView.vue'
 import PetCategoryIndex from '@/page/petcategory/petcategoryIndex.vue'
 import PetCategoryDetails from '@/page/petcategory/childrens/petcategorydetails.vue'
+import ShareServiceShopDetails from '@/page/share/shareserviceshopdetails.vue'//服务店分享页面
 import App from '../App'
 
 // Routes
@@ -70,7 +72,8 @@ export default [
             },
             children:[{
               path:'setting',
-              component:Setting
+              component:Setting,
+              meta: { requiresAuth: true },
             },{
               path:'myserviceorder',
               component:MyServiceOrder
@@ -105,6 +108,7 @@ export default [
           children:[{
             path:'confirmorder',
             component:ConfirmOrder,
+            meta: { requiresAuth: true },
             children:[{
               path:'changeorderphone',
               component:ChangeOrderPhone
@@ -200,6 +204,11 @@ export default [
       component:Login
     },
     {
+      name:'otherlogin',
+      path:'/otherlogin',
+      component:OtherLogin
+    },
+    {
       name:'luokifriend',
       path:'/luokifriend',
       component:LuoKiFriend
@@ -212,12 +221,14 @@ export default [
     {
       name:'createphoto',
       path:'/createphoto',
-      component:CreatePhoto
+      component:CreatePhoto,
+      meta: { requiresAuth: true }
     },
     {
       name:'createarticle',
       path:'/createarticle',
-      component:CreateArticle
+      component:CreateArticle,
+      meta: { requiresAuth: true }
     },
     {
       name:'articleview',
@@ -229,6 +240,11 @@ export default [
       path: '/chat/:sessionId',
       component:P2PChat
     },
+    {//服务店分享页面
+      name:'shareserviceshopdetails',
+      path:'/shareserviceshopdetails/:shopid',
+      component:ShareServiceShopDetails,
+    }
   ]
   },
 ]

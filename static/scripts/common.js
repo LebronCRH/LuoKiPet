@@ -1,4 +1,4 @@
-﻿(function(w){
+(function(w){
 // 空函数
 function shield(){
 	return false;
@@ -7,8 +7,10 @@ document.addEventListener('touchstart',shield,false);//取消浏览器的所有�
 document.oncontextmenu=shield;//屏蔽选择函数
 // H5 plus事件处理
 var ws=null,as='pop-in';
+var first = null;
 function plusReady(){
 	ws=plus.webview.currentWebview();
+	console.log(ws);
 	// Android处理返回键
 	plus.key.addEventListener('backbutton',function(){
 		back();
@@ -30,18 +32,43 @@ document.addEventListener('DOMContentLoaded',function(){
 },false);
 // 处理返回事件
 w.back=function(hide){
-	if(w.plus){
-		ws||(ws=plus.webview.currentWebview());
-		if(hide||ws.preate){
-			ws.hide('auto');
-		}else{
-			ws.close('auto');
-		}
-	}else if(history.length>1){
-		history.back();
-	}else{
-		w.close();
-	}
+	// if(w.plus){
+	// 	ws||(ws=plus.webview.currentWebview());
+	// 	if(hide||ws.preate){
+	// 		ws.hide('auto');
+	// 	}else{
+	// 		ws.close('auto');
+	// 	}
+	// }else if(history.length>1){
+	// 	history.back();
+	// }else{
+	// 	w.close();
+	// }
+	// var strurl=window.window.location.hash;
+	// var hashlist=strurl.split('/');
+	// if(hashlist.length==3&&hashlist[1]=="home")
+	// {
+	// 	if (!first) {
+	//         first = new Date().getTime();//记录第一次按下回退键的时间
+	//         mui.toast('再按一次退出应用');
+	//         // history.go(-1)//回退到上一页面
+	//         setTimeout(function() {//1s中后清除 
+	//             first = null;
+	//         }, 1000);
+	//     } else {
+	//     	// console.log("第二次");
+	//         if (new Date().getTime() - first < 1000) {//如果两次按下的时间小于1s，
+	//         	alert("退出APP");
+	//         	// console.log("退出应用");
+	//             plus.runtime.quit();//那么就退出app
+	//         }
+	//     }
+	// }
+	// else
+	// {
+	// 	alert("后退一页");
+	// 	// history.go(-1)//回退到上一页面
+	// }
 };
 // 处理点击事件
 var openw=null,waiting=null;

@@ -6,6 +6,11 @@ import fetch from '../config/fetch'
 		UserName:username,
 		UserPassword:password,
 	});
+    /*用户使用QQ互联登录*/
+    export const UserQQLogin=(access_token,openid)=>fetch('/user/UserQQLogin',{
+        Access_Token:access_token,
+        OpenId:openid,
+    });
 	/*判断是否有当前用户名注册过*/
 	export const JudgeHasUser=(username)=>fetch('/user/JudgeHasUser',{
 		UserName:username,
@@ -28,6 +33,8 @@ import fetch from '../config/fetch'
 	});
 	/*注册用户信息到数据库*/
 	export const UserRegister=(Obj)=>fetch('/user/UserRegister',Obj,'POST');
+    /*QQ时的注册类型*/
+    export const UserQQRegister=(Obj)=>fetch('/user/UserQQRegister',Obj,'POST');
 	/*用户忘记密码手机验证*/
 	export const ForgetPasswordVerification=(phone)=>fetch('/user/ForgetPasswordVerification',{
 		Phone:phone,
