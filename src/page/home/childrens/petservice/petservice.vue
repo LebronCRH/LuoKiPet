@@ -1,24 +1,25 @@
 <template>
 <div>
-  <div class="service_Head" v-if="CurrentNode">
+  <div class="service_Head" v-if="CurrentNode" ref="Head">
+  <div ref="HelperLine" style="background-color:#fff;"></div>
 	     <div class="ps_Indextop">
-       <span @click="goChangeLocation()">{{CurrentNode.name}}</span>
-       <img src="static/image/sjDown.png" alt="">
-       <div>
-       <router-link :to="{ path: '/petserviceIndex/ticketbag'}">
-       <img src="../../../../assets/image/bag1.png">
-       <p v-if="CartTotalNum>0" class="Num">{{this.CartTotalNum}}</p>
-       </router-link>
+         <span @click="goChangeLocation()">{{CurrentNode.name}}</span>
+         <img src="static/image/sjDown.png" alt="">
+         <div>
+           <router-link :to="{ path: '/petserviceIndex/ticketbag'}">
+             <img src="../../../../assets/image/bag1.png">
+             <p v-if="CartTotalNum>0" class="Num">{{this.CartTotalNum}}</p>
+           </router-link>
+         </div>
        </div>
-</div>
-<div class="ps_serach">
-   <div class="ps_divserach">
-   <img src="../../../../assets/image/serach2.png">
-   <input type="text" name="serachName">
-   </div>
-</div>
-</div>
-<div class="Middle">
+      <div class="ps_serach">
+         <div class="ps_divserach">
+           <img src="../../../../assets/image/serach2.png">
+           <input type="text" name="serachName">
+         </div>
+      </div>
+  </div>
+<div class="Middle" ref="Middle">
 <scroller ref="scroller" lock-x height="-133" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
 <div>
       <div class="ps_Img">
@@ -87,7 +88,7 @@
         },
     computed:{
           ...mapState([
-                'PackageCartList','UserNode','UserSelectNode',
+                'PackageCartList','UserNode','UserSelectNode','StatusbarHeight','StatusbarHeightRem',
             ]),
           CurrentNode:function(){
             if(this.UserSelectNode){
@@ -97,14 +98,42 @@
             {
               return this.UserNode;
             }
+          },
+          QueryNodeModel:function(){
+            var name=this.UserNode.name;
+            var longitude,latitude;
+            if(this.UserSelectNode){
+              longitude=this.UserSelectNode.longitude;
+              latitude=this.UserSelectNode.latitude;
+            }
+            else{
+              longitude=this.UserNode.longitude;
+              latitude=this.UserNode.latitude;
+            }
+            return {
+              name:this.UserNode.name,
+              longitude:longitude,
+              latitude:latitude,
+            }
           }
     },
 		mounted () {
       this.initData();
 		},
+    updated(){
+      this.initHeadHeight();
+    },
 	    methods: {
       onRefresh (done) {
           done()
+      },
+      initHeadHeight(){
+        if(this.$refs.Head)
+        {
+          this.$refs.Head.style.height=(2.2+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          this.$refs.Middle.style.top=(2.2+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+        }
       },
       hideLoading(){
           this.showLoading = false;
@@ -123,9 +152,11 @@
         this.GetShopList();
       },
       initPackCartData(){
+        this.CartTotalNum=0;
         Object.keys(this.PackageCartList).forEach(shopid=>{
           Object.keys(this.PackageCartList[shopid].ServiceList).forEach(serviceid=>{
             Object.keys(this.PackageCartList[shopid].ServiceList[serviceid]).forEach(packageid=>{
+              console.log(this.PackageCartList[shopid].ServiceList[serviceid][packageid].SaleNum);
               this.CartTotalNum+=this.PackageCartList[shopid].ServiceList[serviceid][packageid].SaleNum
             })
           })
@@ -142,7 +173,7 @@
       	// 	console.log(response);
       	// })
         // await GetPetShopByCityAndJwd("杭州",120.206911,30.297499).then(response=>{
-        await GetPetShopByCityAndJwd(this.CurrentNode.name,this.CurrentNode.longitude,this.CurrentNode.latitude).then(response=>{
+        await GetPetShopByCityAndJwd(this.QueryNodeModel.name,this.QueryNodeModel.longitude,this.QueryNodeModel.latitude).then(response=>{
           this.shoplistdata=response;
           console.log(response);
         })
@@ -154,7 +185,6 @@
 
       },
       UpPagedade () {
-        console.log(66);
         this.$nextTick(() => {
         setTimeout(() => {
           this.$refs.scroller.donePullup()
@@ -162,7 +192,6 @@
         })
       },
       DownPageData () {
-        console.log("555");
         this.$nextTick(() => {
         setTimeout(() => {
           this.$refs.scroller.donePulldown()
@@ -171,8 +200,15 @@
       }
   },
   watch:{
-    PackageCartList:function(){
-      this.initPackCartData();
+    PackageCartList:{
+      handler:function(){
+        console.log("主页数量变化");
+        this.initPackCartData();
+      },
+      deep:true
+    },
+    CurrentNode:function(){
+      this.GetShopList();
     },
   }
 	}

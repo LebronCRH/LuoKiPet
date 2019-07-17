@@ -1,9 +1,9 @@
 <template>
   <div id="app">
   <transition :name="transitionName" :mode="transitionMode">
-  <keep-alive>
+<!--   <keep-alive> -->
     <router-view></router-view>
-    </keep-alive>
+<!--     </keep-alive> -->
     </transition>
 <!--     <fullscreen-img></fullscreen-img> -->
   </div>
@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     ...mapState([
-                  'ShareServices','OtherAuths',
+                  'ShareServices','OtherAuths','StatusbarHeight','StatusbarHeightRem',
               ]),
   },
   mounted(){
@@ -76,7 +76,8 @@ export default {
     initOtherService(){
       var that=this;
       document.addEventListener("plusready", function(){
-        console.log("设备加载完成");
+          that.$store.state.StatusbarHeight= plus.navigator.getStatusbarHeight();//获取设备的状态栏高度
+          that.$store.state.StatusbarHeightRem=plus.navigator.getStatusbarHeight()*10/window.screen.width;//获取设备的状态栏高度Rem值
           if(window.plus)
           {
             plus.share.getServices((services)=>{
@@ -111,6 +112,7 @@ export default {
 body {
   background-color: #fbf9fe;
 }
+p{margin:0px;padding:0px;}
 .router-slid-enter-active, .router-slid-leave-active {
     transition: all .4s;
 }

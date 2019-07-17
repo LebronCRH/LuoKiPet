@@ -9,16 +9,16 @@
      <img src="static/image/Close1.png">
    </div>
 
-   <div class="Top">
-     <p class="p_title">{{currentservice.serviceName}}  {{selectPackage.name}}</p>
-     <p class="p_price"><span class="new_price">￥{{selectPackage.sprice || ServicePackage[0].sprice}}</span><span class="old_price"><del>￥{{selectPackage.oldprice || ServicePackage[0].oldprice}}</del></span></p>
+   <div class="Top" v-if="currentservice.MShopService">
+     <p class="p_title">{{currentservice.MShopService.ServiceName}}  {{selectPackage.name}}</p>
+     <p class="p_price"><span class="new_price">￥{{selectPackage.sprice}}</span><span class="old_price"><del>￥{{selectPackage.Oldprice}}</del></span></p>
      <p class="p_discount"><img src="static/image/discount.png"><span>全场服务85折优惠(最高优惠50元)</span></p>
    </div>
 
      <div class="Mid_Category">
        <p class="Title">服务类型</p>
        <ul class="ul_serviceCate">
-         <li class="li_serviceCate" v-for="(item,index) in ServicePackage" :class="{active:selectPackId==index}" @click="selectPack(item,index)">
+         <li class="li_serviceCate" v-for="(item,index) in currentservice.MServicePackageList" :class="{active:selectPackId==item.PackageId}" @click="selectPack(item,item.PackageId)">
          <span>{{item.name}}</span>
          </li>
        </ul>
@@ -37,21 +37,23 @@
 <script>
 import axios from 'axios'
 import {mapState, mapMutations} from 'vuex'
+import {GetShopServiceDetail} from '@/service/getdata' 
 
     export default {
       data(){
             return{
               servicelistdata:[],
               currentservice:{
-                serviceName:null,
-                Category:null,
-                ForServiceID:null,
-                Category:[],
+                MPetServiceShop:null,
+                MShopService:null,
+                MServicePackageList:[],
               },
               selectPackage:{
+                ForServiceID:null,
+                PackageId:null,
                 name:null,
                 sprice:null,
-                oldprice:null
+                Oldprice:null
               },
               ServicePackage:null,
               modal:false,
@@ -90,32 +92,24 @@ import {mapState, mapMutations} from 'vuex'
           ...mapMutations([
                 'ADD_PACKAGECART',
             ]),
-          GetServiceList(){
-            axios.get("./static/data/ServiceCategory.json").then((response)=>{
-              this.servicelistdata=response.data;
-              let Curservice=null;
-              this.servicelistdata.forEach((item,index,list)=>{
-                 if(item.ForServiceID==10001){
-                  this.currentservice=item;
-                  console.log(this.currentservice.serviceName);
-                }
-              });
-
-              // this.currentservice=Curservice;
-              this.GetServicePackageList();//获得当前服务项目的服务类型数据
-              // this.selectPackage=this.currentservice.Category[0];
-            })
+          modalTaggle(){
+            this.modal=!this.modal;
+            this.selectPackId=null;
+            this.BuyNum=1;
           },
-          GetCurrentService(){
-            this.servicelistdata.forEach(function(item,index,list){
-              if(item.ForServiceID==10001){
-                this.currentservice=item;
-              }
-            })
-          },
-          GetServicePackageList(){
-            this.ServicePackage=this.currentservice.Category;
-            console.log(this.ServicePackage);
+          async GetServiceList(){
+            if(this.ServiceId)
+            {
+              await GetShopServiceDetail(this.ServiceId).then(response=>{
+                this.currentservice=response;
+                this.currentservice.MServicePackageList.forEach((item,index)=>{
+                  if(item.PackageId==this.CurrentSelectPackageId){
+                    this.selectPackage=item;
+                    console.log(this.selectPackage);
+                  }
+                })
+              })
+            }
           },
           UpdateCurrentService(){
             var _this=this;
@@ -125,7 +119,6 @@ import {mapState, mapMutations} from 'vuex'
                 this.currentservice=item;
               }
             })
-            this.GetServicePackageList();
           },
           AddPackageCart(shopid,shopname,serviceid,servicename,packageid,packagename,salenum,packageprice){
             console.log(shopid,shopname,serviceid,servicename,packageid,packagename,salenum,packageprice);
@@ -133,10 +126,8 @@ import {mapState, mapMutations} from 'vuex'
             this.modalTaggle();
           },
           GoConfirmOrder(){
-            // console.log("购买");
-            // this.$router.go({path:'/petserviceIndex/serviceshopdetails/confirmorder'});
             if(this.CurrentSelectPackageId!=this.CurrentSelectId){
-              this.$emit('BtnClick',{ shopid:this.ShopId, serviceid:this.ServiceId,oldpackageid:this.CurrentSelectPackageId,newpackageid:this.CurrentSelectId,newpackagename:this.selectPackage.name,newpackageprice:this.selectPackage.sprice,newpackageoldprice:this.selectPackage.oldprice});
+              this.$emit('BtnClick',{ shopid:this.ShopId, serviceid:this.ServiceId,oldpackageid:this.CurrentSelectPackageId,newpackageid:this.CurrentSelectId,newpackagename:this.selectPackage.name,newpackageprice:this.selectPackage.sprice,newpackageoldprice:this.selectPackage.Oldprice});
             }
             this.modalTaggle();
           },
@@ -145,23 +136,13 @@ import {mapState, mapMutations} from 'vuex'
             this.SelectPackageFlag=false;
             this.selectPackage=item;
             this.CurrentSelectId=index;
-          },
-          modalTaggle(){
-            this.modal=!this.modal;
-            this.selectPackage={
-                name:null,
-                sprice:null,
-                oldprice:null
-              };
-            this.selectPackId=null;
-            this.BuyNum=1;
           }
         },
         watch: {
           ServiceId:function(value){
             console.log(value);
             this.SelectPackageFlag=true;
-            this.UpdateCurrentService();
+            this.GetServiceList();
           }
         }
     }

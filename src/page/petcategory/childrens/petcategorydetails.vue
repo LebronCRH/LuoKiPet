@@ -1,6 +1,6 @@
 <template>
   <div class="rating_page">
-    <div class="ShopHead">
+    <div class="ShopHead" ref="ShopHead">
        <div class="shopheadback" @click="$router.goBack()">
          <img src="static/image/back.png">
        </div>
@@ -11,7 +11,7 @@
           <img src="static/image/dian.png">
        </div>
     </div>
-    <div class="Middle">
+    <div class="Middle" ref="Middle">
       <scroller ref="scroller" lock-x height="-0" scrollbar-y @on-scroll="PageSlide">
         <div>
           <div class="PetTopInfo" ref="PetTopInfo">
@@ -266,17 +266,24 @@
     },
     computed:{
       ...mapState([
-                  'PackageCartList','UserNode','UserSelectNode',
+                  'PackageCartList','UserNode','UserSelectNode','StatusbarHeight','StatusbarHeightRem',
               ]),
     },
     mounted() {
       this.initData();
-      // this.hideLoading();
+      this.initHeadHeight();
     },
     methods:{
       ...mapMutations([
                   'ADD_PACKAGECART','JIA_PACKAGECART','JIAN_PACKAGECART'
               ]),
+        initHeadHeight(){
+        if(this.$refs.Middle)
+          {
+            this.$refs.ShopHead.style.height=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.my_shopheadmid.style.paddingTop=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         PageSlide(pos){
           this.HeadHeight=this.$refs.my_shopheadmid.offsetHeight;
           this.ImgHeight=this.$refs.PetTopInfo.offsetHeight;
@@ -439,9 +446,9 @@
           transform: translateY(100%);
   }
   .ShopHead{
-    width:10rem;height:1.5rem;padding-top:0.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+    width:10rem;height:1.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
     .shopheadback{
-      height:100%;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+      height:1.5rem;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;bottom:0rem;z-index:99;box-sizing:border-box;
       display:flex;justify-content:content;align-items:content;
       img{
         width:0.6rem;height:0.6rem;
@@ -452,7 +459,7 @@
       p{line-height:1.5rem;color:#fff;font-size:0.5rem;}
     }
     .shopheadedit{
-      width:1.5rem;height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
+      width:1.5rem;height:1.5rem;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;bottom:0rem;right:0rem;z-index:99;box-sizing:border-box;
       display:flex;justify-content:content;align-items:content;
       img{
         width:0.6rem;height:0.6rem;
@@ -469,172 +476,172 @@
       transform: translate3d(2rem, 0, 0);
       opacity: 0;
   }
-.PetTopInfo{width:100%;height:6rem;position:relative;
-  .BJ{
-    width:100%;height:100%;position:absolute;left: 0rem;top: 0rem;
-    -webkit-filter: blur(3px);
-      -moz-filter: blur(3px);
-      -o-filter: blur(3px);
-      -ms-filter: blur(3px);
-      filter: blur(3px);
-      img{width:10rem;height:6rem;}
-  }
-  .PetImg{width:100%;height:100%;position:absolute;top:0rem;left:0rem;
-    .Img{width:2rem;height:2rem;position:relative;margin:0.2rem auto;}
-    img{width:2rem;height:2rem;display:block;border-radius:1rem;}
-    .PetName{width:100%;height:1rem;font-size:0.6rem;font-family:KaiTi;margin:0rem auto;line-height:1rem;text-align:center;color:#fff;}
-    .PetIntro{width:85%;margin:0rem auto;font-size:0.4rem;text-align:center;line-height:0.6rem;color: #fff;font-family:KaiTi;}
-  }
-}
-.lab.BM {
-    position: absolute;
-    right: -90px;
-    bottom: 35px;
-    background-color: #dab02e;
-    height: 22px;
-    border-radius: 11px;
-    // width: 100px;
-    display:flex;align-items:center;
-}
-.lab .IC {
-    display: block;
-    height: 18px;
-    width: 18px;
-    float: left;
-    background: #fff;
-    border-radius: 9px;
-    margin-top: 2px;
-    margin-left: 2px;
-    margin-right: 5px;
-    text-align: center;
-    line-height: 14px;
-    img {
-        width:18px;height:18px;
+  .PetTopInfo{width:100%;height:6rem;position:relative;
+    .BJ{
+      width:100%;height:100%;position:absolute;left: 0rem;top: 0rem;
+      -webkit-filter: blur(3px);
+        -moz-filter: blur(3px);
+        -o-filter: blur(3px);
+        -ms-filter: blur(3px);
+        filter: blur(3px);
+        img{width:10rem;height:6rem;}
     }
-}
-.span1 {
-    font-family: KaiTi;
-    font-size: 11px;
-    color: white;
-}
-.span2 {
-    font-family: KaiTi;
-    font-size: 11px;
-    color: #b200ff;
-}
-.lab.ENM {
-    position: absolute;
-    right: -75px;
-    bottom: 5px;
-    background-color: #2a9ebd;
-    height: 22px;
-    border-radius: 11px;
-    width: 100px;
-    display:flex;align-items:center;
-}
-.PetMidderInfo{width:100%;background:#fff;
-   .PetInfoTab{width:100%;height:1.2rem;display:flex;justify-content:center;
-    .Information{width:50%;height:100%;display:flex;align-items:center;justify-content:center;
+    .PetImg{width:100%;height:100%;position:absolute;top:0rem;left:0rem;
+      .Img{width:2rem;height:2rem;position:relative;margin:0.2rem auto;}
+      img{width:2rem;height:2rem;display:block;border-radius:1rem;}
+      .PetName{width:100%;height:1rem;font-size:0.6rem;font-family:KaiTi;margin:0rem auto;line-height:1rem;text-align:center;color:#fff;}
+      .PetIntro{width:85%;margin:0rem auto;font-size:0.4rem;text-align:center;line-height:0.6rem;color: #fff;font-family:KaiTi;}
+    }
+  }
+  .lab.BM {
+      position: absolute;
+      right: -90px;
+      bottom: 35px;
+      background-color: #dab02e;
+      height: 22px;
+      border-radius: 11px;
+      // width: 100px;
+      display:flex;align-items:center;
+  }
+  .lab .IC {
+      display: block;
+      height: 18px;
+      width: 18px;
+      float: left;
+      background: #fff;
+      border-radius: 9px;
+      margin-top: 2px;
+      margin-left: 2px;
+      margin-right: 5px;
+      text-align: center;
+      line-height: 14px;
+      img {
+          width:18px;height:18px;
+      }
+  }
+  .span1 {
+      font-family: KaiTi;
+      font-size: 11px;
+      color: white;
+  }
+  .span2 {
+      font-family: KaiTi;
+      font-size: 11px;
+      color: #b200ff;
+  }
+  .lab.ENM {
+      position: absolute;
+      right: -75px;
+      bottom: 5px;
+      background-color: #2a9ebd;
+      height: 22px;
+      border-radius: 11px;
+      width: 100px;
+      display:flex;align-items:center;
+  }
+  .PetMidderInfo{width:100%;background:#fff;
+     .PetInfoTab{width:100%;height:1.2rem;display:flex;justify-content:center;
+      .Information{width:50%;height:100%;display:flex;align-items:center;justify-content:center;
+        img{width:0.5rem;height:0.5rem;margin-right:0.2rem;}
+        span{font-size:0.5rem;font-family:KaiTi;}
+        &.active{
+          span{color:#38dbb0;}
+        }
+      }
+      .Features{width:50%;height:100%;display:flex;align-items:center;justify-content:center;
+        img{width:0.5rem;height:0.5rem;margin-right:0.2rem;}
+        span{font-size:0.5rem;font-family:KaiTi;}
+        &.active{
+          span{color:#38dbb0;}
+        }
+      }
+    }
+  }
+  .InformationDetails{
+      width:100%;
+      .ul_Information{
+        width:100%;list-style:none;padding:0rem 0.2rem;box-sizing:border-box;overflow:hidden;
+        .li_InformationItem{
+          min-width:50%;height:1rem;float:left;display:flex;align-items:center;
+          .Title{
+            font-size:0.45rem;font-family:KaiTi;color:#000;
+          }
+          .Value{
+            font-size:0.45rem;font-family:KaiTi;color:#808080;
+          }
+        }
+      }
+      .ul_Features{
+        width:100%;list-style:none;padding:0rem 0.2rem;box-sizing:border-box;overflow:hidden;
+        .li_FeaturesItem{
+          min-width:50%;height:1rem;float:left;display:flex;align-items:center;
+          .Title{
+            font-size:0.45rem;font-family:KaiTi;color:#000;
+          }
+          .Value{
+            font-size:0.45rem;font-family:KaiTi;color:#808080;
+            i {
+                width: 80px;
+                height: 12px;
+                display: inline-block;
+                background: url(../../../../static/image/png/star.png);
+            }
+            .XX-1 {
+                background-position: 0 -0px;
+            }
+            .XX-2 {
+                background-position: 0 -12px;
+            }
+            .Value .XX-3 {
+                background-position: 0 -24px;
+            }
+            .XX-4 {
+                background-position: 0 -36px;
+            }
+            .XX-5 {
+                background-position: 0 -48px;
+            } 
+            .XX-6 {
+                background-position: 0 -60px;
+            }
+            .XX-7 {
+                background-position: 0 -72px;
+            }
+            .XX-8 {
+                background-position: 0 -84px;
+            }
+            .XX-9 {
+                background-position: 0 -96px;
+            }
+            .XX-10 {
+                background-position: 0 -108px;
+            } 
+          }
+        }
+      }
+   }
+  .BottomIntro{width:100%;height:1.2rem;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:0.2rem;
       img{width:0.5rem;height:0.5rem;margin-right:0.2rem;}
-      span{font-size:0.5rem;font-family:KaiTi;}
-      &.active{
-        span{color:#38dbb0;}
+      span{font-size:0.5rem;font-family:KaiTi;color:#38dbac;}
+   }
+  .BottomItem{width:100%;padding:0.2rem;box-sizing:border-box;background:#fff;}
+  .SlideOrderState{
+      width:100%;
+      .vux-tab-container {
+          height:1.5rem;
+          top: 0;
+          left: 0;
+          right: 0;
+          overflow: hidden;
+          position: absolute;
       }
-    }
-    .Features{width:50%;height:100%;display:flex;align-items:center;justify-content:center;
-      img{width:0.5rem;height:0.5rem;margin-right:0.2rem;}
-      span{font-size:0.5rem;font-family:KaiTi;}
-      &.active{
-        span{color:#38dbb0;}
-      }
-    }
-  }
-}
-.InformationDetails{
-  width:100%;
-  .ul_Information{
-    width:100%;list-style:none;padding:0rem 0.2rem;box-sizing:border-box;overflow:hidden;
-    .li_InformationItem{
-      min-width:50%;height:1rem;float:left;display:flex;align-items:center;
-      .Title{
-        font-size:0.45rem;font-family:KaiTi;color:#000;
-      }
-      .Value{
-        font-size:0.45rem;font-family:KaiTi;color:#808080;
-      }
-    }
-  }
-  .ul_Features{
-    width:100%;list-style:none;padding:0rem 0.2rem;box-sizing:border-box;overflow:hidden;
-    .li_FeaturesItem{
-      min-width:50%;height:1rem;float:left;display:flex;align-items:center;
-      .Title{
-        font-size:0.45rem;font-family:KaiTi;color:#000;
-      }
-      .Value{
-        font-size:0.45rem;font-family:KaiTi;color:#808080;
-        i {
-            width: 80px;
-            height: 12px;
-            display: inline-block;
-            background: url(../../../../static/image/png/star.png);
-        }
-        .XX-1 {
-            background-position: 0 -0px;
-        }
-        .XX-2 {
-            background-position: 0 -12px;
-        }
-        .Value .XX-3 {
-            background-position: 0 -24px;
-        }
-        .XX-4 {
-            background-position: 0 -36px;
-        }
-        .XX-5 {
-            background-position: 0 -48px;
-        } 
-        .XX-6 {
-            background-position: 0 -60px;
-        }
-        .XX-7 {
-            background-position: 0 -72px;
-        }
-        .XX-8 {
-            background-position: 0 -84px;
-        }
-        .XX-9 {
-            background-position: 0 -96px;
-        }
-        .XX-10 {
-            background-position: 0 -108px;
-        } 
-      }
-    }
-  }
-}
-.BottomIntro{width:100%;height:1.2rem;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:0.2rem;
-  img{width:0.5rem;height:0.5rem;margin-right:0.2rem;}
-  span{font-size:0.5rem;font-family:KaiTi;color:#38dbac;}
-}
-.BottomItem{width:100%;padding:0.2rem;box-sizing:border-box;background:#fff;}
-.SlideOrderState{
-    width:100%;
-    .vux-tab-container {
-        height:1.5rem;
-        top: 0;
-        left: 0;
-        right: 0;
-        overflow: hidden;
-        position: absolute;
-    }
-  }
-.shop_back_svg_container {
-    position: fixed;
-    top: 0rem;
-    z-index: 999;
-    width: 100%;
-    height: 100%;
-    img{width:100vw;height:100vh;}
-}
+   }
+  .shop_back_svg_container {
+        position: fixed;
+        top: 0rem;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        img{width:100vw;height:100vh;}
+   }
 </style>

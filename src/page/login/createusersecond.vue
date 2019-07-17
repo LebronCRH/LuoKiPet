@@ -1,5 +1,6 @@
 <template>
 <div class="BigBJ">
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
   </div>
@@ -43,11 +44,11 @@
 		},
 
 		mounted(){
-
+      this.initHeadHeight();
 		},
     computed: {
     ...mapState([
-                'UserRegisterName','UserRegisterPassword','UserRegisterPhone',
+                'UserRegisterName','UserRegisterPassword','UserRegisterPhone','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     methods:{
@@ -76,7 +77,13 @@
           {
             this.UserNameHas=0;
           }
-      }
+      },
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
+      },
     }
 	}
 </script>

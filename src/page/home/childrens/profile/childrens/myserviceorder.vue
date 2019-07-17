@@ -1,12 +1,12 @@
 <template>
 	<div class="rating_page">
 	<head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-  <div class="SlideOrderState">
+  <div class="SlideOrderState" ref="SlideOrderState">
       <tab bar-active-color="#f55b50" :scroll-threshold="5" :line-width="3" active-color='#fc378c' v-model="InfoActiveIndex">
           <tab-item class="vux-center" active-class="active-tab" v-for="(item, index) in list2" @click="demo2 = item" :key="index">{{item}}</tab-item>
       </tab>
   </div>
-	<div class="Middle">
+	<div class="Middle" ref="Middle">
   	<scroller ref="scroller" lock-x height="-100" scrollbar-y @on-scroll="PageSlide">
   	<div>
     <swiper ref="swiperBigArticle" height="100vh" :show-dots="false" v-model="InfoActiveIndex" @on-index-change="InfoSwiperChange">
@@ -14,7 +14,13 @@
                   <div class="PageItem" ref="swiperArticle">
                     <ul class="ul_Order">
                       <li class="li_OrderItem" v-for="item in OrderInfoList">
-                        <p class="Head"><span class="ShopName">{{item._MServiceShop.ShopName}}</span><span class="OrderState">未付款</span></p>
+                        <p class="Head"><span class="ShopName">{{item._MServiceShop.ShopName}}</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==0">未付款</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==1">待使用</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==2">已完成</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==10">已取消(系统关闭)</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==20">已取消(用户取消)</span>
+                        </p>
                         <router-link :to="{ path:'/home/profile/orderdetails/'+item._MPetServiceShopOrder.MShopServiceOrderID}" tag="div" class="OrderInfo" v-for="detailsItem in item._MServiceShopOrderDetails" :key="detailsItem.MShopServiceOrderID">
                           <img :src="GetImgList(item._MServiceShop.ShopImg)" v-ImgEdit="{ width: 2, height: 2 }" alt="">
                           <div class="ServiceInfo">
@@ -25,12 +31,17 @@
                         <div class="OrderMoney">
                           <span>共{{item._MPetServiceShopOrder.OrderServiceNum}}个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥{{item._MPetServiceShopOrder.ActualPrice}}</span>
                         </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==0">
+                          <div class="CancelOrder" @click="CancelServiceOrderFront(item)">
                             <span>取消订单</span>
                           </div>
-                          <div class="PayOrder">
+                          <div class="PayOrder" @click="PayServiceOrder(item)">
                             <span>立即付款</span>
+                          </div>
+                        </div>
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==10||item._MPetServiceShopOrder.OrderState==20">
+                          <div class="PayOrder">
+                            <span>再次购买</span>
                           </div>
                         </div>
                       </li>
@@ -40,68 +51,35 @@
                 <swiper-item>
                   <div class="PageItem" ref="swiperArticle1">
                     <ul class="ul_Order">
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <!-- <div class="OrderInfo"> -->
-                        <router-link :to="{ path:'home/profile/orderdetails'}" tag="div" class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
+                      <li class="li_OrderItem" v-for="item in WaitPayOrder">
+                        <p class="Head"><span class="ShopName">{{item._MServiceShop.ShopName}}</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==0">未付款</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==1">待使用</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==2">已完成</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==10">已取消(系统关闭)</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==20">已取消(用户取消)</span>
+                        </p>
+                        <router-link :to="{ path:'home/profile/orderdetails/'+item._MPetServiceShopOrder.MShopServiceOrderID}" tag="div" class="OrderInfo" v-for="detailsItem in item._MServiceShopOrderDetails" :key="detailsItem.MShopServiceOrderID">
+                          <img :src="GetImgList(item._MServiceShop.ShopImg)" v-ImgEdit="{ width: 2, height: 2 }" alt="">
                           <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
+                            <div class="ServiceAndPackage">{{detailsItem.ServiceName}} {{detailsItem.PackageName}}</div>
+                            <div class="PriceAndNum"><span>￥{{detailsItem.OnePrice}}</span><span>{{detailsItem.ServiceNum}}</span></div>
                           </div>
                         </router-link>
-                        <!-- </div> -->
                         <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
+                          <span>共{{item._MPetServiceShopOrder.OrderServiceNum}}个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥{{item._MPetServiceShopOrder.ActualPrice}}</span>
                         </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==0">
+                          <div class="CancelOrder" @click="CancelServiceOrderFront(item)">
                             <span>取消订单</span>
                           </div>
                           <div class="PayOrder">
                             <span>立即付款</span>
                           </div>
                         </div>
-                      </li>
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <div class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
-                          <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
-                          </div>
-                        </div>
-                        <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
-                        </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
-                            <span>取消订单</span>
-                          </div>
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==10||item._MPetServiceShopOrder.OrderState==20">
                           <div class="PayOrder">
-                            <span>立即付款</span>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <div class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
-                          <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
-                          </div>
-                        </div>
-                        <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
-                        </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
-                            <span>取消订单</span>
-                          </div>
-                          <div class="PayOrder">
-                            <span>立即付款</span>
+                            <span>再次购买</span>
                           </div>
                         </div>
                       </li>
@@ -111,19 +89,25 @@
                 <swiper-item>
                   <div class="PageItem" ref="swiperArticle2">
                     <ul class="ul_Order">
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <div class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
+                      <li class="li_OrderItem" v-for="item in WaitUseOrder">
+                        <p class="Head"><span class="ShopName">{{item._MServiceShop.ShopName}}</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==0">未付款</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==1">待使用</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==2">已完成</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==10">已取消(系统关闭)</span>
+                        <span class="OrderState" v-if="item._MPetServiceShopOrder.OrderState==20">已取消(用户取消)</span>
+                        </p>
+                        <router-link :to="{ path:'home/profile/orderdetails/'+item._MPetServiceShopOrder.MShopServiceOrderID}" tag="div" class="OrderInfo" v-for="detailsItem in item._MServiceShopOrderDetails" :key="detailsItem.MShopServiceOrderID">
+                          <img :src="GetImgList(item._MServiceShop.ShopImg)" v-ImgEdit="{ width: 2, height: 2 }" alt="">
                           <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
+                            <div class="ServiceAndPackage">{{detailsItem.ServiceName}} {{detailsItem.PackageName}}</div>
+                            <div class="PriceAndNum"><span>￥{{detailsItem.OnePrice}}</span><span>{{detailsItem.ServiceNum}}</span></div>
                           </div>
-                        </div>
+                        </router-link>
                         <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
+                          <span>共{{item._MPetServiceShopOrder.OrderServiceNum}}个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥{{item._MPetServiceShopOrder.ActualPrice}}</span>
                         </div>
-                        <div class="OrderEdit">
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==0">
                           <div class="CancelOrder">
                             <span>取消订单</span>
                           </div>
@@ -131,46 +115,9 @@
                             <span>立即付款</span>
                           </div>
                         </div>
-                      </li>
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <div class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
-                          <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
-                          </div>
-                        </div>
-                        <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
-                        </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
-                            <span>取消订单</span>
-                          </div>
+                        <div class="OrderEdit" v-if="item._MPetServiceShopOrder.OrderState==10||item._MPetServiceShopOrder.OrderState==20">
                           <div class="PayOrder">
-                            <span>立即付款</span>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="li_OrderItem">
-                        <p class="Head"><span class="ShopName">贵宾犬之家</span><span class="OrderState">未付款</span></p>
-                        <div class="OrderInfo">
-                          <img src="static/image/UserBJ.png" alt="">
-                          <div class="ServiceInfo">
-                            <div class="ServiceAndPackage">狗狗寄样迷你犬 0kg-3kg</div>
-                            <div class="PriceAndNum"><span>￥85</span><span>1</span></div>
-                          </div>
-                        </div>
-                        <div class="OrderMoney">
-                          <span>共1个服务</span>&nbsp<span>合计:</span>&nbsp<span>￥85</span>
-                        </div>
-                        <div class="OrderEdit">
-                          <div class="CancelOrder">
-                            <span>取消订单</span>
-                          </div>
-                          <div class="PayOrder">
-                            <span>立即付款</span>
+                            <span>再次购买</span>
                           </div>
                         </div>
                       </li>
@@ -319,7 +266,14 @@
   	</div>
   	</scroller>
 	</div>
-
+  <div v-transfer-dom>
+      <confirm v-model="CancelOrderconfirm"
+      :title="'提示'"
+      :content="'确定要取消该订单吗？'"
+      @on-confirm="CancelServiceOrder">
+      </confirm>
+  </div>
+  <paywayselect ref="payway" :Paymoney="TotalMoney" :OrderId="OrderId" :CancelType="2"></paywayselect>
   <transition :name="transitionName" mode="out-in">
             <router-view></router-view>
   </transition>
@@ -331,8 +285,9 @@
 import axios from 'axios'
 import headTop from '@/components/Head.vue'
 import {mapState, mapMutations} from 'vuex'
-import { Swiper, Scroller, Spinner,SwiperItem,Tab, TabItem, } from 'vux'
-import {GetServiceOrderInfo,GetUserServiceOrderInfoList} from '@/service/getdata'  
+import { Swiper, Scroller, Spinner,SwiperItem,Tab, TabItem,Confirm,TransferDomDirective as TransferDom} from 'vux'
+import {GetServiceOrderInfo,GetUserServiceOrderInfoList,CancelServiceOrder} from '@/service/getdata' 
+import paywayselect from '@/components/common/PayWaySelect' 
 
 const list = () => ['全部', '待付款', '待使用', '待评价', '已完成']
 export default {
@@ -343,6 +298,8 @@ export default {
       TabItem,
       Swiper,
       SwiperItem,
+      Confirm,
+      paywayselect
   },
   data () {
       return {
@@ -354,6 +311,10 @@ export default {
         OrderInfoList:[],
         transitionName:'router-slid',
         transitionMode:'in-out',
+        CancelOrderconfirm:false,
+        PlanCancelOrder:null,
+        TotalMoney:0,
+        OrderId:null
       }
   },
   beforeCreate(){
@@ -382,17 +343,57 @@ export default {
   },
   mounted(){
     this.initData();
+    this.initHeadHeight();
     },
   computed: {
       ...mapState([
-                  'PackageCartList','userInfo','UserChangeOrderPhone'
+                  'PackageCartList','userInfo','UserChangeOrderPhone','StatusbarHeight','StatusbarHeightRem',
       ]),
+      WaitPayOrder:function(){
+        if(this.OrderInfoList.length>0)
+        {
+          var list=[];
+          this.OrderInfoList.forEach((item)=>{
+            if(item._MPetServiceShopOrder.OrderState==0){
+              list.push(item);
+            }
+          })
+          return list;
+        }
+        else
+        {
+          return [];
+        }
+      },
+      WaitUseOrder:function(){
+        if(this.OrderInfoList.length>0)
+        {
+          var list=[];
+          this.OrderInfoList.forEach((item)=>{
+            if(item._MPetServiceShopOrder.OrderState==1){
+              list.push(item);
+            }
+          })
+          return list;
+        }
+        else
+        {
+          return [];
+        }
+      },
   },
     props:[],
     methods: {
         ...mapMutations([
                 'USER_ISLOGIN',
         ]),
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.SlideOrderState.style.marginTop=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+44+"px";
+          }
+        },
     	  async initData(){
           await GetUserServiceOrderInfoList(this.userInfo.UserID).then(response=>{
             this.OrderInfoList=response;
@@ -437,6 +438,30 @@ export default {
             this.$refs.swiperBigArticle.$el.children[0].style.height=this.swiperArticleHeight+"px";
           }
         },
+        CancelServiceOrderFront(order)
+        {
+          this.CancelOrderconfirm=true;
+          this.PlanCancelOrder=order;
+        },
+        async CancelServiceOrder()
+        {
+          await CancelServiceOrder(this.PlanCancelOrder._MPetServiceShopOrder.MShopServiceOrderID).then(response=>{
+            if(response==1)
+            {
+              this.PlanCancelOrder._MPetServiceShopOrder.OrderState=20;
+              this.$vux.toast.text('取消成功','middle');
+            }
+            else
+            {
+              this.$vux.toast.text('取消失败','middle');
+            }
+          })
+        },
+        PayServiceOrder(order){
+          this.TotalMoney=order._MPetServiceShopOrder.ActualPrice;
+          this.OrderId=order._MPetServiceShopOrder.MShopServiceOrderID;
+          this.$refs.payway.modalTaggle();
+        }
     },
     directives: {
       ImgEdit: {//图片显示按长宽等比居中显示的指令方法
@@ -462,7 +487,8 @@ export default {
             }
           };
         }
-      }
+      },
+      TransferDom
     },
 }
 </script>

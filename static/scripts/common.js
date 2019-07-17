@@ -27,7 +27,7 @@ var domready=false;
 document.addEventListener('DOMContentLoaded',function(){
 	domready=true;
 	gInit();
-	document.body.onselectstart=shield;
+	// document.body.onselectstart=shield;
 	compatibleAdjust();
 },false);
 // 处理返回事件
@@ -427,39 +427,72 @@ w.ultZeroize=function(v,l){
 	var deviceIsBlackBerry10 = navigator.userAgent.indexOf('BB10') > 0;
 
 	/**
-	 * Determine whether a given element requires a native click.
-	 *
-	 * @param {EventTarget|Element} target Target DOM element
-	 * @returns {boolean} Returns true if the element needs a native click
-	 */
-	FastClick.prototype.needsClick = function(target) {
-		switch (target.nodeName.toLowerCase()) {
+     * 判断所有父级元素是否包含传入的className
+     *
+     * @param {string} className
+     * @returns {boolean} 是否包含
+     */
+    FastClick.prototype.checkParentsHasClassName = function (target) {
+        if (!target) {
+            return false
+        }
 
-		// Don't send a synthetic click to disabled inputs (issue #62)
-		case 'button':
-		case 'select':
-		case 'textarea':
-			if (target.disabled) {
-				return true;
-			}
+        if ((/\bneedsclick\b/).test(target.className)) {
+            return true
+        }
 
-			break;
-		case 'input':
+        if (target.parentElement) {
+            return this.checkParentsHasClassName(target.parentElement)
+        }
 
-			// File inputs need real clicks on iOS 6 due to a browser bug (issue #68)
-			if ((deviceIsIOS && target.type === 'file') || target.disabled) {
-				return true;
-			}
+        return false
+    }
 
-			break;
-		case 'label':
-		case 'iframe': // iOS8 homescreen apps can prevent events bubbling into frames
-		case 'video':
-			return true;
-		}
+    /**
+     * Determine whether a given element requires a native click.
+     *
+     * @param {EventTarget|Element} target Target DOM element
+     * @returns {boolean} Returns true if the element needs a native click
+     */
+    FastClick.prototype.needsClick = function (target) {
+        // 如果父级元素的class包含needsclick 则忽略当前元素
 
-		return (/\bneedsclick\b/).test(target.className);
-	};
+        switch (target.nodeName.toLowerCase()) {
+
+            // Don't send a synthetic click to disabled inputs (issue #62)
+        case 'button':
+        case 'select':
+        case 'textarea':
+            if (target.disabled) {
+                return true
+            }
+
+            break
+        case 'input':
+
+                // File inputs need real clicks on iOS 6 due to a browser bug (issue #68)
+            if ((deviceIsIOS && target.type === 'file') || target.disabled) {
+                return true
+            }
+
+            break
+        case 'label':
+        case 'iframe': // iOS8 homescreen apps can prevent events bubbling into frames
+        case 'video':
+            return true
+        }
+
+        if ((/\bneedsclick\b/).test(target.className)) {
+            // alert(target.nodeName, true)
+            return true
+        }
+
+        if (this.checkParentsHasClassName(target)) {
+            // alert(target.nodeName, true)
+            return true
+        }
+        return false
+    }
 
 
 	/**
@@ -1046,9 +1079,8 @@ w.ultZeroize=function(v,l){
 	} else {
 		window.FastClick = FastClick;
 	}
-
-document.addEventListener('DOMContentLoaded', function() {
-    FastClick.attach(document.body);
-}, false);
-
+	document.addEventListener('DOMContentLoaded', function() {
+	    FastClick.attach(document.body);
+	}, false);
 }());
+

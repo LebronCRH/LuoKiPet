@@ -26,47 +26,47 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch',request
 		}
 	}
 
-	if (window.fetch && method == 'fetch') {
-		var requestConfig = {
-			// credentials: 'include',
-			credentials: 'true',
-			method: type,
-			headers: {
-				// 'Access-Control-Allow-Origin':'*',
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			mode: "cors",
-			cache: "force-cache"
-		}
+	// if (window.fetch && method == 'fetch') {
+	// 	var requestConfig = {
+	// 		// credentials: 'include',
+	// 		credentials: 'true',
+	// 		method: type,
+	// 		headers: {
+	// 			// 'Access-Control-Allow-Origin':'*',
+	// 			'Accept': 'application/json',
+	// 			'Content-Type': 'application/json'
+	// 		},
+	// 		mode: "cors",
+	// 		cache: "force-cache"
+	// 	}
 
-		if (type == 'POST'&&posttype!='formdata') {
-			Object.defineProperty(requestConfig, 'body', {
-				value: JSON.stringify(data)
-			})
-		}
-		else if(type == 'POST'&&posttype=='formdata')
-		{
-			 requestConfig = {
-				// credentials: 'include',
-				credentials: 'true',
-				method: type,
-				mode: "cors",
-				cache: "force-cache"
-			}
-			Object.defineProperty(requestConfig, 'body', {
-				value: data
-			});
+	// 	if (type == 'POST'&&posttype!='formdata') {
+	// 		Object.defineProperty(requestConfig, 'body', {
+	// 			value: JSON.stringify(data)
+	// 		})
+	// 	}
+	// 	else if(type == 'POST'&&posttype=='formdata')
+	// 	{
+	// 		 requestConfig = {
+	// 			// credentials: 'include',
+	// 			credentials: 'true',
+	// 			method: type,
+	// 			mode: "cors",
+	// 			cache: "force-cache"
+	// 		}
+	// 		Object.defineProperty(requestConfig, 'body', {
+	// 			value: data
+	// 		});
 
-		}	
-		try {
-			const response = await fetch(url, requestConfig);
-			const responseJson = await response.json();
-			return responseJson
-		} catch (error) {
-			throw new Error(error)
-		}
-	} else {
+	// 	}	
+	// 	try {
+	// 		const response = await fetch(url, requestConfig);
+	// 		const responseJson = await response.json();
+	// 		return responseJson
+	// 	} catch (error) {
+	// 		throw new Error(error)
+	// 	}
+	// } else {
 		return new Promise((resolve, reject) => {
 			let requestObj;
 			if (window.XMLHttpRequest) {
@@ -105,5 +105,5 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch',request
 				}
 			}
 		})
-	}
+	// }
 }

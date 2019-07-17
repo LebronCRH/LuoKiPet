@@ -1,12 +1,24 @@
 <template>
 	<div class="rating_page">
 	<head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-	<div class="Middle">
+	<div class="Middle" ref="Middle">
   	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
   	<div>
     <div v-if="OrderInfo">
       <div class="OrderState" v-if="OrderInfo._MPetServiceShopOrder.OrderState==0">
         <span>未付款</span>
+      </div>
+      <div class="OrderState" v-if="OrderInfo._MPetServiceShopOrder.OrderState==1">
+        <span>待使用</span>
+      </div>
+      <div class="OrderState" v-if="OrderInfo._MPetServiceShopOrder.OrderState==2">
+        <span>已完成</span>
+      </div>
+      <div class="OrderState" v-if="OrderInfo._MPetServiceShopOrder.OrderState==10">
+        <span>已取消(系统关闭)</span>
+      </div>
+      <div class="OrderState" v-if="OrderInfo._MPetServiceShopOrder.OrderState==20">
+        <span>已取消(用户取消)</span>
       </div>
       <div class="OrderInfo">
           <img :src="GetImgList(OrderInfo._MServiceShop.ShopImg)" v-ImgEdit="{ width: 2, height: 2 }" alt="">
@@ -50,15 +62,29 @@
   	</div>
   	</scroller>
 	</div>
-  <div class="OrderEdit" v-if="OrderInfo._MPetServiceShopOrder.OrderState==0">
-      <div class="CancelOrder">
+  <div v-if="OrderInfo">
+  <div class="OrderEdit" v-show="OrderInfo._MPetServiceShopOrder.OrderState==0">
+      <div class="CancelOrder" @click="CancelServiceOrderFront()">
         <span>取消订单</span>
       </div>
-      <div class="PayOrder">
+      <div class="PayOrder" @click="PayServiceOrder()">
         <span>立即付款</span>
       </div>
   </div>
-
+  <div class="OrderEdit" v-show="OrderInfo._MPetServiceShopOrder.OrderState==10||OrderInfo._MPetServiceShopOrder.OrderState==20">
+      <div class="PayOrder">
+        <span>再次购买</span>
+      </div>
+  </div>
+  </div>
+  <paywayselect ref="payway" :Paymoney="OrderInfo._MPetServiceShopOrder.ActualPrice" :OrderId="OrderInfo._MPetServiceShopOrder.MShopServiceOrderID" :CancelType="2" v-if="OrderInfo"></paywayselect>
+  <div v-transfer-dom>
+      <confirm v-model="CancelOrderconfirm"
+      :title="'提示'"
+      :content="'确定要取消该订单吗？'"
+      @on-confirm="CancelServiceOrder">
+      </confirm>
+  </div>
   <transition name="router-slid" mode="out-in">
             <router-view></router-view>
   </transition>
@@ -70,8 +96,9 @@
 import axios from 'axios'
 import headTop from '@/components/Head.vue'
 import {mapState, mapMutations} from 'vuex'
-import { Swiper, Scroller, Spinner,SwiperItem,Tab, TabItem, } from 'vux'
-import {GetServiceOrderInfo,GetUserServiceOrderInfoList} from '@/service/getdata' 
+import { Swiper, Scroller, Spinner,SwiperItem,Tab, TabItem,Confirm,TransferDomDirective as TransferDom } from 'vux'
+import {GetServiceOrderInfo,GetUserServiceOrderInfoList,CancelServiceOrder} from '@/service/getdata' 
+import paywayselect from '@/components/common/PayWaySelect' 
 
 export default {
   components: {
@@ -81,6 +108,8 @@ export default {
       TabItem,
       Swiper,
       SwiperItem,
+      Confirm,
+      paywayselect,
   },
   data () {
       return {
@@ -88,13 +117,23 @@ export default {
         Color:0,
         MidType:1,
         OrderInfo:null,
+        CancelOrderconfirm:false,
       }
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log(from);
+    console.log(to);  
+    console.log('组件路由勾子：beforeRouteEnter');
+    next(vm => {
+      console.log(vm);  //vm为vue的实例
+      console.log('组件路由勾子beforeRouteEnter的next')
+    });
   },
   beforeCreate(){
 
   },
   created(){
-
+    console.log(this.$router);
   },
   beforeMount(){
     console.log("beforeMount");
@@ -112,11 +151,12 @@ export default {
     console.log("destroyed");
   },
   mounted(){
+    this.initHeadHeight();
     this.initData();
   },
   computed: {
       ...mapState([
-                  'PackageCartList','userInfo','UserChangeOrderPhone'
+                  'PackageCartList','userInfo','UserChangeOrderPhone','StatusbarHeight','StatusbarHeightRem',
       ]),
       DiscountPrice(){
         // console.log(parseFloat(this.OrderInfo._MPetServiceShopOrder.YouHuiQuan.BoQiBean));
@@ -128,6 +168,13 @@ export default {
         ...mapMutations([
                 'USER_ISLOGIN',
         ]),
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            console.log("购买");
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
     	  async initData(){
           await GetServiceOrderInfo(this.$route.params.orderid).then(response=>{
             this.OrderInfo=response;
@@ -136,6 +183,26 @@ export default {
         GetImgList(imglist){
               var firstimg=imglist.split(",")[0];
               return firstimg;
+        },
+        PayServiceOrder(){
+          this.$refs.payway.modalTaggle();
+        },
+        CancelServiceOrderFront(){
+          this.CancelOrderconfirm=true;
+        },
+        async CancelServiceOrder()
+        {
+          await CancelServiceOrder(this.OrderInfo._MPetServiceShopOrder.MShopServiceOrderID).then(response=>{
+            if(response==1)
+            {
+              this.OrderInfo._MPetServiceShopOrder.OrderState=20;
+              this.$vux.toast.text('取消成功','middle');
+            }
+            else
+            {
+              this.$vux.toast.text('取消失败','middle');
+            }
+          })
         },
     },
     directives: {
@@ -162,7 +229,8 @@ export default {
             }
           };
         }
-      }
+      },
+      TransferDom
     },
 }
 </script>

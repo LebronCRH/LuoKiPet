@@ -125,10 +125,10 @@ export default function () {
       /*"color",*/
       "font",
       "align",
-      /*"list",*/
-      /*"link",*/
-      /*"unlink",*/
-      /*"tabulation",*/
+      "list",
+      "link",
+      "unlink",
+      "tabulation",
       "image",
       /*"hr",*/
       /*"eraser",*/

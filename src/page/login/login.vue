@@ -1,5 +1,6 @@
 <template>
 <div class="BigBJ">
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
     <span @click="$router.push('/forgetpasswordfirst')">忘记密码</span>
@@ -67,16 +68,23 @@
 
 		mounted(){
       console.log(this.LoginFrontPageUrl);
+      this.initHeadHeight();
 		},
     computed: {
     ...mapState([
-                'LoginFrontPageUrl','isLogin','userInfo',
+                'LoginFrontPageUrl','isLogin','userInfo','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     methods:{
       ...mapMutations([
           'LOCAL_USER',
       ]),
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
+      },
       TagglePassword(){
         this.PasswordState=!this.PasswordState;
       },

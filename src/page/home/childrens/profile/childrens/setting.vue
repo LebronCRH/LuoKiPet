@@ -1,7 +1,7 @@
 <template>
 <div class="rating_page">
 <head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-<div class="Middle">
+<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
       <div class="TopData" style="margin-top:0.2rem;">
@@ -96,14 +96,14 @@ export default {
       }
     },
     mounted(){
-
+        this.initHeadHeight();
     },
     destroyed(){
 
     },
     computed: {
     	...mapState([
-                'PackageCartList','userInfo','isLogin'
+                'PackageCartList','userInfo','isLogin','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     props:[],
@@ -111,6 +111,12 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART','OUTLOGIN_OTHER',
             ]),
+        initHeadHeight(){
+              if(this.$refs.Middle)
+              {
+                this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
+        },
         OutLogin(){
             removeStore('userInfo');
             this.$store.state.userInfo=null;

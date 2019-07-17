@@ -1,5 +1,6 @@
 <template>
 <div class="BigBJ">
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
     <span @click="PushLogin()">登录</span>
@@ -43,15 +44,21 @@
     },
     computed: {
     ...mapState([
-                'LoginFrontPageUrl','isLogin','userInfo',
+                'LoginFrontPageUrl','isLogin','userInfo','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
 		mounted(){
-
+      this.initHeadHeight();
 		},
     methods:{
       PushLogin(){
         this.$router.replace('/login');
+      },
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
       },
       GetCurrentYear(){
         var date=new Date();

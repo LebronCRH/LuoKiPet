@@ -1,5 +1,6 @@
 <template>
 <div class="BigBJ">
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
   </div>
@@ -53,22 +54,11 @@
     },
     computed: {
     ...mapState([
-                'LoginFrontPageUrl','isLogin','userInfo','OthenLoginInfo','OtherAuths',
+                'LoginFrontPageUrl','isLogin','userInfo','OthenLoginInfo','OtherAuths','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
 		mounted(){
-      // if(window.plus){
-      //   plus.oauth.getServices((services)=>{
-      //     console.log(services);
-      //     for(var i in services){
-      //       var service=services[i];
-      //       console.log(service.id+": "+service.description);
-      //       this.$store.state.OtherAuths[service.id]=service;
-      //     }
-      //   },function(e){
-      //     outLine("获取登录认证失败："+e.message);
-      //   });
-      // }
+      this.initHeadHeight();
 		},
     methods:{
       ...mapMutations([
@@ -76,6 +66,12 @@
             ]),
       PushLogin(){
         this.$router.replace('/login');
+      },
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
       },
       OtherLogin(id){
           var auth=this.OtherAuths[id];

@@ -1,7 +1,7 @@
 <template>
 <div class="rating_page">
 <head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-<div class="Middle">
+<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
       <div class="ShopAllPackageCartItem" v-for="(item1,index1) in AllPackageCartList">
@@ -59,89 +59,6 @@
         </div>
       </div>
       </div>
-<!--     <div class="shopcartItem">
-        <div class="servicetop">
-        	<img v-show="!PackageList[1].SelectStatue" @click="PackageSelect(1)" src="static/image/yuan.png">
-        	<img v-show="PackageList[1].SelectStatue" @click="PackageSelect(1)" src="static/image/duigou.png" alt="">
-        	<span>狗狗SPA 盐浴SPA</span>
-        </div>
-        <div class="OkState" v-show="EditBtn">
-        	<div class="packagename">
-               <span>小型犬(肩高38cm以内)</span>
-            </div>
-            <div class="packageprice">
-                <div class="Left">
-                <span class="price">￥142.8</span>  <span class="oldprice"><del>￥168</del></span>
-                </div>
-                <div class="Right">
-                <span>1</span>
-                </div>
-            </div>
-            <div class="ps_liInfoBt">
-                <img src="static/image/discount.png">
-                <span>全场服务86折优惠</span>
-            </div>
-        </div>
-        <div class="EditState" v-show="!EditBtn">
-        	<div class="EditItem">
-        	  <div class="Left" @click="SelectServicePackage">
-        	  <span>小型犬 (肩高30cm以内)</span>
-        	  <img src="static/image/Down.png">
-        	  </div>
-        	  <div class="Right">
-        	  <div class="jian">
-        	  	<img src="static/image/jian.png" alt="">
-        	  </div>
-        	  <span class="num">1</span>
-        	  <div class="jia">
-        	  	<img src="static/image/jia.png" alt="">
-        	  </div>
-        	  </div>
-        	</div>
-        </div>
-    </div>
-
-    <div class="shopcartItem">
-        <div class="servicetop">
-        	<img v-show="!PackageList[2].SelectStatue" @click="PackageSelect(2)" src="static/image/yuan.png">
-        	<img v-show="PackageList[2].SelectStatue" @click="PackageSelect(2)" src="static/image/duigou.png" alt="">
-        	<span>狗狗SPA 盐浴SPA</span>
-        </div>
-       <div class="OkState" v-show="EditBtn">
-        	<div class="packagename">
-               <span>小型犬(肩高38cm以内)</span>
-            </div>
-            <div class="packageprice">
-                <div class="Left">
-                <span class="price">￥142.8</span>  <span class="oldprice"><del>￥168</del></span>
-                </div>
-                <div class="Right">
-                <span>1</span>
-                </div>
-            </div>
-            <div class="ps_liInfoBt">
-                <img src="static/image/discount.png">
-                <span>全场服务86折优惠</span>
-            </div>
-        </div>
-        <div class="EditState" v-show="!EditBtn">
-        	<div class="EditItem">
-        	  <div class="Left">
-        	  <span>小型犬 (肩高30cm以内)</span>
-        	  <img src="static/image/Down.png">
-        	  </div>
-        	  <div class="Right">
-        	  <div class="jian">
-        	  	<img src="static/image/jian.png" alt="">
-        	  </div>
-        	  <span class="num">1</span>
-        	  <div class="jia">
-        	  	<img src="static/image/jia.png" alt="">
-        	  </div>
-        	  </div>
-        	</div>
-        </div>
-    </div> -->
       </div>
     </scroller>
 </div>
@@ -154,7 +71,7 @@
    </div>
    <div class="Right Active">去结算</div>
 </div>
-<selectpackage :ServiceId='selectpackageServiceId' :CurrentSelectPackageId='CurrentSelectPackageId' :ShopId='selectpackageForShopId' :ShopName='ForShopName' @BtnClick='BtnClick' ref="buyservice"></selectpackage>
+<selectpackage :ServiceId='selectpackageServiceId' :CurrentSelectPackageId='CurrentSelectPackageId' :ShopId='selectpackageForShopId' :ShopName='ForShopName' @BtnClick='BtnClick' ref="selectpackage"></selectpackage>
 </div>
 </template>
 
@@ -211,7 +128,7 @@ export default {
         	PackagePrice:66,
         	PackageOldPrice:77,
         }],
-        selectpackageServiceId:10001,
+        selectpackageServiceId:null,
         selectpackageForShopId:1001,
         CurrentSelectPackageId:0,
         AllPackageCartList:[],
@@ -220,13 +137,14 @@ export default {
     },
     mounted(){
     	this.initPackageCartList();
+        this.initHeadHeight();
     },
     destroyed(){
     	this.AllShopPackageClearSelect();
     },
     computed: {
     	...mapState([
-                'PackageCartList'
+                'PackageCartList','StatusbarHeight','StatusbarHeightRem',
             ]),
     	AllShopPackageCartList: function (){
                 return {...this.PackageCartList};
@@ -283,6 +201,12 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
     	EditShopBtn(index){
     		this.AllPackageCartList[index].EditBtn=false;
     	},
@@ -293,8 +217,8 @@ export default {
     		this.AllPackageCartList=[];
     		Object.keys(this.AllShopPackageCartList).forEach(shopid=>{
     			console.log(shopid);
-    			let ShopPackageObject={ShopName:null,ShopPackageList:[],EditBtn:true,AllSelectStatue:false};
-    			ShopPackageObject.ShopName=this.AllShopPackageCartList[shopid].ShopName.ShopName;
+    			let ShopPackageObject={ShopName:null,ShopId:shopid,ShopPackageList:[],EditBtn:true,AllSelectStatue:false};
+    			ShopPackageObject.ShopName=this.AllShopPackageCartList[shopid].ShopName;
     			console.log(ShopPackageObject.ShopName);
     			Object.keys(this.AllShopPackageCartList[shopid].ServiceList).forEach(serviceid=>{
     				Object.keys(this.AllShopPackageCartList[shopid].ServiceList[serviceid]).forEach(packageid=>{
@@ -310,7 +234,7 @@ export default {
     		this.selectpackageForShopId=item.ForShopId;
     		this.selectpackageServiceId=item.ForServiceID;
     		this.CurrentSelectPackageId=item.PackageId;
-    		this.$refs.buyservice.modalTaggle();
+    		this.$refs.selectpackage.modalTaggle();
     	},
     	AllSelectPackage(index){
     		this.AllSelectStatue=index;
@@ -376,7 +300,39 @@ export default {
     	},
     	BtnClick({shopid,serviceid,oldpackageid,newpackageid,newpackagename,newpackageprice,newpackageoldprice}){
     		console.log(shopid,serviceid,oldpackageid,newpackageid,newpackagename,newpackageprice,newpackageoldprice);
-    		this.UPDATE_PACKAGECART({shopid,serviceid,oldpackageid,newpackageid,newpackagename,newpackageprice,newpackageoldprice})
+            this.AllPackageCartList.forEach((item,index)=>{
+                if(item.ShopId==shopid)
+                {
+                    let NewPackage=null;
+                    let OldPackage=null;
+                    item.ShopPackageList.forEach((item2,index2)=>{
+                        if(item2.PackageId==newpackageid){
+                            NewPackage=item2;
+                        }
+                        if(item2.PackageId==oldpackageid){
+                            OldPackage=item2;
+                        }
+                    })
+                    if(NewPackage){
+                        console.log("有新的包");
+                        NewPackage.SaleNum+=OldPackage.SaleNum;
+                        this.DELETE_PACKAGECART({shopid,serviceid,oldpackageid,newpackageid,newpackagename,newpackageprice,newpackageoldprice});//移除Vuex中的数据
+                        if (item.ShopPackageList.indexOf(OldPackage)> -1)
+                        {
+                            item.ShopPackageList.splice(index, 1);//移除本页面显示的数据
+                        }
+                    }
+                    else{
+                        console.log("没有新的包");
+                        OldPackage.PackageId=newpackageid;
+                        OldPackage.PackageName=newpackagename;
+                        OldPackage.PackageOldPrice=newpackageoldprice;
+                        OldPackage.PackagePrice=newpackageprice;
+                    }
+                }
+            })
+    		// this.UPDATE_PACKAGECART({shopid,serviceid,oldpackageid,newpackageid,newpackagename,newpackageprice,newpackageoldprice})
+            console.log(this.AllPackageCartList);
     	},
     }
 }

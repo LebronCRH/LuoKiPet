@@ -14,7 +14,7 @@
        </div>
       </div>
 
-      <div class="m-chat-main">
+      <div class="m-chat-main" ref="chatmain">
         <chat-list
           type="session"
           :msglist="msglist"
@@ -87,11 +87,12 @@ export default {
     },
     mounted(){
       this.InitToUserInfo();
+      this.initHeadHeight();
       this.$store.dispatch('setCurrSession', this.sessionId);
     },
     computed: {
       ...mapState([
-          'PackageCartList','UserNode','UserSelectNode','userInfo'
+          'PackageCartList','UserNode','UserSelectNode','userInfo','StatusbarHeight','StatusbarHeightRem',
       ]),
       SendShow:function(){
         if(this.MessageContent==""){
@@ -215,6 +216,14 @@ export default {
         }, 1000)
        })
       },
+      initHeadHeight(){
+          if(this.$refs.HeadTop)
+          {
+            this.$refs.HeadTop.style.height=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.my_shopheadmid.style.paddingTop=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.chatmain.style.paddingTop=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+      },
       UpPagedade () {
         this.$nextTick(() => {
         setTimeout(() => {
@@ -252,9 +261,9 @@ export default {
        position:absolute;top:1.5rem;left:0rem;bottom:0rem;width:100%;background:#f3f3f3;
     }
   .ShopHead{
-    width:10rem;height:1.5rem;padding-top:0.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+    width:10rem;height:1.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
     .shopheadback{
-      height:100%;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+      height:1.5rem;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;bottom:0rem;z-index:99;box-sizing:border-box;
       display:flex;justify-content:center;align-items:center;
       img{
         width:0.6rem;height:0.6rem;
@@ -269,7 +278,7 @@ export default {
       p{line-height:1.5rem;color:#000;font-size:0.5rem;}
     }
     .shopheadedit{
-      width:1.5rem;height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
+      width:1.5rem;height:1.5rem;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;bottom:0rem;right:0rem;z-index:99;box-sizing:border-box;
       display:flex;justify-content:content;align-items:content;
       img{
         width:0.6rem;height:0.6rem;

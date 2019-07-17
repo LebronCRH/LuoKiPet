@@ -3,6 +3,7 @@ import {
 	JIA_PACKAGECART,
 	JIAN_PACKAGECART,
 	UPDATE_PACKAGECART,
+	DELETE_PACKAGECART,
 	USER_ISLOGIN,
 	LOCAL_USER,
 	OUTLOGIN_OTHER,
@@ -30,7 +31,7 @@ export default {
 		let PackageCart = state.PackageCartList;
 		let shop = PackageCart[shopid] = (PackageCart[shopid] || {'ShopName':null,ServiceList:{}});
 		let service = shop.ServiceList[serviceid] = (shop.ServiceList[serviceid] || {});
-		let shopName=shop.ShopName=(shop.ShopName ||{'ShopName':shopname});
+		let shopName=shop.ShopName=(shop.ShopName ||shopname);
 		let item = service[packageid];
 		if(item){
 			item['SaleNum']=item['SaleNum']+salenum;
@@ -82,6 +83,19 @@ export default {
 		let item = service[packageid];
 		if(item){
 			item['SaleNum']=item['SaleNum']-1;
+			console.log("ceshi");
+			if(item['SaleNum']==0)
+			{
+				delete(service[packageid]);
+			}
+			if(Object.getOwnPropertyNames(JSON.parse(JSON.stringify(service))).length<=0)
+			{
+				delete(shop.ServiceList[serviceid]);
+			}
+			if(Object.getOwnPropertyNames(JSON.parse(JSON.stringify(shop.ServiceList))).length<=0)
+			{
+				delete(PackageCart[shopid]);
+			}
 		}
 		state.PackageCartList = {...PackageCart};
 	},
@@ -125,6 +139,29 @@ export default {
 			}
 		}
 		service[oldpackageid]=null;
+	},
+	[DELETE_PACKAGECART](state,{
+		shopid,
+		serviceid,
+		oldpackageid,
+		newpackageid,
+		newpackagename,
+		newpackageprice,
+		newpackageoldprice
+	}){
+		let PackageCart = state.PackageCartList;
+		console.log(PackageCart);
+		console.log(shopid);
+		let shop = PackageCart[shopid] = (PackageCart[shopid] || {'ShopName':null,ServiceList:{}});
+		console.log(shop);
+		let service = shop.ServiceList[serviceid] = (shop.ServiceList[serviceid] || {});
+		console.log(service);
+		let olditem = service[oldpackageid];
+		let newitem = service[newpackageid];
+		console.log(olditem);
+		if(olditem){
+			delete(service[oldpackageid])
+		}
 	},
 	[USER_ISLOGIN](state){
 		console.log("输出用户信息");

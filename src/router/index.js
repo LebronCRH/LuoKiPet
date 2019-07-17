@@ -37,11 +37,28 @@ import MyServiceOrder from '@/page/home/childrens/profile/childrens/myserviceord
 import OrderDetails from '@/page/home/childrens/profile/childrens/orderdetails.vue' 
 import EditAddress from '@/page/home/childrens/profile/childrens/editaddress.vue' 
 import CreateArticle from '@/page/Release/CreateArticle.vue'
+import CreateArticleQuill from '@/page/Release/CreateArticleQuill.vue'
+import ManagerCreateArticle from '@/page/Release/ManagerCreateArticle.vue'
 import ArticleView from '@/page/Release/ArticleView.vue'
 import PetCategoryIndex from '@/page/petcategory/petcategoryIndex.vue'
 import PetCategoryDetails from '@/page/petcategory/childrens/petcategorydetails.vue'
 import ShareServiceShopDetails from '@/page/share/shareserviceshopdetails.vue'//服务店分享页面
+//宠物帮助界面
+import PetHelperIndex from '@/page/pethelper/pethelperIndex.vue'
+import CeShi from '@/page/pethelper/ceshi.vue'
+import PetSerach from '@/page/pethelper/petserach.vue'
+import PetSeek from '@/page/pethelper/petseek.vue'
+import PetActive from '@/page/pethelper/petactive.vue'
+import PetAdopt from '@/page/pethelper/petadopt.vue'
+import SwiperCeshi from '@/page/pethelper/swiperceshi.vue'
 import App from '../App'
+//我的宠物界面
+import AddMyPet from '@/page/mypet/addpet.vue'
+import PetCategorySelect from '@/page/mypet/petcategoryselect.vue'
+
+//文章界面
+import ArticleCategoryDetailsIndex from '@/page/article/articlecategorydetailsIndex.vue'
+import ArticleCategoryDetails from '@/page/article/articlecategorydetails.vue'
 
 // Routes
 export default [
@@ -65,6 +82,7 @@ export default [
             components: {
             	Conter:Petservice
             },
+            meta: { HeadStatus: true },
             },{
             path:'profile',
             components:{
@@ -73,13 +91,16 @@ export default [
             children:[{
               path:'setting',
               component:Setting,
-              meta: { requiresAuth: true },
+              meta: { requiresAuth: true,keepAlive:false },
             },{
+              name:'myserviceorder',
               path:'myserviceorder',
-              component:MyServiceOrder
+              component:MyServiceOrder,
+              meta: { HeadStatus: true,keepAlive:true },
             },{
               path:'orderdetails/:orderid',
-              component:OrderDetails
+              component:OrderDetails,
+              meta: { HeadStatus: true,keepAlive:false },
             },{
               path:'address',
               component:Address,
@@ -98,6 +119,7 @@ export default [
     {
       path:'/petserviceIndex',
       component:PetserviceIndex,
+      meta: { HeadStatus: true },
       children:[{
         path:'serviceshopdetails/:shopid',
         component:ServiceShopDetails,
@@ -124,6 +146,7 @@ export default [
         },{
           path:'shopmap',
           component:ShopMap,
+          meta: { HeadStatus: true },
           children:[{
             path:'shopstreetscape',
             component:ShopStreetscape
@@ -132,10 +155,12 @@ export default [
       },{
         path:'ticketbag',
         component:TicketBag,
+        meta: { HeadStatus: true },
       },{
         // name:'changelocation',
         path:'changelocation',
         component:ChangeLocation,
+        meta: { HeadStatus: true },
       }]
     },
     {
@@ -211,7 +236,8 @@ export default [
     {
       name:'luokifriend',
       path:'/luokifriend',
-      component:LuoKiFriend
+      component:LuoKiFriend,
+      meta: { HeadStatus: true },
     },
     {
       name:'friendchat',
@@ -222,13 +248,19 @@ export default [
       name:'createphoto',
       path:'/createphoto',
       component:CreatePhoto,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true,HeadStatus: true}
     },
     {
       name:'createarticle',
       path:'/createarticle',
-      component:CreateArticle,
-      meta: { requiresAuth: true }
+      component:CreateArticleQuill,
+      meta: { requiresAuth: true,HeadStatus: true}
+    },
+    {
+      name:'managercreatearticle',
+      path:'/managercreatearticle',
+      component:ManagerCreateArticle,
+      meta: { requiresAuth: true,HeadStatus: true}
     },
     {
       name:'articleview',
@@ -238,13 +270,69 @@ export default [
     {
       name: 'chat',
       path: '/chat/:sessionId',
-      component:P2PChat
+      component:P2PChat,
+      meta: { HeadStatus: true },
     },
     {//服务店分享页面
       name:'shareserviceshopdetails',
       path:'/shareserviceshopdetails/:shopid',
       component:ShareServiceShopDetails,
-    }
+    },
+    {
+      name:'pethelperIndex',
+      path:'/pethelperIndex',
+      component:PetHelperIndex,
+    },
+    {
+      name:'petserach',
+      path:'/petserach',
+      component:PetSerach,
+    },
+    {
+      name:'petseek',
+      path:'/petseek',
+      component:PetSeek,
+    },
+    {
+      name:'petadopt',
+      path:'/petadopt',
+      component:PetAdopt,
+    },
+    {
+      name:'petactive',
+      path:'/petactive',
+      component:PetActive,
+    },
+    {
+      name:'ceshi',
+      path:'/ceshi',
+      component:CeShi,
+    },
+    {
+      name:'swiperceshi',
+      path:'/swiperceshi',
+      component:SwiperCeshi,
+    },
+    {
+      name:'addmypet',
+      path:'/addmypet',
+      component:AddMyPet,
+    },
+    {
+      name:'petcategoryselect',
+      path:'/petcategoryselect',
+      component:PetCategorySelect,
+    },
+    {
+      name:'articlecategorydetailsIndex',
+      path:'/articlecategorydetailsIndex',
+      component:ArticleCategoryDetailsIndex,
+    },
+    {
+      name:'articlecategorydetails',
+      path:'/articlecategorydetails/:articleid',
+      component:ArticleCategoryDetails,
+    },
   ]
   },
 ]

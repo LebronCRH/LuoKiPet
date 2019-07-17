@@ -1,7 +1,7 @@
 <template>
 	<div class="rating_page">
   <head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-	<div class="Middle">
+	<div class="Middle" ref="Middle">
     <div class="Line" style="height:0.1rem;width:100%;background-color: #f7f3f7;"></div>
     <div class="CityAndSerach WhiteItem" ref="WhiteItem">
       <div class="Left" @click="TaggleSelectCity()">
@@ -38,10 +38,6 @@
       <ul class="ul_NodeHistory">
         <li class="HistoryItem" v-for="item in placeHistory" @click="SelectPlaceHistoryItem(item)"><p class="Top">{{item.name}}</p><p class="Bottom">{{item.address}}</p></li>
       </ul>
-
-<!--       <ul class="ul_NodeHistory">
-        <li class="HistoryItem" v-for="item in chat" ><p class="Top">{{item}}</p></li>
-      </ul> -->
     </div>
 
     <div class="State2" ref="State2" v-show="SerachFoucs && !SerachNodeLength">
@@ -159,6 +155,7 @@
       },
       mounted(){
         this.initData();
+        this.initHeadHeight();
         //获取热门城市
         hotcity().then(res => {
             this.hotcity = res;
@@ -171,7 +168,7 @@
       },
       computed:{
         ...mapState([
-                    'PackageCartList','UserNode','UserSelectNode',
+                    'PackageCartList','UserNode','UserSelectNode','StatusbarHeight','StatusbarHeightRem',
                 ]),
         SerachNodeLength:function(){
           if(this.SerachNode!="")
@@ -212,6 +209,12 @@
             this.$refs.SerachNoResult.style.height=H+"px";
             this.$refs.State2.style.height=H+"px";
             this.GetHistorySerach();
+          },
+          initHeadHeight(){
+            if(this.$refs.Middle)
+            {
+              this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            }
           },
           // submit(){
           //   this.socket.emit('chat message', this.messagesend);
@@ -312,6 +315,10 @@
           },
           ChnageCity(Item){
             this.$store.state.UserNode=Item;
+            if(this.UserSelectNode&&this.UserNode.name!=this.UserSelectNode.name)
+            {
+              this.$store.state.UserSelectNode=null;
+            }
             this.SelectCityShow=false;
           },
       },

@@ -885,29 +885,29 @@
     }
   }
   #origin-img{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  }
-#origin-img .swiper-slide img{
-  width:100%;
-  vertical-align:middle;
-  } 
-.swiper-pagination{
-  top:1em;
-  bottom:auto;
-  color:#fff;}  
-.upload{
-  position:absolute;
-  bottom:0;
-  line-height:3em;
-  background:rgba(0,0,0,.5);
-  z-index:5;
-  color:#fff;
-  text-indent:1em;
-  width:100%;}  
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    }
+  #origin-img .swiper-slide img{
+    width:100%;
+    vertical-align:middle;
+    } 
+  .swiper-pagination{
+    top:1em;
+    bottom:auto;
+    color:#fff;}  
+  .upload{
+    position:absolute;
+    bottom:0;
+    line-height:3em;
+    background:rgba(0,0,0,.5);
+    z-index:5;
+    color:#fff;
+    text-indent:1em;
+    width:100%;}  
 </style>

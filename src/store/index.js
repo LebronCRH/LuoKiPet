@@ -20,6 +20,8 @@ const state = {
 	OthenLoginInfo:null,//第三方登录信息
 	OtherAuths:{},//第三方登录版权信息
 	ShareServices:{},//第三方分享服务
+	StatusbarHeight:0,//设备状态栏的高度
+	StatusbarHeightRem:0,//设备状态栏的高度转换成rem值
 	imgPath:null,//头像地址
 	removeAddress:[],//移除地址
 	addAddress:'',		//新增地址

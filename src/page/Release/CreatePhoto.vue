@@ -5,7 +5,7 @@
         <span>发表</span>
       </div>
   </head-top>
-  <div class="Middle">
+  <div class="Middle" ref="Middle">
     <scroller ref="scroller" lock-x height="-56" scrollbar-y>
         <div>
         <div class="BigPhotoContent">
@@ -54,7 +54,6 @@
               <img src="static/image/png/weibo.png" alt="">
             </li>
           </ul>
-<!--           <div class="rt"><p v-for="item in fenge(plist)">{{item}}</p></div> -->
         </div>
         </div>
       </scroller>
@@ -89,6 +88,7 @@ import { Scroller } from 'vux'
 import selectpackage from '@/page/petservice/components/selectpackage.vue'
 import {AddLoveShowPhotos} from '@/service/getdata'
 import {convertBase64UrlToBlob,getBase64Image} from '@/config/mUtils'
+import Lyric from 'lyric-parser'
 
 export default {
     components: {
@@ -124,14 +124,14 @@ export default {
       }
     },
     mounted(){
-
+      this.initHeadHeight();
     },
     destroyed(){
 
     },
     computed: {
       ...mapState([
-                'PackageCartList','userInfo'
+                'PackageCartList','userInfo','StatusbarHeight','StatusbarHeightRem',
             ]),
       AllSelectImg:function(){
         var arr=[];
@@ -149,6 +149,13 @@ export default {
       ...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
+      initHeadHeight(){
+        if(this.$refs.Middle)
+        {
+          console.log("top"+this.$refs.Middle.offsetTop);
+          this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+        }
+      },
       TaggleSelectShow(){
         this.SelectShow=!this.SelectShow;
       },

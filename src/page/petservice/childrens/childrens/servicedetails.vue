@@ -1,7 +1,7 @@
 <template>
 	<div class="rating_page">
 	<head-top :Title="Service.MShopService.ServiceName" :Color="Color" :MidType="MidType"></head-top>
-	<div class="Middle">
+	<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
         <div class="psd_details">
@@ -251,9 +251,12 @@ export default {
       console.log(this.$route.params.serviceid);
     	this.initData();
     },
+    updated(){
+      this.initHeadHeight();
+    },
     computed:{
       ...mapState([
-                  'PackageCartList'
+                  'PackageCartList','StatusbarHeight','StatusbarHeightRem',
               ]),
       //当前商店券包信息
               shopPackageCart: function (){
@@ -276,12 +279,27 @@ export default {
     },
     props:[],
     methods: {
+      ...mapMutations([
+                  'ADD_PACKAGECART','JIA_PACKAGECART','JIAN_PACKAGECART'
+              ]),
     	async initData(){
         this.CurrentShopId=this.$route.params.shopid;
         this.GetShopList();
         },
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         BuyService(){
         this.$refs.buyservice.modalTaggle();
+        },
+        PackageCartJia(shopid,serviceid,packageid){
+          this.JIA_PACKAGECART({shopid,serviceid,packageid});
+        },
+        PackageCartJian(shopid,serviceid,packageid,){
+          this.JIAN_PACKAGECART({shopid,serviceid,packageid});
         },
     	  async GetShopList(){
           // await GetShopServiceInfoByServiceID(this.$route.params.serviceid).then(response=>{
@@ -293,7 +311,14 @@ export default {
           })
         },
         TagglePackageCartList(){
-          this.showPackageCartList=!this.showPackageCartList;
+          if(this.ShopPackageCartList.length==0)
+          {
+            this.$vux.toast.text('请添加商户服务券','middle');
+          }
+          else
+          {
+            this.showPackageCartList=!this.showPackageCartList;
+          }
         },
         initPackageCartList(){
           this.ShopPackageCartList=[];
@@ -311,7 +336,13 @@ export default {
     },
     watch:{
       shopPackageCart:function (value){
+        if(value.ShopName!=undefined)
+        {
           this.initPackageCartList();
+        }else{
+          this.ShopPackageCartList=[];
+          this.showPackageCartList=false;
+        }
       },
     },
 }

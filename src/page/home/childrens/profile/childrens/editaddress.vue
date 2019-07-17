@@ -5,7 +5,7 @@
         <span>保存</span>
     </div>
 </head-top>
-<div class="Middle">
+<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
         <ul class="ul_Line">
@@ -19,7 +19,7 @@
           </li>
           <li class="Item">
             <p>所在地区</p>
-            <input type="text" ref="Area" Value="" placeholder="地区信息" id="picker5">
+            <input type="text" ref="Area" disabled Value="" placeholder="地区信息" id="picker5">
           </li>
           <li class="Item">
             <p>详细地址</p>
@@ -79,13 +79,14 @@ export default {
         picker.show();
       });
       this.GetAddressInfo();
+      this.initHeadHeight();
     },
     destroyed(){
 
     },
     computed: {
     	...mapState([
-                'PackageCartList','userInfo','isLogin'
+                'PackageCartList','userInfo','isLogin','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     props:[],
@@ -93,6 +94,12 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         async AddAddress(){
           this.addressItem.UserID=this.userInfo.UserID;
           this.addressItem.Area=this.$refs.Area.value;

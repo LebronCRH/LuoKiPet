@@ -1,6 +1,6 @@
 <template>
   <div class="rating_page" v-if="shopinfo.PetShopInfo.ShopImg">
-    <div class="ShopHead">
+    <div class="ShopHead" ref="ShopHead">
        <div class="shopheadback" @click="$router.go(-1)">
          <img src="static/image/back.png">
        </div>
@@ -82,7 +82,6 @@
                             <span>{{serviceCate.CateName}}</span>
                          </li>
                          <li v-for="serviceItem in serviceCate.ServiceList">
-<!--                          <router-link :to="{ path: 'servicedetails',params:{serviceid:serviceItem.ServiceId},append:true}"> -->
                          <router-link :to="{ name: 'servicedetails',params:{serviceid:serviceItem.ServiceId},append:true}">
                          <p class="ItemName"><span>{{serviceItem.ServiceName}}</span><img src="static/image/discount.png"></p>
                          <div class="ItemMid">
@@ -128,20 +127,6 @@
                           </div>
                       </div>
                   </div>
-<!--                   <ul class="ul_ShopTeach">
-                          <li class="TeachItem" v-for="item in shopinfo.ShopTeach">
-                            <div class="TeachImg">
-                            <img :src="imgBaseUrl+item.Image">
-                            </div>
-                            <div class="TeachInfo">
-                              <p class="Name">{{item.TeachName}}</p>
-                              <div class="TeachLevel">
-                                <img src="static/image/star1.png">  <span>311人评价</span>
-                              </div>
-                              <p class="Intro">{{item.Intro}}…</p>
-                            </div>
-                          </li>
-                  </ul> -->
                 </div>
              </swiper-item>
           </swiper>
@@ -357,7 +342,7 @@
     },
     computed:{
       ...mapState([
-                  'PackageCartList','UserNode','UserSelectNode','ShareServices',
+                  'PackageCartList','UserNode','UserSelectNode','ShareServices','StatusbarHeight','StatusbarHeightRem',
               ]),
               CurrentNode:function(){
                 if(this.UserSelectNode){
@@ -370,6 +355,7 @@
               },
       //当前商店券包信息
               shopPackageCart: function (){
+                console.log(this.CurrentParamsShopId+"9090");
                   if({...this.PackageCartList[this.CurrentParamsShopId]}.ShopName==undefined)
                   {
                     console.log("空");
@@ -406,11 +392,22 @@
     mounted() {
         this.initData();
     },
+    updated(){
+      this.initHeadHeight();
+    },
     methods:{
       ...mapMutations([
                   'ADD_PACKAGECART','JIA_PACKAGECART','JIAN_PACKAGECART'
               ]),
+        initHeadHeight(){
+          if(this.$refs.ShopHead)
+          {
+            this.$refs.ShopHead.style.height=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.my_shopheadmid.style.paddingTop=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         async initData(){
+          this.ShopPackageCartList=[];
           console.log(this.$route);
           this.CurrentParamsShopId=this.$route.params.shopid;//获取店铺id
           console.log(this.CurrentParamsShopId);
@@ -505,7 +502,14 @@
           console.log(this.ServiceId);
         },
         TagglePackageCartList(){
-          this.showPackageCartList=!this.showPackageCartList;
+          if(this.ShopPackageCartList.length==0)
+          {
+            this.$vux.toast.text('请添加商户服务券','middle');
+          }
+          else
+          {
+            this.showPackageCartList=!this.showPackageCartList;
+          }
         },
         PageSlide(pos){
           let swiperLeftH=this.$refs.swiperLeft.offsetHeight;
@@ -554,11 +558,11 @@
           })
         },
         PackageCartJia(shopid,serviceid,packageid){
-              this.JIA_PACKAGECART({shopid,serviceid,packageid});
-            },
+          this.JIA_PACKAGECART({shopid,serviceid,packageid});
+        },
         PackageCartJian(shopid,serviceid,packageid,){
-              this.JIAN_PACKAGECART({shopid,serviceid,packageid});
-            },
+          this.JIAN_PACKAGECART({shopid,serviceid,packageid});
+        },
         InfoSwiperChange(index){
           this.InfoActiveIndex=index;
         },
@@ -621,8 +625,12 @@
       },
       shopPackageCart:function (value){
         if(value.ShopName!=undefined)
+        {
           this.initPackageCartList();
-          // console.log("6789");
+        }else{
+          this.ShopPackageCartList=[];
+          this.showPackageCartList=false;
+        }
       },
     },
   }
@@ -663,20 +671,20 @@
           transform: translateY(100%);
   }
   .ShopHead{
-    width:10rem;height:1.5rem;padding-top:0.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+    width:10rem;height:1.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
     .shopheadback{
-      height:100%;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;top:0rem;z-index:99;box-sizing:border-box;
+      height:1.5rem;width:1.5rem;text-align:center;padding:0.45rem 0.45rem;position:absolute;left:0rem;z-index:99;box-sizing:border-box;bottom:0rem;
       display:flex;justify-content:content;align-items:content;
       img{
         width:0.6rem;height:0.6rem;
       }
     }
     .shopheadmid{
-      width:10rem;height:100%;list-style:none;margin:0;padding: 0;text-align:center;position:absolute;top:0rem;left:0rem;background:#38dbb0;z-index:98;opacity:0;
+      width:10rem;height:100%;list-style:none;margin:0;padding: 0;text-align:center;position:absolute;left:0rem;background:#38dbb0;z-index:98;opacity:0;
       p{line-height:1.5rem;color:#fff;font-size:0.5rem;}
     }
     .shopheadedit{
-      width:1.5rem;height:100%;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;top:0rem;right:0rem;z-index:99;box-sizing:border-box;
+      width:1.5rem;height:1.5rem;color:#38dbb0;padding:0.45rem 0.45rem;position:absolute;right:0rem;z-index:99;box-sizing:border-box;bottom:0rem;
       display:flex;justify-content:content;align-items:content;
       img{
         width:0.6rem;height:0.6rem;

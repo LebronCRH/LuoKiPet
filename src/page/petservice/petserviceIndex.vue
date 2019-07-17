@@ -1,5 +1,6 @@
 <template>
 <div class="rating_page">
+    <div ref="HelperLine" style="background-color:#fff;"></div>
     <div class="psAll_serach">
         <div class="back" @click="$router.go(-1)">
           <img src="static/image/Left1.png">
@@ -29,7 +30,7 @@
      </ul>
     <transition name="showlist">
       <div v-show="sortBy=='EreaSelect'" class="AreaList">
-             <div class="Left">
+         <div class="Left">
                <ul class="BigArea">
                   <li class="BigAreaItem" :class="Area==0?'active':''" @click="ChangeAreaAll()"><span>全部商圈</span></li>
                   <li class="BigAreaItem" v-for="area in Arealist" :class="Area==area.AreaId?'active':''" @click="ChangeArea(area)"><span>{{area.AreaName}}</span></li>
@@ -126,7 +127,7 @@
     </transition>
 </div>
 <div class="ModalZhe" v-show="ModalZhe" @click="CloseModal"></div>
-<div class="Middle">
+<div class="Middle" ref="Middle">
     <scroller ref="scroller" lock-x height="-90" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
     <div>
         <serviceshoplist :shoplistdata="shoplistdata"></serviceshoplist>
@@ -197,26 +198,27 @@
           MerchantCategoryList:[],
           SpecialShopCategoryList:[],
           YouHuiActiveCategoryList:[],
-          QueryViewModel:{
-            CityName:'',
-            lng:'',
-            lat:'',
-            AreaId:0,
-            NodeId:0,
-            PageIndex:1,
-            PageSize:10,
-          },
+          // QueryViewModel:{
+          //   CityName:'',
+          //   lng:'',
+          //   lat:'',
+          //   AreaId:0,
+          //   NodeId:0,
+          //   PageIndex:1,
+          //   PageSize:10,
+          // },
         }
       },
       mounted(){
-        this.QueryViewModel.CityName=this.CurrentUserNode.name;
-        this.QueryViewModel.lng=this.CurrentUserNode.longitude;
-        this.QueryViewModel.lat=this.CurrentUserNode.latitude;
+        // this.QueryViewModel.CityName=this.QueryNodeModel.name;
+        // this.QueryViewModel.lng=this.QueryNodeModel.longitude;
+        // this.QueryViewModel.lat=this.QueryNodeModel.latitude;
         this.initData();
+        this.initHeadHeight();
       },
       computed: {
         ...mapState([
-                'PackageCartList','UserNode','UserSelectNode',
+                'PackageCartList','UserNode','UserSelectNode','StatusbarHeight','StatusbarHeightRem',
             ]),
         CurrentUserNode:function(){
             if(this.UserSelectNode){
@@ -227,11 +229,46 @@
               return this.UserNode;
             }
           },
+          QueryNodeModel:function(){
+            var name=this.UserNode.name;
+            var longitude,latitude;
+            if(this.UserSelectNode){
+              longitude=this.UserSelectNode.longitude;
+              latitude=this.UserSelectNode.latitude;
+            }
+            else{
+              longitude=this.UserNode.longitude;
+              latitude=this.UserNode.latitude;
+            }
+            return {
+              name:this.UserNode.name,
+              longitude:longitude,
+              latitude:latitude,
+            }
+          },
+          QueryViewModel:function(){            
+            return {
+              CityName:this.QueryNodeModel.name,
+              lng:this.QueryNodeModel.longitude,
+              lat:this.QueryNodeModel.latitude,
+              AreaId:0,
+              NodeId:0,
+              PageIndex:1,
+              PageSize:10,
+            }
+          }
       },
       props:[],
       methods: {
       	onRefresh (done) {
             done()
+        },
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.Middle.style.top=(2.34+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
         },
         //隐藏动画
         hideLoading(){
@@ -403,6 +440,11 @@
           }, 1000)
          })
         },
+    },
+    watch:{
+      QueryViewModel:function(){
+        this.initData();
+      },
     }
   }
 </script>
@@ -559,7 +601,7 @@
   				}
   			}
   	.CharactSelect{
-      	width:10rem;position:absolute;left:0rem;top:1.1rem;background:#f2f3f4;height:11rem;z-index:99;overflow-y:auto;
+      	width:10rem;position:absolute;left:0rem;top:1.1rem;background:#f2f3f4;height:12.7rem;z-index:99;overflow-y:auto;padding-bottom:1.7rem;
       	.CharacgTitle{
       		width:10rem;height:0.8rem;line-height:0.8rem;font-size:0.38rem;margin:0rem;padding:0rem 0.3rem;box-sizing: border-box;
       	}

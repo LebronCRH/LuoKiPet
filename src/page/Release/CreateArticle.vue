@@ -5,7 +5,7 @@
         <span>发表</span>
       </div>
   </head-top>
-  <div class="Middle">
+  <div class="Middle" ref="Middle">
   <div class="BigArticle">
     <div class="ArticleCove">
       <div class="NoSelect">
@@ -27,11 +27,26 @@
     <img src="static/image/png/CreateArticle2.png" alt="">
     <span>正文编辑</span>
   </div>
-  <vue-html5-editor :content="content" :height="height" :style="{width:'100%'}"
-                      @change="updateData"></vue-html5-editor>
+  <vue-html5-editor ref="vueh5editor" :content="content" :height="height" :style="{width:'100%'}"
+                      @change="updateData" @selectimage="SelectImage"></vue-html5-editor>
   </div>
-
-
+  <div class="zhe" v-show="SelectShow" @click="TaggleSelectShow()"></div>
+  <transition name="fade">
+    <ul class="SelectModel" v-show="SelectShow">
+      <li class="SelectItem" @click="insertimg()">
+        <span>从手机相册中选择</span>
+      </li>
+      <li class="SelectItem">
+        <span>精美配图</span>
+      </li>
+      <li class="SelectItem">
+        <span>拍照</span>
+      </li>
+      <li class="SelectCancel" @click="TaggleSelectShow()">
+        <span>取消</span>
+      </li>
+    </ul>
+  </transition>
 
 </div>
 </template>
@@ -57,7 +72,7 @@
           MidType:1,
           EditBtn:true,
           SelectShow:false,
-          content: '请输入文章内容', 
+          content: '', 
           width: 0, 
           height: 300,
           ArticleTitle:"",
@@ -80,14 +95,14 @@
         // }
       },
       mounted(){
-
+        this.initHeadHeight();
       },
       destroyed(){
 
       },
       computed: {
         ...mapState([
-                  'PackageCartList','CreateArticleTest','userInfo'
+                  'PackageCartList','CreateArticleTest','userInfo','StatusbarHeight','StatusbarHeightRem',
               ]),
       },
       props:[],
@@ -95,6 +110,13 @@
         ...mapMutations([
                   'UPDATE_PACKAGECART',
               ]),
+        initHeadHeight(){
+        if(this.$refs.Middle)
+          {
+            console.log("top"+this.$refs.Middle.offsetTop);
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         updateData(e = ''){
           let c1 = e.replace(/<img width="100%"/g, '<img');
           let c2 = c1.replace(/<img/g, '<img width="100%"');
@@ -112,6 +134,18 @@
           this.$store.state.CreateArticleTest=Data;
           this.$router.push('/articleview');
         },
+        TaggleSelectShow(){
+          this.SelectShow=!this.SelectShow;
+        },
+        SelectImage(){
+          this.TaggleSelectShow();
+        },
+        insertimg(){
+          this.$refs.vueh5editor.execCommand('insertImage',"http://www.joingp.com:8085/Images/萌宠秀图/799b1473239989.jpg");
+          this.TaggleSelectShow();
+          console.log(window.getSelection ? window.getSelection() : document.getSelection());
+          console.log(this.$refs.vueh5editor.range);
+        }
       },
       directives: {
         ImgEdit: {//图片显示按长宽等比居中显示的指令方法
@@ -186,7 +220,18 @@
       span{margin-left:0.2rem;line-height:0.7rem;font-size:0.5rem;color:#bfbfbf;}
     }
 }
-
+.zhe{position:absolute;width:100%;height:100%;top:0rem;left:0rem;z-index:1002;background-color: rgba(0,0,0,0.7);}
+  .SelectModel{
+    width:100%;list-style:none;position:absolute;left:0rem;bottom:0rem;background:#e5e3e4;z-index:1003;
+    .SelectItem{
+      width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;border-bottom:solid 1px #e5e3e4;
+      span{font-size:0.5rem;}
+    }
+    .SelectCancel{
+      width:100%;height:1.4rem;display:flex;align-items:center;justify-content:center;background:#ffffff;margin-top:0.2rem;
+      span{font-size:0.5rem;}
+    }
+  }
 .fade-enter-active, .fade-leave-active {
         transition: all .4s;
         transform: translateY(0%);

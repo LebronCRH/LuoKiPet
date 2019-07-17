@@ -1,7 +1,7 @@
 <template>
 	<div class="rating_page">
 	<head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-	<div class="Middle">
+	<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
 	<div>
 
@@ -153,6 +153,7 @@
   import {GetLoveShowPhotosById} from '@/service/getdata'
   import {imgUserBaseUrl,imgPCBaseUrl} from '@/config/env'
   import {UserImgFromat} from '@/config/mUtils'
+  import {mapState, mapMutations} from 'vuex'
 
   export default {
       components: {
@@ -188,8 +189,12 @@
       },
       mounted(){
         this.InitLoveShowInfo();
+        this.initHeadHeight();
       },
       computed: {
+        ...mapState([
+                  'StatusbarHeight','StatusbarHeightRem',
+              ]),
         list:function(){
                 let imglist=[];
                 this.GetImgList(this.LoveShowViewModel.loveshowphoto.PhotoList).forEach(item=>{
@@ -200,6 +205,13 @@
       },
       props:[],
       methods: {
+        initHeadHeight(){
+          if(this.$refs.Middle)
+            {
+              console.log("top"+this.$refs.Middle.offsetTop);
+              this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            }
+        },
       	UpPagedade () {
           console.log(66);
           this.$nextTick(() => {

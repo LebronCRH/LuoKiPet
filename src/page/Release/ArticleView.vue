@@ -5,48 +5,49 @@
          <img src="static/image/back.png">
        </div>
        <div class="shopheadmid" ref="my_shopheadmid">
-          <p>文章标题</p>
+          <p>{{this.CreateArticleTest.ArticleTitle}}</p>
        </div>
-       <div class="shopheadedit" ui-sref="zx_article" onclick="onback()">
-          <img :src="this.CreateArticleTest.ArticleCove">
+       <div class="shopheadedit" onclick="onback()">
+          <img src="static/image/dian.png">
        </div>
     </div>
   <div class="Middle">
         <scroller ref="scroller" lock-x height="-0" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
         <div>
-        <div class="ArtcleCove">
-          <img src="static/image/gou.jpg" alt="">
+          <div class="ArtcleCove">
+            <img :src="this.CreateArticleTest.ArticleCove" alt="" v-ImgEdit="{ width:9.6,height:5 }">
+          </div>
+          <div class="ArticleTitle">
+            <p>{{this.CreateArticleTest.ArticleTitle}}</p>
+          </div>
+          <div class="SmallTitle">
+            <p>{{this.CreateArticleTest.AarticleSubtitle}}</p>
+          </div>
+          <div class="Line1"></div>
+          <div class="AarticleAuthor">
+            <img src="static/image/user1.jpg" alt="">
+            <span class="AauthorName">笑吾不良人</span>
+            <span class="Time">2018/04/25</span>
+            <span class="Category">宠物咨询</span>
+          </div>
+          <div class="ArticleHead">
+            <div class="Line2"></div>
+            <img src="static/image/png/AarticleView.png" alt="">
+            <span>正文</span>
+            <div class="Line2"></div>
+          </div>
+          <div class="ArticleContent ql-editor" v-html="CreateArticleTest.content">
+          </div>
         </div>
-        <div class="ArticleTitle">
-          <p>{{this.CreateArticleTest.ArticleTitle}}</p>
+        <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height:1.4rem; line-height:1.4rem; top:-1.4rem; text-align: center;">
+          <span v-show="scrollerStaues.pulldownStatus === 'default'"></span>
+          <span class="pulldown-arrow" v-show="scrollerStaues.pulldownStatus === 'down' || scrollerStaues.pulldownStatus === 'up'" :class="{'rotate': scrollerStaues.pulldownStatus === 'up'}">↓</span>
+          <span v-show="scrollerStaues.pulldownStatus === 'loading'"><spinner type="ios-small"></spinner></span>
         </div>
-        <div class="SmallTitle">
-          <p>{{this.CreateArticleTest.AarticleSubtitle}}</p>
-        </div>
-        <div class="Line1"></div>
-        <div class="AarticleAuthor">
-          <img src="static/image/user1.jpg" alt="">
-          <span class="AauthorName">笑吾不良人</span>
-          <span class="Time">2018/04/25</span>
-          <span class="Category">宠物咨询</span>
-        </div>
-        <div class="ArticleHead">
-          <div class="Line2"></div>
-          <img src="static/image/png/AarticleView.png" alt="">
-          <span>正文</span>
-          <div class="Line2"></div>
-        </div>
-        <div class="ArticleContent" v-html="CreateArticleTest.content">
-<!--           <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
-          <img src="static/image/Slides1.jpg" alt="">
-          <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
-          <img src="static/image/Slides2.jpg" alt="">
-          <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
-          <img src="static/image/Slides3.jpg" alt="">
-          <p>第三大打打数据的洒点水经典款很快就恢复啥电话费客户端收费撒发的发的顺丰科技大厦空间发挥的萨克积分哈空间都是阿打算发的说法范德萨范德萨发</p>
-          <img src="static/image/Slides1.jpg" alt=""> -->
-          {{CreateArticleTest.content}}
-        </div>
+        <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height:1.4rem; line-height:1.4rem; bottom:-1.4rem; text-align: center;">
+          <span v-show="scrollerStaues.pullupStatus === 'default'"></span>
+          <span class="pulldown-arrow" v-show="scrollerStaues.pullupStatus === 'down' || scrollerStaues.pullupStatus === 'down'" :class="{'rotate': scrollerStaues.pullupStatus === 'down'}">↑</span>
+          <span v-show="scrollerStaues.pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
         </div>
         </scroller>
   </div>
@@ -61,6 +62,9 @@
   import {mapState, mapMutations} from 'vuex'
   import headTop from '@/components/Head.vue'
   import { Scroller } from 'vux'
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
   import selectpackage from '@/page/petservice/components/selectpackage.vue'
 
   export default {
@@ -143,13 +147,13 @@
         ImgEdit: {//图片显示按长宽等比居中显示的指令方法
           // 指令的定义
           inserted: function (el,binding) {
-            var image=new Image();
-            image.src=el.src; //获取图像路径
+          var image=new Image();
+          image.src=el.src; //获取图像路径
+          image.onload=function(){
             var width1=image.width; //获取图像宽度
             var height1=image.height; //获取图像高度
             var RequestW=binding.value.width/10*window.screen.width;
             var RequestH=binding.value.height/10*window.screen.width;
-            console.log(window.screen.width);
             var a1=height1/width1;
             var a2=RequestH/RequestW;
             if(a1>a2){
@@ -161,7 +165,8 @@
               el.width=width1*RequestH/height1;
               el.style.marginLeft='-' + Math.round((el.width-RequestW)/2)+ 'px';
             }
-          }
+          };
+        }
         }
       },
   }
@@ -218,8 +223,16 @@
 }
 .ArticleContent{
   width:100%;padding:0rem 0.3rem;background:#fff;
-  p{font-size:0.4rem;color:#848488;line-height:0.6rem;margin:0.2rem 0rem;}
-  img{width:100%;}
+  /deep/ p{font-size:0.4rem;color:#848488;line-height:0.6rem;margin:0.2rem 0rem;
+    img{width:100%;}
+  }
+  /deep/ img{width:100%;}
+  /deep/ h3{
+    color: #88888d;font-size:15px;height:30px;line-height:30px;display:flex;align-items:center;justify-content:center;background-color:#faf9f9;
+    img{
+      width:18px;
+    }
+  }
 }
 .ShopHead{
     width:10rem;height:1.5rem;padding-top:0.5rem;position:fixed;left:0rem;top:0rem;z-index:99;box-sizing:border-box;

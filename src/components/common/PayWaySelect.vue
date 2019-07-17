@@ -89,7 +89,14 @@ import {PayServiceOrder} from '@/service/getdata'
 
           },
           ConfirmCancelPay(){
-            this.$router.push({path:'/home/profile/orderdetails/'+this.OrderId});
+            if(this.CancelType==1)
+            {
+              this.$router.replace({path:'/home/profile/orderdetails/'+this.OrderId});
+            }
+            else
+            {
+              this.modalTaggle();
+            }
           },
           ClosePay(){
             this.CancelPay=true;
@@ -121,7 +128,7 @@ import {PayServiceOrder} from '@/service/getdata'
             }
           }
         },
-        props: ['Paymoney','OrderId',],
+        props: ['Paymoney','OrderId','CancelType'],
         beforeDestroy(){
         	clearInterval(this.timer);
         }

@@ -1,6 +1,7 @@
 <template>
 <div>
 <div class="BigBJ">
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.goBack()">
   </div>
@@ -46,10 +47,11 @@
     },
 
     mounted(){
+      this.initHeadHeight();
     },
     computed: {
       ...mapState([
-                  'UserRegisterName','UserRegisterPassword','UserRegisterPhone',
+                  'UserRegisterName','UserRegisterPassword','UserRegisterPhone','StatusbarHeight','StatusbarHeightRem',
               ]),
       UserPhone:function(){
             return this.$route.params.Phone;
@@ -58,6 +60,12 @@
     methods:{
       TagglePassword(){
          this.PasswordState=!this.PasswordState;
+      },
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
       },
       SubmitUpdate(){
         // axios.post("user/UpdateUserPassword",{"RegisterPhone":this.UserPhone,"Password":this.UserPassword}).then((response)=>{

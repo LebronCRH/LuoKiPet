@@ -1,25 +1,25 @@
 <template>
 	<div class="rating_page">
-	  <div class="la_luokihead">
+	  <div class="la_luokihead" ref="HeadTop">
          <div class="la_user" @click="$router.go(-1)">
          <img src="static/image/back.png">
          </div>
          <ul class="la_menu">
-         <li class="la_menuitem" :class="InfoActiveIndex==0?'select':''" @click="SelectInfoSwiper(0)">
-         <span>精选资讯</span>
-         </li>
-            <li class="la_menuitem Mid" :class="InfoActiveIndex==1?'select':''" @click="SelectInfoSwiper(1)">
-         <span>养宠课堂</span>
-         </li>
-            <li class="la_menuitem" :class="InfoActiveIndex==2?'select':''" @click="SelectInfoSwiper(2)">
-         <span>常见问题</span>
-         </li>
+           <li class="la_menuitem" :class="InfoActiveIndex==0?'select':''" @click="SelectInfoSwiper(0)">
+           <span>精选资讯</span>
+           </li>
+              <li class="la_menuitem Mid" :class="InfoActiveIndex==1?'select':''" @click="SelectInfoSwiper(1)">
+           <span>养宠课堂</span>
+           </li>
+              <li class="la_menuitem" :class="InfoActiveIndex==2?'select':''" @click="SelectInfoSwiper(2)">
+           <span>常见问题</span>
+           </li>
          </ul>
          <div class="la_serach">
          <img src="static/image/serach.png">
          </div>
       </div>
-      <div class="Middle">
+      <div class="Middle" ref="Middle">
         <scroller ref="scroller" lock-x height="-57" scrollbar-y use-pulldown :use-pullup=true @on-scroll="PageSlide" @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
         <div>
               <swiper :list="SlideList" auto  v-model="Swiper_index" dots-position="center"></swiper>
@@ -393,6 +393,7 @@
 import serviceshoplist from '@/page/petservice/components/serviceshoplist'
 import axios from 'axios'
 import { Swiper, Scroller, Spinner,SwiperItem } from 'vux'
+import {mapState, mapMutations} from 'vuex'
 const baseList = [{
       url: 'javascript:',
       img: './static/image/Slides.jpg'
@@ -429,15 +430,24 @@ export default {
       }
     },
     mounted(){
-
+      this.initHeadHeight();
     },
     computed: {
-  
+      ...mapState([
+                'StatusbarHeight','StatusbarHeightRem',
+            ]),
     },
     props:[],
     methods: {
       PageSlide (pos) {
       	this.SlideChangeSwiperHeight(this.InfoActiveIndex);
+      },
+      initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.HeadTop.style.height=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
       },
       UpPagedade () {
         this.$nextTick(() => {
@@ -501,7 +511,7 @@ export default {
   }
   .la_luokihead{width:10rem;height:1.5rem;background-color: #38dbb0;position:fixed;left:0rem;top:0rem;z-index: 99;display:flex;justify-content: center;align-items:center;
   	.la_user{
-  		height:100%;width:2rem;float:left;text-align:center;padding:0.4rem 0.4rem;
+  		height:1.5rem;width:2rem;float:left;text-align:center;padding:0.4rem 0.4rem;
   		display:flex;justify-content:content;align-items:content;box-sizing: border-box;
   		img{
         width:0.6rem;height:0.6rem;
@@ -523,7 +533,7 @@ export default {
   		
   	}
   	.la_serach{
-  		width:2rem;height:100%;float:left;color:#38dbb0;padding:0.35rem 0.35rem;
+  		width:2rem;height:1.5rem;float:left;color:#38dbb0;padding:0.35rem 0.35rem;
   		display:flex;justify-content:content;align-items:content;text-align:center;box-sizing: border-box;
   		img{
   			width:0.8rem;height:0.8rem;margin-left:0.25rem;float:left;

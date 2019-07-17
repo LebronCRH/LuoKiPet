@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import store from './store/'
@@ -12,11 +11,13 @@ import  { ToastPlugin } from 'vux'
 import initRichText from './common/initHTMLEditor';
 import VueTouch from '@/plugins/touchEvent'
 import 'font-awesome/css/font-awesome.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 initRichText();
 
 Vue.use(VueTouch)
 Vue.use(VueRouter)
 Vue.use(ToastPlugin)
+Vue.use(VueAwesomeSwiper, {autoplay: 3000,speed: 1000})
 
 Vue.prototype.$msgbox = function(title, position) {
     // this.$vux.alert.show({
@@ -60,6 +61,19 @@ router.beforeEach((to, from, next) => {
 	{
 		store.commit("ToggleFooterShow", false);
 	}
+	if(to.matched.some(record => record.meta.HeadStatus)){
+		if(window.plus)
+		{
+			plus.navigator.setStatusBarStyle('dark');
+		}
+	}
+	else
+	{
+		if(window.plus)
+		{
+			plus.navigator.setStatusBarStyle('light');
+		}
+	}
 	if (to.matched.some(record => record.meta.requiresAuth)) {
 	    if (!store.state.isLogin) {
 	    	console.log(to);
@@ -79,8 +93,6 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   router.isBack=false;
 })
-
-FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 

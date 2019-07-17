@@ -5,7 +5,7 @@
         <router-link :to="{ path: 'editaddress',append:true}" tag="span">新增</router-link>
     </div>
 </head-top>
-<div class="Middle">
+<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-56" scrollbar-y>
       <div>
       <ul class="ul_address">
@@ -82,13 +82,14 @@ export default {
     },
     mounted(){
       this.initData();
+      this.initHeadHeight();
     },
     destroyed(){
 
     },
     computed: {
     	...mapState([
-                'PackageCartList','userInfo','isLogin'
+                'PackageCartList','userInfo','isLogin','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     props:[],
@@ -96,6 +97,12 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
+        initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         AddAddress(){
 
         },

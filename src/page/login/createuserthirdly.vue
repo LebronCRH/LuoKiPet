@@ -1,6 +1,7 @@
 <template>
 <div class="BigBJ">
 <!-- <div> -->
+<div ref="HelperLine"></div>
   <div class="TopHead">
     <img src="static/image/back2.png" alt="" @click="$router.go(-1)">
     <span @click="TaggleMessageError()">没有收到？</span>
@@ -54,15 +55,22 @@
 
 		mounted(){
       this.YzmDjsJian();
+      ths.initHeadHeight();
 		},
     computed: {
     ...mapState([
-                'UserRegisterName','UserRegisterPassword','UserRegisterPhone','OthenLoginInfo','isLogin','userInfo','LoginFrontPageUrl',
+                'UserRegisterName','UserRegisterPassword','UserRegisterPhone','OthenLoginInfo','isLogin','userInfo','LoginFrontPageUrl','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     methods:{
       TaggleMessageError(){
         this.MessageError=!this.MessageError;
+      },
+      initHeadHeight(){
+              if(this.$refs.HelperLine)
+              {
+                this.$refs.HelperLine.style.height=(this.StatusbarHeightRem)*window.screen.width / 10+"px";
+              }
       },
       YzmDjsJian(){
         if (this.YzmIsSend==true&&this.YzmDjs > 0) 

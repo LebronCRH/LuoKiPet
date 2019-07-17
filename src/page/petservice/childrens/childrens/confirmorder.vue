@@ -64,7 +64,7 @@
                </div>
             </div>
 
-            <paywayselect ref="payway" :Paymoney="TotalMoney" :OrderId="OrderId"></paywayselect>
+            <paywayselect ref="payway" :Paymoney="TotalMoney" :OrderId="OrderId" :CancelType="1"></paywayselect>
 
   <transition name="router-slid" mode="out-in">
             <router-view></router-view>

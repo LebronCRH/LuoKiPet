@@ -1,7 +1,7 @@
 <template>
 <div class="rating_page">
 <head-top :Title="Title" :Color="Color" :MidType="MidType"></head-top>
-<div class="PetShopScreen">
+<div class="PetShopScreen" ref="PetShopScreen">
      <ul class="ul_Screen">
         <li class="ScreenItem" :class="sortBy=='EreaSelect'?'active':''" @click="chooseType('EreaSelect')" ng-click="CurrentScreen=1">
           <span>区域 <i></i></span>
@@ -17,7 +17,7 @@
         </li>
      </ul>
 </div>
-<div class="Middle">
+<div class="Middle" ref="Middle">
 	<scroller ref="scroller" lock-x height="-90" scrollbar-y>
       <div>
         <ul class="ul_Pet">
@@ -87,13 +87,14 @@ export default {
     },
     mounted(){
         this.initData();
+        this.initHeadHeight();
     },
     destroyed(){
 
     },
     computed: {
     	...mapState([
-                'PackageCartList'
+                'PackageCartList','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     props:[],
@@ -101,6 +102,13 @@ export default {
     	...mapMutations([
                 'UPDATE_PACKAGECART',
             ]),
+        initHeadHeight(){
+        if(this.$refs.Middle)
+          {
+            this.$refs.PetShopScreen.style.marginTop=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.Middle.style.top=(2.64+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
+        },
         async initData(){
             await GetPetCategoryAll().then(response=>{
                 this.petcategorylist=response;

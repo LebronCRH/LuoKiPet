@@ -1,6 +1,6 @@
 <template>
 	<div class="rating_page">
-	  <div class="la_luokihead">
+	  <div class="la_luokihead" ref="Head">
          <div class="la_user" @click="$router.go(-1)">
          <img src="static/image/Bback.png">
          </div>
@@ -13,7 +13,7 @@
          <img src="static/image/png/Baddfriend.png">
          </div>
       </div>
-      <div class="Middle">
+      <div class="Middle" ref="Middle">
         <scroller ref="scroller" lock-x height="-57" scrollbar-y use-pulldown :use-pullup=true @on-pullup-loading="UpPagedade" @on-pulldown-loading="DownPageData" v-model="scrollerStaues">
           <div>
               <swiper ref="swiperBigArticle" height="100vh" :show-dots="false" v-model="InfoActiveIndex" @on-index-change="InfoSwiperChange">
@@ -27,18 +27,9 @@
                     </div>
                     <ul class="ul_friend">
                       <router-link v-for="item in UserFriendList" :to="{path:'/chat/p2p-'+item.UserName,query:{userId:item.UserID}}" tag="li" :key="item.UserID" class="lifriendItem">
-                      <!-- <router-link v-for="item in UserFriendList" :key="item.UserID" :to="{ name: 'friendchat',query:{userid:item.UserID}}" tag="li" class="lifriendItem"> -->
                         <img :src="imgUserBaseUrl + item.UserPhotos" alt="">
                         <p><span>{{item.UserName}}</span></p>
                       </router-link>
-<!--                       <router-link :to="{ name: 'friendchat',query:{userid:1}}" tag="li" class="lifriendItem">
-                        <img src="static/image/user2.jpg" alt="">
-                        <p><span>笑吾不良人</span></p>
-                      </router-link>
-                      <li class="lifriendItem">
-                        <img src="static/image/user3.jpg" alt="">
-                        <p><span>邪魅君子阐</span></p>
-                      </li> -->
                     </ul>
                     <p class="Num"><span>4个关注</span></p>
                   </div>
@@ -149,10 +140,11 @@ export default {
       this.initData();
       // this.getCamera();
       console.log("打开照相机");
+      this.initHeadHeight();
     },
     computed: {
       ...mapState([
-                'LoginFrontPageUrl','isLogin','userInfo',
+                'LoginFrontPageUrl','isLogin','userInfo','StatusbarHeight','StatusbarHeightRem',
             ]),
     },
     props:[],
@@ -164,6 +156,13 @@ export default {
           this.$refs.scroller.donePulldown()
         }, 1000)
        })
+      },
+      initHeadHeight(){
+          if(this.$refs.Middle)
+          {
+            this.$refs.Head.style.height=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+            this.$refs.Middle.style.top=(1.5+this.StatusbarHeightRem)*window.screen.width / 10+"px";
+          }
       },
       async initData(){
         await GetUserFriendly(this.userInfo.UserID).then(response=>{
@@ -226,7 +225,7 @@ export default {
   .la_luokihead{width:10rem;height:1.5rem;background-color: #fff;position:fixed;left:0rem;top:0rem;z-index: 99;display:flex;justify-content: space-between;align-items:center;
   	.la_user{
   		height:100%;width:2rem;float:left;text-align:center;padding:0.4rem 0.4rem;
-  		display:flex;justify-content:content;align-items:content;box-sizing: border-box;
+  		display:flex;justify-content:center;align-items:center;box-sizing: border-box;
   		img{
         width:0.6rem;height:0.6rem;
       }

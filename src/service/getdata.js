@@ -161,7 +161,12 @@ import fetch from '../config/fetch'
     export const PayServiceOrder=(orderid)=>fetch('/serviceshop/PayServiceOrder',{
         OrderId:orderid
     });
+    /*用户取消某个服务订单*/
+    export const CancelServiceOrder=(orderid)=>fetch('/serviceshop/CancelServiceOrder',{
+        OrderId:orderid
+    });
 //宠物服务店的API结束
+
 
 //宠物种类的API开始
     /*获取很多*/
@@ -171,6 +176,26 @@ import fetch from '../config/fetch'
         Id:categordId,
     });
 //宠物种类的API结束
+
+
+//图片/视频/文件处理API开始
+  /*上传图片到服务器*/
+  export const PostImages=(data)=>fetch('/imagehandle/postimages',data,'POST','fetch','','formdata');
+//图片/视频/文件处理API结束
+
+
+//移动端文章发布API开始
+  /*添加文章*/
+  export const AddMArticle=(Obj)=>fetch('/marticle/AddMArticle',Obj,'POST');
+  /*获取文章全部根据文章类型*/
+  export const GetAllArticleByCategory=(categorytype)=>fetch('/marticle/GetAllArticleByCategory',{
+    CategoryType:categorytype,
+  });
+  /*获取文章全部根据文章类型*/
+  export const GetArticleItemByID=(articleid)=>fetch('/marticle/GetArticleItemByID',{
+    ArticleId:articleid,
+  })
+//移动端文章发布API结束
 
 //仿饿了么项目API接口开始
    export const cityGuess = () => fetch('/v1/cities', {
